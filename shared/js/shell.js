@@ -1,5 +1,5 @@
 // Die Hülle von MIND PAUSE: alles, was jedes Spiel gleich braucht.
-// Kopfzeile, Steuerleiste, Auswahl (Blatt, Schublade, Seitenleiste), Einstellungen,
+// Kopfzeile, Steuerleiste, Auswahl (Blatt von unten, im Querformat Schublade von links), Einstellungen,
 // Ergebniskarte, Hinweise, Erststart-Hinweis, Ton-Freigabe und Offline-Betrieb.
 //
 // Ein Spiel ruft createShell(config) auf, bekommt die Bühne (stage) für sein Brett
@@ -17,9 +17,7 @@ const ICONS = {
 };
 
 // Version der Hülle. Ändern nur über: node scripts/release.mjs shell <version>
-export const SHELL_VERSION = '1.4.0';
-
-const SIDEBAR_QUERY = '(min-width: 1000px) and (orientation: landscape) and (min-height: 600px)';
+export const SHELL_VERSION = '1.5.0';
 
 export function createShell(config) {
   const {
@@ -29,7 +27,7 @@ export function createShell(config) {
     storage,
     sound,
     buttons = ['undo', 'hint', 'restart', 'levels', 'settings'],
-    levels = null, // { buttonKey, titleKey, nextKey }
+    levels = null, // { buttonKey, titleKey, nextKey, otherKey }
     settings = [], // Schalter: [{ id, nameKey, textKey }], Auswahl: [{ id, nameKey, options: [{ value, labelKey }] }]
     noteKey = null,
     coachKey = null,
@@ -97,7 +95,10 @@ export function createShell(config) {
                 <span data-i18n="${levels?.nextKey || 'again'}"></span> <span aria-hidden="true">→</span>
               </button>
             </div>
-            <button id="back" class="link-btn" type="button" data-i18n="undoLast"></button>
+            <div class="result-links">
+              <button id="back" class="link-btn" type="button" data-i18n="undoLast"></button>
+              ${levels ? `<button id="other" class="link-btn" type="button" aria-haspopup="dialog" data-i18n="${levels.otherKey || levels.titleKey}"></button>` : ''}
+            </div>
           </div>
         </section>
         <section id="confirm" class="result confirm" hidden role="alertdialog" aria-modal="true" aria-labelledby="confirm-title">
@@ -170,11 +171,11 @@ export function createShell(config) {
 
   // ---------- Panels ----------
 
-  const isSidebar = () => window.matchMedia(SIDEBAR_QUERY).matches;
+  // Erster Start: erst die Auswahl zeigen, beim Schließen dann die Sprechblase, wo man sie wiederfindet
+  let firstRun = false;
 
   function openPanel(name) {
     closePanels();
-    if (name === 'levels' && isSidebar()) return;
     document.body.classList.add(`open-${name}`);
     $('#scrim').hidden = false;
     if (name === 'levels') {
@@ -186,6 +187,10 @@ export function createShell(config) {
   function closePanels() {
     document.body.classList.remove('open-levels', 'open-settings');
     $('#scrim').hidden = true;
+    if (firstRun) {
+      firstRun = false;
+      setTimeout(showBubble, 450);
+    }
   }
 
   // Blatt mit dem Finger nach unten wegwischen
@@ -261,7 +266,7 @@ export function createShell(config) {
     }
   }
 
-  // opts: { title, text, stars, stats, highlight, showNext, showBack }
+  // opts: { title, text, stars, stats, highlight, showNext, showBack, showOther }
   function showResult(opts) {
     $('#result-title').textContent = opts.title;
     $('#result-text').textContent = opts.text || '';
@@ -269,6 +274,7 @@ export function createShell(config) {
     $('#result-stats').textContent = opts.stats || '';
     $('#next').hidden = !opts.showNext;
     $('#back').hidden = opts.showBack === false;
+    if ($('#other')) $('#other').hidden = opts.showOther === false;
     $('#result').classList.toggle('perfect', Boolean(opts.highlight));
     $('#result').hidden = false;
     requestAnimationFrame(() => $('#result').classList.add('show'));
@@ -317,11 +323,24 @@ export function createShell(config) {
     toastTimer = setTimeout(() => (el.hidden = true), 250);
   }
 
-  // Einmaliger Hinweis beim ersten Start. Verschwindet nach der ersten Berührung oder nach 6 Sekunden.
+  // Einmalig beim ersten Start: die Auswahl öffnet sich von selbst, damit man sieht, was es gibt.
+  // Wird sie geschlossen, zeigt eine Sprechblase am Namen der Stufe, wo man sie wiederfindet.
   function showCoach() {
-    const el = $('#coach');
-    if (!el || storage.load('coachSeen', false) || isSidebar()) return;
+    if (storage.load('coachSeen', false)) return;
     storage.save('coachSeen', true);
+    const busy = !$('#result').hidden || !$('#confirm').hidden || $('#scrim').hidden === false;
+    if (levels && !busy) {
+      openPanel('levels');
+      firstRun = true;
+      return;
+    }
+    showBubble();
+  }
+
+  // Sprechblase unter dem Namen der Stufe. Verschwindet nach der ersten Berührung oder nach 6 Sekunden.
+  function showBubble() {
+    const el = $('#coach');
+    if (!el || !el.hidden) return;
     el.hidden = false;
     requestAnimationFrame(() => el.classList.add('show'));
     setTimeout(hideCoach, 6000);
@@ -384,8 +403,14 @@ export function createShell(config) {
     $('#panel-close').addEventListener('click', closePanels);
     $('#level-list').addEventListener('click', (e) => {
       const card = e.target.closest('.level-card');
-      if (card) act('selectLevel', card.dataset.id);
+      if (!card) return;
+      act('selectLevel', card.dataset.id);
+      // Kurz warten, damit man die neue Auswahl aufleuchten sieht, dann gehört der Platz dem Brett
+      setTimeout(() => {
+        if (document.body.classList.contains('open-levels')) closePanels();
+      }, 260);
     });
+    $('#other').addEventListener('click', () => openPanel('levels'));
     swipeToClose($('#panel'));
   }
 
@@ -461,7 +486,6 @@ export function createShell(config) {
     hideCoach,
     openPanel,
     closePanels,
-    isSidebar,
     setSetting,
     renderSettings,
   };

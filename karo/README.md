@@ -35,7 +35,7 @@ KARO is Klondike, the solitaire that became famous with Windows. It is played wi
 | **Hints** | A solver knows the way and shows the next right move |
 | **Win celebration** | The bouncing cards of Windows, as a calm homage with fading trails |
 | **Sound design** | Paper on linen: flicks, slides, placements. On the foundations, the ceramic tone of the collection |
-| **Made for Apple devices** | iPhone portrait and landscape, iPad with sidebar, light and dark mode, respects the silent switch |
+| **Made for Apple devices** | iPhone and iPad in portrait and landscape, full height board in landscape, light and dark mode, respects the silent switch |
 
 ## How to play
 

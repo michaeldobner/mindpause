@@ -345,6 +345,13 @@
   color: var(--ink);
 }
 
+.result-links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  column-gap: 4px;
+}
+
 .link-btn {
   min-height: 44px;
   margin-top: 4px;
@@ -698,35 +705,159 @@
   }
 }
 
-/* ---------- iPhone quer: Steuerung rechts, Figuren als Schublade links ---------- */
+/* ---------- Querformat: Info links, Brett in der Mitte, Steuerung rechts ----------
+ * Gilt für iPhone quer und für iPad, Rechner und Split View, sobald der Bereich deutlich breiter
+ * als hoch ist. Im Querformat ist die Höhe knapp, deshalb liegen Kopfzeile und Steuerung neben
+ * dem Brett statt darüber und darunter. Die Auswahl kommt als Schublade von links.
+ */
 
-@media (orientation: landscape) and (max-height: 500px) {
+@media (min-aspect-ratio: 5/4), (orientation: landscape) and (max-height: 500px) {
   .app {
     grid-template-areas: "top stage controls";
     grid-template-rows: minmax(0, 1fr);
-    grid-template-columns: 170px minmax(0, 1fr) 80px;
+    grid-template-columns: clamp(170px, 18vw, 230px) minmax(0, 1fr) auto;
+    column-gap: 12px;
   }
 
   .top {
     flex-direction: column;
     justify-content: center;
-    gap: 14px;
+    gap: 28px;
     margin: 0;
   }
 
-  .brand {
-    font-size: 22px;
+  .counter {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+
+  /* Sprechblase rechts neben dem Namen der Stufe, damit sie den Zähler nicht verdeckt */
+  .coach {
+    top: auto;
+    bottom: 0;
+    left: calc(100% + 14px);
+  }
+
+  .coach::before {
+    top: 50%;
+    left: -5px;
+    margin-top: -5px;
   }
 
   .stage {
     padding: 0;
   }
 
+  /* Im Querformat darf das Brett größer werden, die Höhe begrenzt es ohnehin */
+  .board {
+    max-width: 1280px;
+    max-height: 1040px;
+  }
+
   .controls {
     flex-direction: column;
     justify-content: center;
-    gap: 8px;
+    gap: 14px;
     padding: 0;
+  }
+
+  .controls.many {
+    gap: 10px;
+  }
+
+  .icon-btn {
+    flex: 0 0 auto;
+  }
+
+  .panel {
+    top: 0;
+    right: auto;
+    width: min(380px, 45vw);
+    margin: 0;
+    padding: max(10px, env(safe-area-inset-top)) 0 10px max(4px, env(safe-area-inset-left));
+    border-radius: 0 26px 26px 0;
+    transform: translateX(-105%);
+  }
+
+  .panel .grabber {
+    display: none;
+  }
+
+  .panel-head {
+    padding: 14px 16px 4px 22px;
+  }
+
+  .level-list {
+    flex-direction: column;
+    height: calc(100% - 56px);
+    padding: 10px 16px 16px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    scroll-snap-type: y proximity;
+  }
+
+  .level-card {
+    width: 100%;
+    grid-template-columns: 64px 1fr auto;
+    grid-template-areas:
+      "svg name stars"
+      "svg meta dots";
+    justify-items: start;
+    align-items: center;
+    column-gap: 14px;
+    row-gap: 3px;
+    padding: 12px 14px;
+  }
+
+  .level-card svg {
+    grid-area: svg;
+    width: 64px;
+    height: 64px;
+    margin: 0;
+  }
+
+  .lc-name {
+    grid-area: name;
+  }
+
+  .lc-meta {
+    grid-area: meta;
+    text-align: left;
+  }
+
+  .lc-stars {
+    grid-area: stars;
+  }
+
+  .lc-dots {
+    grid-area: dots;
+  }
+
+  .sheet {
+    max-height: 100%;
+    overflow-y: auto;
+  }
+}
+
+/* ---------- iPhone quer: alles etwas kompakter ---------- */
+
+@media (orientation: landscape) and (max-height: 500px) {
+  .app {
+    grid-template-columns: 170px minmax(0, 1fr) 80px;
+    column-gap: 0;
+  }
+
+  .top {
+    gap: 14px;
+  }
+
+  .brand {
+    font-size: 22px;
+  }
+
+  .controls {
+    gap: 8px;
   }
 
   .icon-btn {
@@ -756,168 +887,56 @@
   }
 
   .panel {
-    top: 0;
-    right: auto;
     width: min(340px, 60vw);
-    margin: 0;
-    padding: max(10px, env(safe-area-inset-top)) 0 10px max(4px, env(safe-area-inset-left));
-    border-radius: 0 26px 26px 0;
-    transform: translateX(-105%);
   }
 
-  .panel .grabber {
-    display: none;
+  .panel-head {
+    padding: 0 16px 0 22px;
   }
 
   .level-list {
-    flex-direction: column;
     height: calc(100% - 50px);
-    overflow-x: hidden;
-    overflow-y: auto;
-    scroll-snap-type: y proximity;
+    padding: 12px 22px 8px;
   }
 
   .level-card {
-    width: 100%;
     grid-template-columns: 56px 1fr auto;
-    grid-template-areas:
-      "svg name stars"
-      "svg meta dots";
-    justify-items: start;
-    align-items: center;
     column-gap: 12px;
     row-gap: 2px;
     padding: 10px 12px;
   }
 
   .level-card svg {
-    grid-area: svg;
     width: 56px;
     height: 56px;
-    margin: 0;
   }
 
-  .lc-name {
-    grid-area: name;
+  /* Ergebniskarte: auf der niedrigen Bühne etwas enger */
+  .card {
+    padding: 18px 20px 8px;
   }
 
-  .lc-meta {
-    grid-area: meta;
+  .result-title {
+    font-size: 30px;
   }
 
-  .lc-stars {
-    grid-area: stars;
-  }
-
-  .lc-dots {
-    grid-area: dots;
-  }
-
-
-  .sheet {
-    max-height: 100%;
-    overflow-y: auto;
-  }
-}
-
-/* ---------- iPad quer: feste Seitenleiste mit allen Figuren ---------- */
-
-@media (min-width: 1000px) and (orientation: landscape) and (min-height: 600px) {
-  .app {
-    grid-template-areas:
-      "panel top"
-      "panel stage"
-      "panel controls";
-    grid-template-columns: 300px minmax(0, 1fr);
-    column-gap: 28px;
-  }
-
-  .panel {
-    grid-area: panel;
-    position: relative;
-    z-index: 1;
-    max-width: none;
-    margin: 0;
-    padding: 6px 0 0;
-    border-radius: 26px;
-    box-shadow: var(--shadow);
-    transform: none;
-    visibility: visible;
-    overflow: hidden;
-  }
-
-  .panel .grabber,
-  .panel .close-btn,
-  #btn-levels {
+  .result-kicker {
     display: none;
   }
 
-  .panel-head {
-    padding: 14px 22px 4px;
+  .stars {
+    margin: 4px 0 0;
   }
 
-  .level-list {
-    flex-direction: column;
-    height: calc(100% - 56px);
-    padding: 10px 16px 16px;
-    overflow-x: hidden;
-    overflow-y: auto;
-    scroll-snap-type: none;
+  .result-text {
+    margin: 4px 0 2px;
   }
 
-  .level-card {
-    width: 100%;
-    grid-template-columns: 64px 1fr auto;
-    grid-template-areas:
-      "svg name stars"
-      "svg meta dots";
-    justify-items: start;
-    align-items: center;
-    column-gap: 14px;
-    row-gap: 3px;
-    padding: 12px 14px;
+  .result-stats {
+    margin-bottom: 10px;
   }
 
-  .level-card svg {
-    grid-area: svg;
-    width: 64px;
-    height: 64px;
-    margin: 0;
-  }
-
-  .lc-name {
-    grid-area: name;
-  }
-
-  .lc-meta {
-    grid-area: meta;
-  }
-
-  .lc-stars {
-    grid-area: stars;
-  }
-
-  .lc-dots {
-    grid-area: dots;
-  }
-
-
-  .level-name {
-    pointer-events: none;
-  }
-
-  .level-name svg {
-    display: none;
-  }
-}
-
-/* Spiele ohne Auswahl: keine Seitenleiste auf dem iPad */
-@media (min-width: 1000px) and (orientation: landscape) and (min-height: 600px) {
-  .app.no-levels {
-    grid-template-areas:
-      "top"
-      "stage"
-      "controls";
-    grid-template-columns: minmax(0, 1fr);
+  .link-btn {
+    margin-top: 0;
   }
 }

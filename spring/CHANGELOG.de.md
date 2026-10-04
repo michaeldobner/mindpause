@@ -2,6 +2,15 @@
 
 Alle wichtigen Änderungen an SPRING. [English](CHANGELOG.md)
 
+## 2.1.2 (2026-10-04)
+
+### Verbessert
+* Querformat auf dem iPad: das Brett nutzt die volle Höhe, die Figuren kommen als Schublade.
+* „Andere Figur“ auf der Ergebniskarte.
+
+### Technisch
+* Braucht Hülle 1.5.0.
+
 ## 2.1.1 (2026-10-04)
 
 ### Technik

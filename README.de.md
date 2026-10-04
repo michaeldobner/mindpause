@@ -16,11 +16,11 @@ Klassische Brettspiele, neu gedacht, mit fast greifbarem Design und handgemachte
 
 | | Spiel | Beschreibung | Version |
 |---|---|---|---|
-| <img src="spring/icons/icon.svg" width="56" alt=""> | **[SPRING](spring/README.de.md)** · [spielen](https://michaeldobner.github.io/mindpause/spring/) | Solohalma auf dem klassischen Kreuzbrett. Sieben Figuren von leicht bis meisterhaft, Tipps, lebendiger Rand, Neigen | 2.1.1 |
-| <img src="queen/icons/icon.svg" width="56" alt=""> | **[QUEEN](queen/README.de.md)** · [spielen](https://michaeldobner.github.io/mindpause/queen/) | Deutsche Dame gegen den Computer in vier Stufen oder zu zweit an einem Gerät. Ebenholz, Ahorn und eine gravierte Goldkrone, Schalen für geschlagene Steine | 1.2.0 |
-| <img src="karo/icons/icon.svg" width="56" alt=""> | **[KARO](karo/README.de.md)** · [spielen](https://michaeldobner.github.io/mindpause/karo/) | Die klassische Patience wie bei Windows. 1 oder 3 Karten, Punkte oder Vegas, sicher lösbare Stufen, Tipps | 1.0.2 |
-| <img src="fuge/icons/icon.svg" width="56" alt=""> | **[FUGE](fuge/README.de.md)** · [spielen](https://michaeldobner.github.io/mindpause/fuge/) | Das klassische Spiel mit fallenden Steinen als lackierter Holzkasten. Klassisch, Sprint, 3 Minuten und Ruhe ohne Ende, Gesten statt Knöpfe | 1.0.1 |
-| <img src="muehle/icons/icon.svg" width="56" alt=""> | **[MÜHLE](muehle/README.de.md)** · [spielen](https://michaeldobner.github.io/mindpause/muehle/) | Neun Männer Mühle gegen den Computer in drei Stufen oder zu zweit an einem Gerät. Goldlinien auf schwarzem Holz, leuchtende Mühlen, Schalen als Vorrat | 1.0.0 |
+| <img src="spring/icons/icon.svg" width="56" alt=""> | **[SPRING](spring/README.de.md)** · [spielen](https://michaeldobner.github.io/mindpause/spring/) | Solohalma auf dem klassischen Kreuzbrett. Sieben Figuren von leicht bis meisterhaft, Tipps, lebendiger Rand, Neigen | 2.1.2 |
+| <img src="queen/icons/icon.svg" width="56" alt=""> | **[QUEEN](queen/README.de.md)** · [spielen](https://michaeldobner.github.io/mindpause/queen/) | Deutsche Dame gegen den Computer in vier Stufen oder zu zweit an einem Gerät. Ebenholz, Ahorn und eine gravierte Goldkrone, Schalen für geschlagene Steine, eigene Steine immer unten | 1.3.0 |
+| <img src="karo/icons/icon.svg" width="56" alt=""> | **[KARO](karo/README.de.md)** · [spielen](https://michaeldobner.github.io/mindpause/karo/) | Die klassische Patience wie bei Windows. 1 oder 3 Karten, Punkte oder Vegas, sicher lösbare Stufen, Tipps | 1.0.3 |
+| <img src="fuge/icons/icon.svg" width="56" alt=""> | **[FUGE](fuge/README.de.md)** · [spielen](https://michaeldobner.github.io/mindpause/fuge/) | Das klassische Spiel mit fallenden Steinen als lackierter Holzkasten. Klassisch, Sprint, 3 Minuten und Ruhe ohne Ende, Gesten statt Knöpfe, Daumensteuerung im Querformat | 1.1.0 |
+| <img src="muehle/icons/icon.svg" width="56" alt=""> | **[MÜHLE](muehle/README.de.md)** · [spielen](https://michaeldobner.github.io/mindpause/muehle/) | Neun Männer Mühle gegen den Computer in drei Stufen oder zu zweit an einem Gerät. Goldlinien auf schwarzem Holz, leuchtende Mühlen, Schalen als Vorrat | 1.1.0 |
 
 Weitere Spiele und das Spiel auf zwei Geräten sind in Arbeit, siehe [Roadmap](#roadmap).
 
@@ -31,8 +31,8 @@ Alle Spiele bauen auf einer gemeinsamen **Hülle** in [`shared/`](shared/README.
 | Gemeinsam | Bedeutung |
 |---|---|
 | **Design-Tokens** | Schriften, Farben, Abstände, Schatten und Bewegung in `shared/tokens.css` |
-| **Oberfläche** | Kopfzeile, Steuerleiste, Auswahl als Blatt, Schublade oder Seitenleiste, Einstellungen, Ergebniskarte mit Sternen, Hinweise, Erststart-Hinweis |
-| **Layouts** | iPhone hoch und quer, iPad mit Seitenleiste, Hell- und Dunkelmodus, sichere Ränder |
+| **Oberfläche** | Kopfzeile, Steuerleiste, Auswahl als Blatt oder Schublade, beim ersten Start von selbst offen, Einstellungen, Ergebniskarte mit Sternen, Hinweise, Erststart-Hinweis |
+| **Layouts** | Hochformat und Querformat auf iPhone und iPad, im Querformat Kopf links, Brett in voller Höhe, Steuerung rechts, Hell- und Dunkelmodus, sichere Ränder |
 | **Klang-Engine** | Keramik auf Holz in vier Schichten, drei Klangfarben, respektiert den Lautlos-Schalter |
 | **Lebendiger Rand** | Physik für Murmeln und Steine im Rand oder in Schalen: antippen, wischen, neigen |
 | **Sprachen** | Deutsch auf deutsch eingestellten Geräten, sonst Englisch |
@@ -70,7 +70,7 @@ Voraussetzungen: Node.js ab Version 20 und ein moderner Browser. Es gibt keine A
 ```bash
 npm start       # lokaler Server: http://localhost:3000/ (Startseite), /spring/, /queen/
 npm test        # Logik-Tests aller Spiele und der Hülle
-npm run e2e     # Browser-Test aller Spiele auf iPhone, iPhone SE und iPad
+npm run e2e     # Browser-Test aller Spiele auf iPhone hoch und quer, iPhone SE und iPad quer
 E2E_ENGINE=webkit npm run e2e   # dasselbe mit WebKit, der Engine von Safari
 ```
 
@@ -110,7 +110,8 @@ Jeder Verweis trägt seine Version (`?v=` für Dateien eines Spiels, `?shell=` f
 | KARO | Klondike-Patience, 1 oder 3 Karten, Punkte nach Windows und Vegas, sicher lösbare Stufen | Fertig |
 | FUGE | Fallende Steine als Holzkasten, vier Modi, Gesten, Hülle 1.3.0 mit eigenen Schaltflächen | Fertig |
 | MÜHLE | Neun Männer Mühle nach WMD-Regeln, drei Computerstufen, zu zweit, Gestaltung von QUEEN | Fertig |
-| QUEEN 1.3 | Gegeneinander auf zwei Geräten, Stufe 1: Zug per Link | Geplant |
+| Querformat | Hülle 1.5.0: Querformat für alle Spiele, Brett in voller Höhe, eigene Steine unten, FUGE mit Daumensteuerung | Fertig |
+| QUEEN 1.4 | Gegeneinander auf zwei Geräten, Stufe 1: Zug per Link | Geplant |
 | Später | Live mit Raumcode, weitere Spiele | Idee |
 
 ## Schreibstil

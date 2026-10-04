@@ -35,7 +35,7 @@ In the middle of the inner square, where no piece ever stands, lies an engraved 
 
 ## Geometry
 
-Board space 1000 × 1280 units in portrait, as in QUEEN. Grid of 7 × 7 lines, spacing 130, margin 70. Piece radius 50, tap area radius 64, piece radius in a tray 38.
+Board space 1000 × 1280 units in portrait, in landscape a wide plate of 1280 × 1040 units with trays left and right, as in QUEEN. Grid of 7 × 7 lines, spacing 130, margin 70. Piece radius 50, tap area radius 64, piece radius in a tray 38.
 
 **Why never more than 9 pieces per tray?** Each of your moves takes one piece from the supply and adds at most one taken piece. After placing the supply is empty, and nobody can take more than 7 pieces.
 

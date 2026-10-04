@@ -33,4 +33,4 @@ This documentation describes QUEEN completely: how to play, how it looks and sou
 <img src="../images/iphone-game-en.jpg" width="230" alt="Game on the iPhone">&nbsp;
 <img src="../images/iphone-settings-en.jpg" width="230" alt="Settings">
 </p>
-<img src="../images/ipad-en.jpg" width="700" alt="iPad in landscape with sidebar">
+<img src="../images/ipad-en.jpg" width="700" alt="iPad in landscape, full height board">

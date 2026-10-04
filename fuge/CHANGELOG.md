@@ -2,6 +2,17 @@
 
 All notable changes to FUGE. [Deutsch](CHANGELOG.de.md)
 
+## 1.1.0 (2026-10-04)
+
+### New
+* **Wide box in landscape:** hold and the values sit left of the well, next on the right, as usual for this kind of game. The well uses the full height and gets clearly larger on the iPad.
+* **Thumb controls** (setting, off at first): in landscape the areas beside the well become large tap zones. Left moves (outer half left, inner half right, keeping your thumb down repeats), right rotates (inner ↺, outer ↻), swipe down drops, swipe up holds. Both thumbs work at the same time.
+* "Other mode" on the result card, on the iPad the modes come as a drawer.
+
+### Technical
+* Requires shell 1.5.0.
+* New "Thumbs" check in the browser test.
+
 ## 1.0.1 (2026-10-04)
 
 ### Design

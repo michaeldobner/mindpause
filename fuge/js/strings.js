@@ -11,6 +11,7 @@ export const FUGE_STRINGS = {
     modes: 'Modi',
     chooseMode: 'Modus wählen',
     coach: 'Hier wählst du den Modus',
+    otherMode: 'Anderer Modus',
     points: { one: 'Punkt', other: 'Punkte' },
     time: 'Zeit',
     mode: {
@@ -98,6 +99,8 @@ export const FUGE_STRINGS = {
     ghostText: 'Zeigt, wo der Stein landen wird',
     patterns: 'Muster auf den Steinen',
     patternsText: 'Jede Form trägt ein eigenes Zeichen, hilfreich bei Farbsehschwäche',
+    thumbs: 'Daumensteuerung',
+    thumbsText: 'Nur im Querformat. Links neben dem Kasten verschieben: außen nach links, innen nach rechts. Rechts tippen dreht (innen ↺, außen ↻), nach unten wischen lässt fallen, nach oben wischen hält.',
     note: 'Auf dem iPhone: Ziehen verschiebt, Tippen dreht, schnelles Wischen nach unten lässt fallen, nach oben hält. Am Rechner: Pfeiltasten, Leertaste, C und P.',
   },
   en: {
@@ -110,6 +113,7 @@ export const FUGE_STRINGS = {
     modes: 'Modes',
     chooseMode: 'Choose a mode',
     coach: 'Choose the mode here',
+    otherMode: 'Other mode',
     points: { one: 'point', other: 'points' },
     time: 'Time',
     mode: {
@@ -197,6 +201,8 @@ export const FUGE_STRINGS = {
     ghostText: 'Shows where the piece will land',
     patterns: 'Patterns on the pieces',
     patternsText: 'Each shape carries its own mark, helpful for colour blindness',
+    thumbs: 'Thumb controls',
+    thumbsText: 'Landscape only. Left of the box, your thumb moves the piece: outer half left, inner half right. On the right, tap to rotate (inner ↺, outer ↻), swipe down to drop, swipe up to hold.',
     note: 'On iPhone: drag to move, tap to rotate, swipe down quickly to drop, up to hold. On a computer: arrow keys, space, C and P.',
   },
 };

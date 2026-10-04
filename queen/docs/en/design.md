@@ -55,7 +55,7 @@ In both styles target rings are white, dotted and pulsing. The hint ring is a so
 
 ## Geometry
 
-Everything is drawn in a fixed board space of **1000 × 1280 units** in portrait. The rendering scales this space to the available room.
+Everything is drawn in a fixed board space of **1000 × 1280 units** in portrait. In landscape the plate gets wider (**1280 × 1040 units**), the board stays where it is and only the trays move to the sides. The rendering picks the shape in which the board appears larger and scales it to the available room.
 
 | Size | Value | Reason |
 |---|---|---|
@@ -86,14 +86,14 @@ The queen's crown is a **queen's crown as a fine gold engraving**, as if inlaid 
 
 A fine shadow line lies beneath every gold line, which makes it look inlaid. On ivory the gold is darker (antique gold `#b8892c` to `#7d5a14`), on ebony and ceramic it is brighter (`#fbe3a0` to `#d4a443`), so the engraving stays legible on every piece. The shapes are paths in `CROWN` in `js/themes.js`.
 
-Light and crown always stay upright. When the board turns (landscape or two players), an inner group turns each piece back. Light always falls from the top left, and the crown is never upside down. The same applies to the coordinates.
+Light and crown always stay upright. When the board turns (two players), an inner group turns each piece back. Light always falls from the top left, and the crown is never upside down. The same applies to the coordinates.
 
 ## Orientation
 
 | Situation | Rendering |
 |---|---|
 | Portrait | Bottom side at the bottom, Black at the top, trays above and below the board |
-| Landscape | The board is turned by 90°: bottom side on the left, Black on the right, trays left and right |
+| Landscape | The bottom side stays at the bottom, as at a real table. The plate gets wider, the trays stand on the left (Black) and on the right (bottom side). Captured pieces fill the right tray from the bottom and the left one from the top |
 | Two players with "Turn the board" | After every move the board turns by 180° towards the player to move |
 
 The tilt of the device is turned back into board space, so pieces in the trays slide to the side that is actually lower in every orientation.
@@ -123,10 +123,10 @@ Animations run one after another through a queue, so a quick tap on Undo is neve
 | Situation | Arrangement |
 |---|---|
 | iPhone portrait | Wordmark, mode and counter at the top, board in the middle, six buttons at the bottom (Undo, Hint, New, Resign, Modes, More), a little smaller than with five. Modes and settings as sheets from the bottom |
-| iPhone landscape | Wordmark and counter on the left, turned board in the middle, buttons on the right. Modes as a drawer |
+| iPhone landscape | Wordmark, mode and counter on the left, board in the middle with trays left and right, buttons on the right. Modes as a drawer from the left |
 | iPhone SE | Counter on two lines and a little smaller, so the header never wraps |
 | iPad portrait | Like iPhone portrait, with more room |
-| iPad landscape | Fixed sidebar with all modes, board and controls on the right |
+| iPad landscape | Like iPhone landscape, with larger buttons. The board uses the full height, modes come as a drawer via the mode name, Modes or "Other mode" on the result card |
 
 <img src="../images/ipad-en.jpg" width="700" alt="iPad in landscape">
 

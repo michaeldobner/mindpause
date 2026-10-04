@@ -92,3 +92,18 @@ Best results and stars are stored per mode on the device and shown in the mode p
 | **Pause** or tap on the box | P, Escape, Enter, Space | pause and resume |
 
 Gestures work on the whole area around the box, so your thumb never has to cover the piece. When dragging, the piece moves roughly as far as your finger, one cell per cell width.
+
+### Thumb controls
+
+For an iPad held in landscape with both hands, the settings offer **Thumb controls** (off at first). They only work while the box lies wide and turn the areas left and right of the well into large tap zones:
+
+| Zone | Action |
+|---|---|
+| Left, outer half | move left, keeping your thumb down repeats |
+| Left, inner half | move right, keeping your thumb down repeats |
+| Tap right, inner half | rotate counterclockwise |
+| Tap right, outer half | rotate clockwise |
+| Swipe down on the right | drop |
+| Swipe up on the right | hold |
+
+Both thumbs can act at the same time. The hold box and all buttons stay tappable as usual, and the gestures on the well keep working.

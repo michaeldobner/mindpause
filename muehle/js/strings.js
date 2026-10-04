@@ -7,6 +7,7 @@ export const MUEHLE_STRINGS = {
     modes: 'Modi',
     chooseMode: 'Modus wählen',
     coach: 'Hier wählst du den Modus',
+    otherMode: 'Anderer Modus',
     mode: {
       easy: 'Leicht',
       medium: 'Mittel',
@@ -60,6 +61,7 @@ export const MUEHLE_STRINGS = {
     modes: 'Modes',
     chooseMode: 'Choose a mode',
     coach: 'Choose the mode here',
+    otherMode: 'Other mode',
     mode: {
       easy: 'Easy',
       medium: 'Medium',

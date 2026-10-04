@@ -99,9 +99,9 @@ The cell size follows the available space and is rounded to whole device pixels 
 | Device | Arrangement |
 |---|---|
 | iPhone portrait | Wordmark, mode and score on top, box in the centre, control bar at the bottom: Hold, Pause, New, Modes, More |
-| iPhone landscape | Wordmark and score on the left, box in the centre, control bar on the right. The controls help is hidden in the pause card |
+| iPhone landscape | Wordmark, mode and score on the left, wide box in the centre (hold and values left of the well, next on the right), control bar on the right. The controls help is hidden in the pause card |
 | iPhone SE | As iPhone portrait, slightly smaller cells |
-| iPad and computer landscape | Fixed sidebar with all modes, box and control bar on the right |
+| iPad and computer landscape | Like iPhone landscape, the well uses the full height. Modes as a drawer from the left. Optional thumb controls on the areas beside the well |
 
 The box is always the largest element. Gestures work on the whole stage.
 

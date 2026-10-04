@@ -37,7 +37,7 @@ FUGE spielt sich wie das Original, sieht aber aus wie ein Designobjekt für den 
 | **Spielgefühl** | Steine gleiten weich, drehen sich sichtbar, setzen sich mit einem Aufleuchten. Volle Reihen lösen sich von der Mitte aus auf |
 | **Klangdesign** | Holz auf Holz: leises Klicken, Klacken beim Drehen, dumpfes Aufsetzen. Reihen klingen mit dem Keramikton der Sammlung |
 | **Barrierearm** | Optionale Muster auf den Steinen für Farbsehschwäche, „Bewegung reduzieren“ wird respektiert |
-| **Für Apple-Geräte gemacht** | iPhone hoch und quer, iPad mit Seitenleiste, Hell- und Dunkelmodus, Spiel wird beim Verlassen gespeichert |
+| **Für Apple-Geräte gemacht** | iPhone und iPad hoch und quer, im Querformat Brett in voller Höhe, Hell- und Dunkelmodus, Spiel wird beim Verlassen gespeichert |
 
 ## So wird gespielt
 

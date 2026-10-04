@@ -72,7 +72,7 @@ Kopfzeile: links der Modus, rechts die Steine beider Seiten (auf dem Brett und i
 
 ## Schalen
 
-Jede Seite hat eine Schale, Weiß unten, Schwarz oben (im Querformat links und rechts). Darin liegen die eigenen Steine, die noch zu setzen sind, und die Steine, die man der Gegenseite genommen hat. Die Steine reagieren auf Antippen und Wischen und mit dem Schalter **Neigen** auf die Lage des Geräts.
+Jede Seite hat eine Schale, Weiß unten, Schwarz oben. Im Querformat bleibt Weiß unten, die Schalen stehen dann links (Schwarz) und rechts (Weiß). Darin liegen die eigenen Steine, die noch zu setzen sind, und die Steine, die man der Gegenseite genommen hat. Die Steine reagieren auf Antippen und Wischen und mit dem Schalter **Neigen** auf die Lage des Geräts.
 
 ## Einstellungen
 

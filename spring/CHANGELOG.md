@@ -2,6 +2,15 @@
 
 All notable changes to SPRING. [Deutsch](CHANGELOG.de.md)
 
+## 2.1.2 (2026-10-04)
+
+### Improved
+* Landscape on the iPad: the board uses the full height, the figures come as a drawer.
+* "Other figure" on the result card.
+
+### Technical
+* Requires shell 1.5.0.
+
 ## 2.1.1 (2026-10-04)
 
 ### Technical

@@ -10,6 +10,7 @@ export const KARO_STRINGS = {
     chooseLevel: 'Stufe wählen',
     nextDeal: 'Nächstes Spiel',
     coach: 'Hier wählst du die Stufe',
+    otherLevel: 'Andere Stufe',
     level: {
       easy: 'Leicht',
       medium: 'Mittel',
@@ -65,6 +66,7 @@ export const KARO_STRINGS = {
     chooseLevel: 'Choose a level',
     nextDeal: 'Next deal',
     coach: 'Choose the level here',
+    otherLevel: 'Other level',
     level: {
       easy: 'Easy',
       medium: 'Medium',

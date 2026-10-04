@@ -92,3 +92,18 @@ Bestwerte und Sterne werden je Modus auf dem Gerät gespeichert und in der Modus
 | **Pause** oder Tipp auf den Kasten | P, Escape, Enter, Leertaste | Pause und Fortsetzen |
 
 Die Gesten funktionieren auf der ganzen Fläche um den Kasten, der Daumen muss den Stein nicht verdecken. Beim Ziehen bewegt sich der Stein ungefähr so weit wie der Finger, ein Feld pro Zellbreite.
+
+### Daumensteuerung
+
+Für das iPad quer in beiden Händen gibt es in den Einstellungen die **Daumensteuerung** (anfangs aus). Sie wirkt nur, wenn der Kasten breit liegt, und macht die Flächen links und rechts neben der Wanne zu großen Tippzonen:
+
+| Zone | Wirkung |
+|---|---|
+| Links, äußere Hälfte | nach links verschieben, Liegenlassen wiederholt |
+| Links, innere Hälfte | nach rechts verschieben, Liegenlassen wiederholt |
+| Rechts, innere Hälfte antippen | gegen den Uhrzeigersinn drehen |
+| Rechts, äußere Hälfte antippen | im Uhrzeigersinn drehen |
+| Rechts nach unten wischen | fallen lassen |
+| Rechts nach oben wischen | halten |
+
+Beide Daumen können gleichzeitig wirken. Das Fach Halten und alle Schaltflächen bleiben wie gewohnt antippbar, die Gesten auf der Wanne bleiben ebenfalls.

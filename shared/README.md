@@ -6,7 +6,7 @@ The shell is everything every MIND PAUSE game shares. A game only describes what
 
 **Rule of thumb:** if a change should affect every game, it belongs here. If it only concerns one game, it belongs in that game's folder.
 
-Current version: **1.4.0**
+Current version: **1.5.0**
 
 ## Contents
 
@@ -31,7 +31,7 @@ All values live as CSS variables in `tokens.css`. Games never use fixed values f
 | `--bg`, `--bg-edge` | `#ece8e1`, `#e2ddd4` | `#141519`, `#0d0e11` | Background with vignette |
 | `--ink`, `--ink-soft` | `#1a1d4e`, `#6b6d85` | `#e9e7f2`, `#8f91a6` | Text and icons, secondary text |
 | `--btn`, `--btn-border` | `#f7f4ef`, 12 % ink | `#1e2027`, 8 % white | Buttons |
-| `--card`, `--sheet` | `#faf8f4`, `#f6f3ee` | `#1e2027`, `#1b1d23` | Cards, sheets, sidebar |
+| `--card`, `--sheet` | `#faf8f4`, `#f6f3ee` | `#1e2027`, `#1b1d23` | Cards, sheets, drawer |
 | `--accent` | `#3f6ef0` | `#3f6ef0` | Current selection, switches, highlight |
 | `--star`, `--hint` | `#e0a526`, `#ffd36b` | same | Stars, hint ring |
 | `--shadow` | soft | stronger | Buttons and cards |
@@ -47,13 +47,14 @@ All values live as CSS variables in `tokens.css`. Games never use fixed values f
 |---|---|
 | Header | Title of the game, name of the current level with a chevron, counter on the right |
 | Control bar | Up to six round buttons with labels, chosen by the game: `undo`, `hint`, `restart`, `resign`, `levels`, `settings` or the game's own (for example Hold and Pause in FUGE). With six they get a little smaller so they fit on the iPhone SE too |
-| Picker | iPhone portrait: sheet from the bottom with cards to swipe. iPhone landscape: drawer from the left. iPad landscape: permanent sidebar |
+| Picker | Portrait: sheet from the bottom with cards to swipe. Landscape (iPhone, iPad, computer): drawer from the left. Opens by itself on the first start and closes after a choice |
+| Landscape | As soon as the area is clearly wider than tall (aspect ratio from 5:4): title, level and counter on the left, full height board, controls stacked on the right. More compact on the iPhone |
 | Level card | Preview, name, meta line, up to three stars, five difficulty dots, current card outlined in blue |
 | Settings | Choices defined by the game (for example the board style), sound on or off, sound style (Warm, Clear, Soft), switches defined by the game, a note, version line |
-| Result card | Title, stars, text, statistics, "Play again", optional "Next …", "Undo last move" |
+| Result card | Title, stars, text, statistics, "Play again", optional "Next …", "Undo last move" and "Other …" (opens the picker) |
 | Confirmation | Card on the board with title, text and two buttons, for example before resigning. Escape cancels |
 | Toast | Short message at the bottom of the board |
-| First launch hint | Speech bubble below the level name, only once per game |
+| First start | The picker opens by itself. Once it is closed, a speech bubble at the level name shows where to find it again. Only once per game |
 
 Sheets close on swipe down, tap outside, the cross or Escape. Touch targets are never below 44 pt. All layouts respect the notch, Dynamic Island and home indicator.
 
@@ -62,9 +63,9 @@ Sheets close on swipe down, tap outside, the cross or Escape. Touch targets are 
 A game calls `createShell()` in its `main.js`:
 
 ```js
-import { createShell } from '../../shared/js/shell.js?shell=1.4.0';
-import { createI18n } from '../../shared/js/i18n.js?shell=1.4.0';
-import { createStorage } from '../../shared/js/storage.js?shell=1.4.0';
+import { createShell } from '../../shared/js/shell.js?shell=1.5.0';
+import { createI18n } from '../../shared/js/i18n.js?shell=1.5.0';
+import { createStorage } from '../../shared/js/storage.js?shell=1.5.0';
 
 const storage = createStorage('queen:');
 const i18n = createI18n(QUEEN_STRINGS);         // texts of the game, de and en
@@ -77,7 +78,7 @@ const shell = createShell({
   storage,
   sound,
   buttons: ['undo', 'hint', 'restart', 'levels', 'settings'],
-  levels: { buttonKey: 'modes', titleKey: 'chooseMode', nextKey: 'nextLevel' },
+  levels: { buttonKey: 'modes', titleKey: 'chooseMode', nextKey: 'nextLevel', otherKey: 'otherMode' },
   settings: [
     { id: 'theme', nameKey: 'theme', options: [{ value: 'classic', labelKey: 'themes.classic' }, { value: 'midnight', labelKey: 'themes.midnight' }] },
     { id: 'flip', nameKey: 'flip', textKey: 'flipText' },
@@ -98,7 +99,7 @@ const shell = createShell({
 | `version` | Version of the game |
 | `i18n`, `storage`, `sound` | Created with `createI18n`, `createStorage` and a subclass of `SoundEngine` |
 | `buttons` | Which buttons the control bar shows, in this order. An entry is a shell name or a custom button `{ id, icon, labelKey }`: `icon` is SVG content in a 24 × 24 box, a tap calls `actions[id]` |
-| `levels` | Optional picker: keys for the button label, the title and the "Next" button |
+| `levels` | Optional picker: keys for the button label, the title, the "Next" button and the "Other …" link on the result card |
 | `settings` | Additional settings. A switch has `id`, `nameKey` and `textKey`. A choice has `id`, `nameKey` and `options` with `value` and `labelKey`, and appears as a segmented control at the top of the settings |
 | `noteKey`, `coachKey`, `boardLabelKey` | Optional texts: note in the settings, first launch hint, label of the board |
 | `actions` | Functions the shell calls: `undo`, `hint`, `restart`, `again`, `back`, `next`, `selectLevel(id)`, `setting(id, value)`. For a switch `value` is the new state, for a choice the selected `value` |
@@ -114,12 +115,12 @@ const shell = createShell({
 | `renderLevels(items)` | Fills the picker. `items`: `{ id, name, meta, stars, difficulty, preview, current }` |
 | `setDisabled(name, bool)`, `setBusy(name, bool)` | State of a button, for example while the hint is computing |
 | `setButton(id, { icon, labelKey })` | Change a button's icon and label, for example Pause and Resume |
-| `showResult(opts)`, `hideResult()` | Result card. `opts`: `{ title, text, stars, stats, highlight, showNext, showBack }`. `showBack: false` hides “Undo last move”, for games without undo |
+| `showResult(opts)`, `hideResult()` | Result card. `opts`: `{ title, text, stars, stats, highlight, showNext, showBack, showOther }`. `showBack: false` hides “Undo last move”, for games without undo. `showOther: false` hides “Other …” |
 | `confirm({ title, text, ok, cancel })` | Confirmation. Returns a promise with `true` (ok) or `false` (cancel). `cancel` is optional, default "Cancel" |
 | `toast(text)`, `hideToast()` | Short message |
-| `showCoach()` | First launch hint, shown only once |
+| `showCoach()` | First start: opens the picker, the speech bubble follows when it closes. Only once per game |
 | `setSetting(id, value)` | Shows the state of a switch (`true` or `false`) or the selected value of a choice |
-| `openPanel(name)`, `closePanels()`, `isSidebar()` | Control the sheets |
+| `openPanel(name)`, `closePanels()` | Control the sheets |
 
 ### Texts
 
@@ -149,7 +150,7 @@ A game extends the class with its own sounds, for example SPRING with `lift`, `l
 `Gutter` describes every piece only by its **angle** on a circle and its angular velocity. Friction, collisions, tilt and finger input are the same for every game.
 
 ```js
-import { Gutter } from '../../shared/js/gutter.js?shell=1.4.0';
+import { Gutter } from '../../shared/js/gutter.js?shell=1.5.0';
 
 // Round rim as in SPRING
 const rim = new Gutter({ radius: 446, marbleRadius: 37, onCollide: (i) => sound.clack(i) });
@@ -180,7 +181,7 @@ With `arc` the rim gets walls at both ends: pieces bounce off, and there is no p
 ### Tilt
 
 ```js
-import { Tilt } from '../../shared/js/tilt.js?shell=1.4.0';
+import { Tilt } from '../../shared/js/tilt.js?shell=1.5.0';
 
 const tilt = new Tilt((x, y) => view.setGravity(x, y), storage.load('tilt', false));
 const result = await tilt.enable();   // 'ok', 'off', 'denied' or 'unsupported'

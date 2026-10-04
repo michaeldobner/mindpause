@@ -2,6 +2,19 @@
 
 All notable changes to QUEEN. [Deutsch](CHANGELOG.de.md)
 
+## 1.3.0 (2026-10-04)
+
+### New
+* **Your own pieces always at the bottom:** in landscape the board is no longer turned. Blue sits at the bottom as at a real table, on iPhone and iPad.
+* **Trays at the sides:** in landscape the plate gets wider, the trays stand on the left (Black) and on the right (Blue). The right one fills from the bottom, the left one from the top, so the opponent stays at the top and you at the bottom.
+* The board picks the shape in which it appears larger, in Split View too.
+* "Other mode" on the result card, on the iPad the modes come as a drawer.
+
+### Technical
+* Requires shell 1.5.0.
+* `orient()` switches between the tall and the wide plate, the trays work with a centre and a direction instead of fixed rows.
+* New "Seat" check in the browser test: trays and your own pieces are in the right place.
+
 ## 1.2.0 (2026-10-04)
 
 ### New

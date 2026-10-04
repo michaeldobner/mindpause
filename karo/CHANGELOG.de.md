@@ -2,6 +2,15 @@
 
 Alle wichtigen Änderungen an KARO. [English](CHANGELOG.md)
 
+## 1.0.3 (2026-10-04)
+
+### Verbessert
+* Querformat auf dem iPad: ohne feste Seitenleiste und mit Kopf und Steuerung neben dem Tisch werden die Karten deutlich größer. Die Stufen kommen als Schublade.
+* „Andere Stufe“ auf der Ergebniskarte.
+
+### Technisch
+* Braucht Hülle 1.5.0.
+
 ## 1.0.2 (2026-10-04)
 
 ### Gestaltung

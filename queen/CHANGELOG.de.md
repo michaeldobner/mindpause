@@ -2,6 +2,19 @@
 
 Alle wichtigen Änderungen an QUEEN. [English](CHANGELOG.md)
 
+## 1.3.0 (2026-10-04)
+
+### Neu
+* **Eigene Steine immer unten:** Im Querformat wird das Brett nicht mehr gedreht. Blau sitzt unten wie am echten Tisch, auf iPhone und iPad.
+* **Schalen an der Seite:** Im Querformat wird die Platte breiter, die Schalen stehen links (Schwarz) und rechts (Blau). Die rechte füllt sich von unten, die linke von oben, so bleibt oben der Gegner und unten man selbst.
+* Das Brett wählt selbst die Form, in der es größer erscheint, auch in Split View.
+* „Anderer Modus“ auf der Ergebniskarte, die Modi kommen auf dem iPad als Schublade.
+
+### Technisch
+* Braucht Hülle 1.5.0.
+* `orient()` wechselt zwischen hoher und breiter Platte, die Schalen rechnen mit Mitte und Richtung statt fester Zeilen.
+* Neue Prüfung „Seat“ im Browser-Test: Schalen und eigene Steine liegen richtig.
+
 ## 1.2.0 (2026-10-04)
 
 ### Neu

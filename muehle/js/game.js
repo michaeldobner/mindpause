@@ -4,7 +4,7 @@
 import {
   WHITE, BLACK, STONES, POINTS, DRAW_PLIES, initialState, legalMoves, applyMove, lossReason,
   positionKey, phaseOf, countOnBoard, material, millsAt,
-} from './rules.js?v=1.0.0';
+} from './rules.js?v=1.1.0';
 
 export class Game {
   constructor() {

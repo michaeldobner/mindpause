@@ -2,6 +2,15 @@
 
 All notable changes to KARO. [Deutsch](CHANGELOG.de.md)
 
+## 1.0.3 (2026-10-04)
+
+### Improved
+* Landscape on the iPad: without the fixed sidebar and with header and controls beside the table, the cards get clearly larger. The levels come as a drawer.
+* "Other level" on the result card.
+
+### Technical
+* Requires shell 1.5.0.
+
 ## 1.0.2 (2026-10-04)
 
 ### Design

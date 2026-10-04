@@ -150,7 +150,7 @@ Die Tests prüfen bei jedem Push, dass Leicht klar gegen Einsteiger und Mittel k
 
 ### `view.js`: Klasse `QueenView`
 
-**Brettraum.** Gezeichnet wird in festen Einheiten (1000 × 1280, Hochformat, Blau unten). `orient()` dreht die ganze Welt für das Querformat um 90° und beim Spiel zu zweit um weitere 180°. Eine innere Gruppe jedes Steins dreht zurück, damit Licht und Krone aufrecht bleiben.
+**Brettraum.** Gezeichnet wird in festen Einheiten, Blau immer unten. Es gibt zwei Formen der Platte: hoch (1000 × 1280, Schalen oben und unten) und breit (1280 × 1040, Schalen links und rechts). Das Brett liegt in beiden an derselben Stelle, nur Platte und Schalen wechseln. `orient()` wählt die Form, in der das Brett auf der Bühne größer erscheint, und setzt den Ausschnitt (`viewBox`). Beim Wechsel behält jeder Stein seinen Platz entlang der Schale. Beim Spiel zu zweit dreht `orient()` die Welt um 180°, eine innere Gruppe jedes Steins dreht zurück, damit Licht und Krone aufrecht bleiben.
 
 **Steine.** Es gibt immer 24 SVG-Steine, einer je Nummer. Jeder steht entweder auf dem Brett oder in einer Schale. Die Krone liegt als Gravur auf jedem Stein bereit und wird bei der Krönung eingeblendet.
 

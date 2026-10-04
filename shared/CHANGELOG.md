@@ -2,6 +2,23 @@
 
 All notable changes to the MIND PAUSE shell. [Deutsch](CHANGELOG.de.md)
 
+## 1.5.0 (2026-10-04)
+
+Landscape rethought for every game. In landscape the height is scarce, so the header and the controls now sit beside the board instead of above and below it.
+
+### New
+* **One landscape layout for all devices:** as soon as the area is clearly wider than tall (aspect ratio from 5:4), title, level and counter sit on the left, the board uses the full height and the buttons are stacked on the right. This applies to iPhone, iPad, computer and Split View. On the iPhone it stays more compact.
+* **Drawer instead of sidebar:** the fixed sidebar on the iPad is gone. The picker comes as a drawer from the left, via the level name (with its arrow again) or the button. It closes by itself after a choice.
+* **First start:** the picker opens once by itself. When it is closed, the speech bubble at the level name shows where to find it again.
+* **"Other …" on the result card** opens the picker. New key `levels.otherKey`, hidden with `showResult({ showOther: false })`.
+* In landscape the board may grow beyond 820 px.
+
+### Removed
+* `isSidebar()` and the fixed sidebar.
+
+### Tests
+* The browser test checks the first start (picker open, then the speech bubble) and that header and controls sit beside the board in landscape and above and below it in portrait.
+
 ## 1.4.0 (2026-10-04)
 
 ### New

@@ -119,7 +119,7 @@ Die Figur lässt sich **jederzeit im Spiel** wechseln. Die gewählte Figur begin
 |---|---|
 | iPhone hoch, iPad hoch | Auf den Figurennamen unter SPRING tippen oder auf **Figuren**. Ein Blatt fährt von unten hoch, die Karten lassen sich seitlich wischen |
 | iPhone quer | **Figuren** öffnet eine Schublade von links mit einer senkrechten Liste |
-| iPad quer | Alle Figuren stehen dauerhaft in der Seitenleiste links, ein Tipp genügt |
+| iPad quer | **Figuren** oder ein Tipp auf den Figurennamen öffnet die Schublade von links, nach einer Wahl schließt sie sich |
 
 Jede Karte zeigt eine Vorschau der Figur, die Zahl der Murmeln, die erreichten Sterne und die Schwierigkeit.
 

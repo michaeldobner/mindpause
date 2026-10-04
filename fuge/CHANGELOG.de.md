@@ -2,6 +2,17 @@
 
 Alle wichtigen Änderungen an FUGE. [English](CHANGELOG.md)
 
+## 1.1.0 (2026-10-04)
+
+### Neu
+* **Breiter Kasten im Querformat:** Halten und die Werte stehen links der Wanne, Nächste rechts, wie bei solchen Spielen üblich. Die Wanne nutzt die volle Höhe und wird auf dem iPad deutlich größer.
+* **Daumensteuerung** (Einstellung, anfangs aus): Im Querformat werden die Flächen neben der Wanne zu großen Tippzonen. Links verschieben (außen nach links, innen nach rechts, Liegenlassen wiederholt), rechts drehen (innen ↺, außen ↻), nach unten wischen lässt fallen, nach oben hält. Beide Daumen gleichzeitig gehen.
+* „Anderer Modus“ auf der Ergebniskarte, die Modi kommen auf dem iPad als Schublade.
+
+### Technisch
+* Braucht Hülle 1.5.0.
+* Neue Prüfung „Thumbs“ im Browser-Test.
+
 ## 1.0.1 (2026-10-04)
 
 ### Gestaltung

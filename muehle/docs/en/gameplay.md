@@ -66,7 +66,7 @@ One star for 1 win, two for 3 wins, three for 10 wins on a level.
 
 ## Trays
 
-Each side has a tray, White at the bottom, Black at the top (left and right in landscape). It holds your pieces still to be placed and the pieces you have taken. The pieces react to tapping and swiping, and with **Tilt** switched on to the angle of the device.
+Each side has a tray, White at the bottom, Black at the top. In landscape White stays at the bottom, the trays then stand on the left (Black) and on the right (White). It holds your pieces still to be placed and the pieces you have taken. The pieces react to tapping and swiping, and with **Tilt** switched on to the angle of the device.
 
 ## Settings
 

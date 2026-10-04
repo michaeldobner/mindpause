@@ -7,6 +7,11 @@
 // Gesten auf der ganzen Bühne: Ziehen verschiebt Feld für Feld mit dem Finger (wie eine Ratsche),
 // langsames Ziehen nach unten fällt schneller, schnelles Wischen nach unten fällt ganz,
 // schnelles Wischen nach oben hält, Tippen dreht (linke Hälfte gegen, rechte im Uhrzeigersinn).
+//
+// Daumensteuerung (Einstellung, nur wenn der Kasten breit liegt): die ganze Fläche links und rechts
+// neben der Wanne wird zu großen Tippzonen für zwei Daumen. Links verschiebt, solange der Daumen
+// liegt (außen nach links, innen nach rechts). Rechts dreht ein Tipp (innen gegen, außen im
+// Uhrzeigersinn), Wischen nach unten lässt fallen, nach oben hält. Beide Daumen gleichzeitig gehen.
 
 export const DAS = 0.17;
 export const ARR = 0.05;
@@ -14,6 +19,7 @@ const TAP_SLOP = 10;
 const TAP_TIME = 280;
 const FLICK_DOWN = 0.85; // Pixel pro Millisekunde
 const FLICK_UP = 0.7;
+const ZONE_SWIPE = 36; // Pixel, ab denen ein Daumen rechts als Wisch zählt
 
 const KEYS = {
   ArrowLeft: 'left', KeyA: 'left',
@@ -38,9 +44,11 @@ export class Input {
     this.dasTimer = 0;
     this.arrTimer = 0;
     this.touch = null;
+    this.zones = new Map(); // Daumen in den Zonen: pointerId -> { side, dir, x0, y0 }
     this.lastPointer = 'mouse';
     this.bindKeys();
     this.bindTouch();
+    this.bindThumbs();
   }
 
   act(name, ...args) {
@@ -84,11 +92,7 @@ export class Input {
       const action = KEYS[e.code];
       if (action === 'left' || action === 'right') {
         this.held[action] = false;
-        if (this.held.left) this.dir = -1;
-        else if (this.held.right) this.dir = 1;
-        else this.dir = 0;
-        this.dasTimer = 0;
-        this.arrTimer = 0;
+        this.restoreDir();
       } else if (action === 'soft') this.act('soft', false);
     });
 
@@ -98,8 +102,20 @@ export class Input {
 
   release() {
     this.held = { left: false, right: false };
+    this.zones.clear();
     this.dir = 0;
     this.act('soft', false);
+  }
+
+  // Richtung nach dem Loslassen: ein anderer Daumen oder eine Taste, die noch liegt, gewinnt
+  restoreDir() {
+    const thumb = [...this.zones.values()].reverse().find((z) => z.dir);
+    if (thumb) this.dir = thumb.dir;
+    else if (this.held.left) this.dir = -1;
+    else if (this.held.right) this.dir = 1;
+    else this.dir = 0;
+    this.dasTimer = 0;
+    this.arrTimer = 0;
   }
 
   // Wiederholung beim Gedrückthalten, einmal pro Bild aufgerufen
@@ -222,5 +238,66 @@ export class Input {
     };
     el.addEventListener('pointerup', end);
     el.addEventListener('pointercancel', end);
+  }
+
+  // ---------- Daumensteuerung ----------
+
+  // Zone eines Punkts: 'left', 'right' oder null. Nur mit Einstellung und breitem Kasten.
+  zoneAt(e, m) {
+    if (!this.act('thumbs') || !m.wide) return null;
+    if (e.target.closest('button, .panel, .sheet, .result, .scrim, .toast')) return null;
+    const b = document.body.classList;
+    if (b.contains('open-levels') || b.contains('open-settings')) return null;
+    if (e.clientX < m.well.left) return 'left';
+    if (e.clientX > m.well.right) return 'right';
+    return null;
+  }
+
+  bindThumbs() {
+    // In der Erfassungsphase des Dokuments, damit die Zonen vor den Gesten der Bühne entscheiden
+    document.addEventListener('pointerdown', (e) => {
+      if (e.button > 0) return;
+      const m = this.metrics();
+      const side = this.zoneAt(e, m);
+      if (!side) return;
+      // Feld Halten bleibt antippbar
+      if (e.clientX >= m.hold.left && e.clientX <= m.hold.right && e.clientY >= m.hold.top && e.clientY <= m.hold.bottom) return;
+      e.stopPropagation();
+      e.preventDefault();
+      this.lastPointer = 'touch';
+      if (!this.act('active')) {
+        this.act('confirm');
+        return;
+      }
+      const zone = { side, dir: 0, x0: e.clientX, y0: e.clientY };
+      if (side === 'left') {
+        // Außen nach links, innen nach rechts
+        zone.dir = e.clientX < m.well.left / 2 ? -1 : 1;
+        this.dir = zone.dir;
+        this.dasTimer = 0;
+        this.arrTimer = 0;
+        this.act('move', zone.dir);
+      } else {
+        zone.mid = (m.well.right + window.innerWidth) / 2;
+      }
+      this.zones.set(e.pointerId, zone);
+    }, { capture: true });
+
+    const end = (e) => {
+      const zone = this.zones.get(e.pointerId);
+      if (!zone) return;
+      this.zones.delete(e.pointerId);
+      if (zone.side === 'left') {
+        this.restoreDir();
+        return;
+      }
+      if (e.type !== 'pointerup' || !this.act('active')) return;
+      const dx = e.clientX - zone.x0;
+      const dy = e.clientY - zone.y0;
+      if (Math.abs(dy) > ZONE_SWIPE && Math.abs(dy) > Math.abs(dx)) this.act(dy > 0 ? 'hard' : 'hold');
+      else if (Math.hypot(dx, dy) < ZONE_SWIPE) this.act('rotate', zone.x0 < zone.mid ? -1 : 1);
+    };
+    document.addEventListener('pointerup', end, { capture: true });
+    document.addEventListener('pointercancel', end, { capture: true });
   }
 }

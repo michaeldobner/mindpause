@@ -1,18 +1,20 @@
 // Darstellung von MÜHLE als SVG: Brett mit drei Quadraten aus Goldlinien, 24 Punkte, gedrechselte
 // Steine, zwei Schalen für Vorrat und genommene Steine, Animationen und Touch-Bedienung.
 //
-// Alles wird im "Brettraum" gezeichnet (Hochformat, Weiß unten, 1000 × 1280 Einheiten), wie bei
-// QUEEN. Im Querformat dreht eine Transformation das Brett um 90°, die Schalen liegen dann links und
-// rechts. Beim Spiel zu zweit kann sich das Brett zusätzlich nach jedem Zug um 180° drehen.
+// Alles wird im "Brettraum" gezeichnet, Weiß sitzt immer unten wie am echten Tisch, wie bei QUEEN.
+// Zwei Formen der Platte, je nachdem, welche das Brett auf der Bühne größer zeigt:
+//   hoch   1000 × 1280, Schalen oben (Schwarz) und unten (Weiß)
+//   breit  1280 × 1040, Schalen links (Schwarz) und rechts (Weiß), das Brett bleibt unverändert
+// Beim Spiel zu zweit kann sich das Brett zusätzlich nach jedem Zug um 180° drehen.
 //
 // Jede Seite hat eine Schale. Darin liegen ihre noch nicht gesetzten Steine und die Steine, die sie
 // der Gegenseite genommen hat. Pro Zug verliert der Vorrat einen Stein und gewinnt höchstens einen
 // genommenen, eine Schale hält deshalb nie mehr als neun Steine.
 
-import { Gutter } from '../../shared/js/gutter.js?shell=1.4.0';
-import { WHITE, BLACK, GRID, ADJACENT, POINTS, millsAt } from './rules.js?v=1.0.0';
-import { Game } from './game.js?v=1.0.0';
-import { THEMES, DEFAULT_THEME, millWheel } from './themes.js?v=1.0.0';
+import { Gutter } from '../../shared/js/gutter.js?shell=1.5.0';
+import { WHITE, BLACK, GRID, ADJACENT, POINTS, millsAt } from './rules.js?v=1.1.0';
+import { Game } from './game.js?v=1.1.0';
+import { THEMES, DEFAULT_THEME, millWheel } from './themes.js?v=1.1.0';
 
 const NS = 'http://www.w3.org/2000/svg';
 const W = 1000;
@@ -27,8 +29,32 @@ const STEP = 130; // Abstand der Rasterlinien, 6 × 130 = 780
 const PIECE_R = 50;
 const TRAY_R = 38; // Steine in der Schale sind etwas kleiner
 const TRAY_HALF = 440; // halbe nutzbare Länge einer Schale
-const TRAY_Y = { [WHITE]: 1192, [BLACK]: 88 }; // Weiß hat seine Schale unten, Schwarz oben
 const VIRTUAL_R = 10000; // Schalen sind gerade, die Physik rechnet auf einem sehr großen Kreis
+
+// Die zwei Formen der Platte. Brett und Steine liegen in beiden an derselben Stelle, nur Platte und
+// Schalen wechseln. Eine Schale ist eine gerade Linie durch mid, center ist ihr Winkel in der Physik.
+const BOARD_CX = BOARD_X + BOARD / 2;
+const BOARD_CY = BOARD_Y + BOARD / 2;
+const WIDE_W = 1280;
+const WIDE_H = 1040;
+const WIDE_X = BOARD_CX - WIDE_W / 2;
+const WIDE_Y = BOARD_CY - WIDE_H / 2;
+const LAYOUTS = {
+  tall: {
+    box: { x: 0, y: 0, w: W, h: H },
+    trays: {
+      [WHITE]: { center: Math.PI / 2, mid: { x: CX, y: 1192 } },
+      [BLACK]: { center: -Math.PI / 2, mid: { x: CX, y: 88 } },
+    },
+  },
+  wide: {
+    box: { x: WIDE_X, y: WIDE_Y, w: WIDE_W, h: WIDE_H },
+    trays: {
+      [WHITE]: { center: 0, mid: { x: WIDE_X + WIDE_W - 88, y: BOARD_CY } },
+      [BLACK]: { center: Math.PI, mid: { x: WIDE_X + 88, y: BOARD_CY } },
+    },
+  },
+};
 const HIT_R = 64; // Tippfläche um einen Punkt
 
 const LIFT = 0.1;
@@ -58,12 +84,13 @@ export class MuehleView {
       onCollide: (i) => this.emit('clack', i),
     });
     this.trays = { [WHITE]: tray(Math.PI / 2), [BLACK]: tray(-Math.PI / 2) };
+    this.layout = LAYOUTS.tall;
 
     this.build();
     this.setTheme(theme);
     this.bindInput();
     this.orient();
-    window.addEventListener('resize', () => this.orient());
+    new ResizeObserver(() => this.orient()).observe(this.svg);
   }
 
   emit(name, ...args) {
@@ -104,34 +131,33 @@ export class MuehleView {
     return game.reserve[color].includes(id) ? color : -color;
   }
 
-  trayPos(side, angle) {
-    const tray = this.trays[side];
-    const u = tray.local(angle);
-    const dir = side === WHITE ? -1 : 1;
-    return { x: CX + dir * u * VIRTUAL_R, y: TRAY_Y[side] };
+  // Richtung entlang einer Schale (Tangente des großen Kreises) und quer dazu
+  trayAxes(side) {
+    const { center, mid } = this.layout.trays[side];
+    return { mid, along: { x: -Math.sin(center), y: Math.cos(center) }, across: { x: Math.cos(center), y: Math.sin(center) } };
   }
 
-  trayAngle(side, x) {
-    const tray = this.trays[side];
-    const dir = side === WHITE ? -1 : 1;
-    return tray.arc.center + ((x - CX) / VIRTUAL_R) * dir;
+  // Position in einer Schale aus dem Winkel der Physik (gerade Linie)
+  trayPos(side, angle) {
+    const u = this.trays[side].local(angle) * VIRTUAL_R;
+    const { mid, along } = this.trayAxes(side);
+    return { x: mid.x + along.x * u, y: mid.y + along.y * u };
+  }
+
+  // Winkel in der Physik für einen Punkt im Brettraum
+  trayAngle(side, p) {
+    const { mid, along } = this.trayAxes(side);
+    return this.trays[side].arc.center + ((p.x - mid.x) * along.x + (p.y - mid.y) * along.y) / VIRTUAL_R;
   }
 
   // ---------- Aufbau ----------
 
   build() {
     const frame = (inset) => `x="${BOARD_X - inset}" y="${BOARD_Y - inset}" width="${BOARD + 2 * inset}" height="${BOARD + 2 * inset}"`;
-    const trayBed = (side) => `x="44" y="${TRAY_Y[side] - 50}" width="${W - 88}" height="100" rx="50"`;
     this.svg.innerHTML = `
       <defs class="theme-defs"></defs>
       <g class="world">
-        <rect x="6" y="18" width="${W - 12}" height="${H - 12}" rx="70" fill="#000" opacity="0.16"/>
-        <rect x="0" y="0" width="${W}" height="${H}" rx="70" fill="url(#m-plate)"/>
-        <rect x="0" y="0" width="${W}" height="${H}" rx="70" fill="url(#m-grain)"/>
-        ${[BLACK, WHITE].map((side) => `
-        <rect class="tray-bed" ${trayBed(side)} fill="url(#m-tray)"/>
-        <rect ${trayBed(side)} fill="url(#m-lattice)"/>
-        <rect ${trayBed(side)} fill="none" stroke="url(#m-tray-edge)" stroke-width="2"/>`).join('')}
+        <g class="plate"></g>
         <rect ${frame(8)} rx="18" fill="url(#m-frame)" stroke="url(#m-frame-line)" stroke-width="3"/>
         <rect ${frame(0)} rx="10" fill="url(#m-field)"/>
         <rect ${frame(0)} rx="10" fill="url(#m-field-grain)" pointer-events="none"/>
@@ -145,6 +171,7 @@ export class MuehleView {
       </g>
     `;
     this.defsEl = this.svg.querySelector('.theme-defs');
+    this.plateEl = this.svg.querySelector('.plate');
     this.world = this.svg.querySelector('.world');
     this.millsEl = this.svg.querySelector('.mills');
     this.targetsEl = this.svg.querySelector('.targets');
@@ -185,6 +212,27 @@ export class MuehleView {
     for (let r = 0; r < 7; r++) label(String(7 - r), BOARD_X - 22, BOARD_Y + MARGIN + r * STEP);
 
     for (let id = 0; id < 18; id++) this.pieces.push(this.createPiece(Game.colorOf(id) === WHITE ? 'p1' : 'p2'));
+  }
+
+  // Platte und Schalen für die aktuelle Form zeichnen
+  renderPlate() {
+    const { box } = this.layout;
+    const bed = (side) => {
+      const { mid, across } = this.trayAxes(side);
+      const vertical = Math.abs(across.x) > 0.5;
+      const len = (vertical ? box.h : box.w) - 88;
+      return vertical
+        ? `x="${mid.x - 50}" y="${box.y + 44}" width="100" height="${len}" rx="50"`
+        : `x="${box.x + 44}" y="${mid.y - 50}" width="${len}" height="100" rx="50"`;
+    };
+    this.plateEl.innerHTML = `
+      <rect x="${box.x + 6}" y="${box.y + 18}" width="${box.w - 12}" height="${box.h - 12}" rx="70" fill="#000" opacity="0.16"/>
+      <rect x="${box.x}" y="${box.y}" width="${box.w}" height="${box.h}" rx="70" fill="url(#m-plate)"/>
+      <rect x="${box.x}" y="${box.y}" width="${box.w}" height="${box.h}" rx="70" fill="url(#m-grain)"/>
+      ${[BLACK, WHITE].map((side) => `
+      <rect class="tray-bed" ${bed(side)} fill="url(#m-tray)"/>
+      <rect ${bed(side)} fill="url(#m-lattice)"/>
+      <rect ${bed(side)} fill="none" stroke="url(#m-tray-edge)" stroke-width="2"/>`).join('')}`;
   }
 
   // Brettstil wechseln: nur die Definitionen der Verläufe und Muster werden ausgetauscht
@@ -234,25 +282,35 @@ export class MuehleView {
 
   // ---------- Ausrichtung ----------
 
-  // Querformat: Brett um 90° drehen (Weiß links). Spiel zu zweit: optional zusätzlich 180°.
+  // Form der Platte wählen: die, in der das Brett auf der Bühne größer erscheint. Weiß bleibt unten.
+  // Spiel zu zweit: optional um 180° gedreht.
   orient() {
-    const landscape = window.matchMedia('(orientation: landscape)').matches;
-    const turns = (landscape ? 1 : 0) + (this.flip ? 2 : 0);
-    const [vw, vh] = landscape ? [H, W] : [W, H];
-    this.svg.setAttribute('viewBox', `0 0 ${vw} ${vh}`);
-    this.turns = turns % 4;
-    const transforms = [
-      '',
-      `translate(${H} 0) rotate(90)`,
-      `translate(${W} ${H}) rotate(180)`,
-      `translate(0 ${W}) rotate(270)`,
-    ];
-    this.world.setAttribute('transform', transforms[this.turns]);
+    const r = this.svg.getBoundingClientRect();
+    const fit = (l) => Math.min(r.width / l.box.w, r.height / l.box.h);
+    const layout = r.width && r.height && fit(LAYOUTS.wide) > fit(LAYOUTS.tall) * 1.02 ? LAYOUTS.wide : LAYOUTS.tall;
+    if (layout !== this.layout || !this.plateEl.firstChild) this.setLayout(layout);
+    const { box } = this.layout;
+    this.svg.setAttribute('viewBox', `${box.x} ${box.y} ${box.w} ${box.h}`);
+    this.turns = this.flip ? 2 : 0;
+    this.world.setAttribute('transform', this.flip ? `rotate(180 ${BOARD_CX} ${BOARD_CY})` : '');
     // Steine sollen trotz Drehung gleich beleuchtet sein, Koordinaten aufrecht stehen
     const upright = -90 * this.turns;
     this.pieces.forEach((p) => p.spin.setAttribute('transform', `rotate(${upright})`));
     this.coordLabels.forEach((c) => c.el.setAttribute('transform', `rotate(${upright} ${c.x} ${c.y})`));
     this.applyGravity();
+  }
+
+  // Schalen auf die neue Form umstellen. Jeder Stein behält seinen Platz entlang der Schale.
+  setLayout(layout) {
+    this.layout = layout;
+    for (const side of [WHITE, BLACK]) {
+      const tray = this.trays[side];
+      const center = layout.trays[side].center;
+      for (const it of tray.items.values()) it.a = center + tray.local(it.a);
+      tray.arc.center = center;
+    }
+    this.renderPlate();
+    this.renderTrays();
   }
 
   setFlip(flip) {
@@ -335,7 +393,7 @@ export class MuehleView {
   toTray(id, side, delay = 0) {
     const p = this.pieces[id];
     const tray = this.trays[side];
-    const angle = tray.freeAngle(this.trayAngle(side, p.x));
+    const angle = tray.freeAngle(this.trayAngle(side, p));
     tray.add(id, angle, 0);
     p.where = side;
     p.flying = true;
@@ -611,7 +669,10 @@ export class MuehleView {
 
   trayAtPoint(p) {
     for (const side of [WHITE, BLACK]) {
-      if (Math.abs(p.y - TRAY_Y[side]) < 64 && p.x > 30 && p.x < W - 30) return side;
+      const { mid, along, across } = this.trayAxes(side);
+      const dx = p.x - mid.x;
+      const dy = p.y - mid.y;
+      if (Math.abs(dx * across.x + dy * across.y) < 64 && Math.abs(dx * along.x + dy * along.y) < TRAY_HALF + 30) return side;
     }
     return null;
   }
@@ -645,7 +706,7 @@ export class MuehleView {
     const side = this.trayAtPoint(p);
     if (side !== null) {
       capture(this.svg, e.pointerId);
-      this.trayTouch = { id: e.pointerId, side, x: p.x, t: performance.now(), sx: e.clientX, sy: e.clientY, moved: false };
+      this.trayTouch = { id: e.pointerId, side, p, t: performance.now(), sx: e.clientX, sy: e.clientY, moved: false };
       this.startLoop();
       return;
     }
@@ -704,12 +765,12 @@ export class MuehleView {
       if (!tt.moved && Math.hypot(e.clientX - tt.sx, e.clientY - tt.sy) < TAP_SLOP) return;
       tt.moved = true;
       const now = performance.now();
-      const x = this.toBoard(e).x;
+      const p = this.toBoard(e);
       const tray = this.trays[tt.side];
-      const a = this.trayAngle(tt.side, x);
-      const v = (a - this.trayAngle(tt.side, tt.x)) / Math.max(0.008, (now - tt.t) / 1000);
+      const a = this.trayAngle(tt.side, p);
+      const v = (a - this.trayAngle(tt.side, tt.p)) / Math.max(0.008, (now - tt.t) / 1000);
       tray.push(a, v);
-      tt.x = x;
+      tt.p = p;
       tt.t = now;
       return;
     }
@@ -725,7 +786,7 @@ export class MuehleView {
     const tt = this.trayTouch;
     if (tt && e.pointerId === tt.id) {
       this.trayTouch = null;
-      if (!tt.moved) this.trays[tt.side].nudge(this.trayAngle(tt.side, tt.x));
+      if (!tt.moved) this.trays[tt.side].nudge(this.trayAngle(tt.side, tt.p));
       this.startLoop();
       return;
     }

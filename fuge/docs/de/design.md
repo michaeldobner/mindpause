@@ -99,9 +99,9 @@ Die Zellgröße ergibt sich aus dem Platz und wird auf ganze Gerätepixel gerund
 | Gerät | Anordnung |
 |---|---|
 | iPhone hoch | Schriftzug, Modus und Punkte oben, Kasten mittig, Steuerleiste unten: Halten, Pause, Neu, Modi, Mehr |
-| iPhone quer | Schriftzug und Punkte links, Kasten mittig, Steuerleiste rechts. Die Bedienhilfe in der Pause entfällt |
+| iPhone quer | Schriftzug, Modus und Punkte links, breiter Kasten mittig (Halten und Werte links der Wanne, Nächste rechts), Steuerleiste rechts. Die Bedienhilfe in der Pause entfällt |
 | iPhone SE | Wie iPhone hoch, etwas kleinere Zellen |
-| iPad und Rechner quer | Feste Seitenleiste mit allen Modi, Kasten und Steuerleiste rechts |
+| iPad und Rechner quer | Wie iPhone quer, die Wanne nutzt die volle Höhe. Modi als Schublade von links. Optional Daumensteuerung auf den Flächen neben der Wanne |
 
 Der Kasten ist immer das größte Element. Die Gesten wirken auf der ganzen Bühne.
 

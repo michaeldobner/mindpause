@@ -1,18 +1,18 @@
 // FUGE: das klassische Spiel mit fallenden Steinen, als Holzkasten mit lackierten Steinen.
 // Die Oberfläche kommt aus der Hülle (shared/js/shell.js), hier steht nur, was FUGE eigen ist.
 
-import { createShell } from '../../shared/js/shell.js?shell=1.4.0';
-import { createI18n } from '../../shared/js/i18n.js?shell=1.4.0';
-import { createStorage } from '../../shared/js/storage.js?shell=1.4.0';
-import { DEFAULT_STYLE } from '../../shared/js/sound-engine.js?shell=1.4.0';
-import { Game, HEIGHT, HIDDEN } from './game.js?v=1.0.1';
-import { MODES, modeById, starsFor } from './modes.js?v=1.0.1';
-import { FugeView, previewSvg } from './view.js?v=1.0.1';
-import { Input } from './input.js?v=1.0.1';
-import { FugeSound } from './sound.js?v=1.0.1';
-import { FUGE_STRINGS } from './strings.js?v=1.0.1';
+import { createShell } from '../../shared/js/shell.js?shell=1.5.0';
+import { createI18n } from '../../shared/js/i18n.js?shell=1.5.0';
+import { createStorage } from '../../shared/js/storage.js?shell=1.5.0';
+import { DEFAULT_STYLE } from '../../shared/js/sound-engine.js?shell=1.5.0';
+import { Game, HEIGHT, HIDDEN } from './game.js?v=1.1.0';
+import { MODES, modeById, starsFor } from './modes.js?v=1.1.0';
+import { FugeView, previewSvg } from './view.js?v=1.1.0';
+import { Input } from './input.js?v=1.1.0';
+import { FugeSound } from './sound.js?v=1.1.0';
+import { FUGE_STRINGS } from './strings.js?v=1.1.0';
 
-export const VERSION = '1.0.1';
+export const VERSION = '1.1.0';
 
 // Eigene Schaltflächen der Steuerleiste, im Stil der Symbole der Hülle (Feld 24 × 24)
 const ICON = {
@@ -32,7 +32,7 @@ const locale = lang === 'de' ? 'de-DE' : 'en-US';
 const sound = new FugeSound({ enabled: load('sound', true), style: load('soundStyle', DEFAULT_STYLE) });
 let mode = modeById(load('mode', 'classic')) || MODES[0];
 let stats = load('stats', {});
-const settings = { ghost: load('ghost', true), patterns: load('patterns', false) };
+const settings = { ghost: load('ghost', true), patterns: load('patterns', false), thumbs: load('thumbs', false) };
 let paused = false;
 let endTimer = null;
 
@@ -70,10 +70,11 @@ const shell = createShell({
     'levels',
     'settings',
   ],
-  levels: { buttonKey: 'modes', titleKey: 'chooseMode', nextKey: 'again' },
+  levels: { buttonKey: 'modes', titleKey: 'chooseMode', nextKey: 'again', otherKey: 'otherMode' },
   settings: [
     { id: 'ghost', nameKey: 'ghost', textKey: 'ghostText' },
     { id: 'patterns', nameKey: 'patterns', textKey: 'patternsText' },
+    { id: 'thumbs', nameKey: 'thumbs', textKey: 'thumbsText' },
   ],
   noteKey: 'note',
   coachKey: 'coach',
@@ -92,6 +93,7 @@ const shell = createShell({
 
 shell.setSetting('ghost', settings.ghost);
 shell.setSetting('patterns', settings.patterns);
+shell.setSetting('thumbs', settings.thumbs);
 
 // ---------- Kasten ----------
 
@@ -106,6 +108,7 @@ const isActive = () => game.state === 'playing' && !paused;
 const input = new Input(shell.stage, {
   keysAllowed: () => document.getElementById('result').hidden,
   active: isActive,
+  thumbs: () => settings.thumbs,
   move: (dx) => isActive() && game.move(dx),
   rotate: (dir) => isActive() && game.rotate(dir),
   soft: (on) => game.setSoftDrop(on && isActive()),
@@ -490,6 +493,38 @@ window.__game = {
     async move() {
       confirm();
       game.hardDrop();
+    },
+    checks: {
+      // Daumensteuerung: im breiten Kasten verschiebt ein Tipp innen links den Stein nach rechts,
+      // außen links nach links, rechts dreht er. Im schmalen Kasten gibt es keine Zonen.
+      async Thumbs() {
+        const before = settings.thumbs;
+        settings.thumbs = true;
+        try {
+          newGame();
+          startGame();
+          const m = view.metrics();
+          const tap = (x, y) => {
+            const target = document.elementFromPoint(x, y) || document.body;
+            for (const type of ['pointerdown', 'pointerup']) {
+              target.dispatchEvent(new PointerEvent(type, { clientX: x, clientY: y, pointerId: 41, pointerType: 'touch', bubbles: true, cancelable: true }));
+            }
+          };
+          if (!m.wide) return true;
+          const y = (m.well.top + m.well.bottom) / 2;
+          const x0 = game.active.x;
+          tap(m.well.left - 12, y);
+          if (game.active.x !== x0 + 1) return 'innen links verschiebt nicht nach rechts';
+          tap(4, y);
+          if (game.active.x !== x0) return 'außen links verschiebt nicht nach links';
+          const rot = game.active.rot;
+          tap(m.well.right + 20, y);
+          return game.active.rot !== rot || 'rechts dreht nicht';
+        } finally {
+          settings.thumbs = before;
+          newGame();
+        }
+      },
     },
   },
 };

@@ -27,4 +27,4 @@
 <img src="../images/iphone-game-de.jpg" width="230" alt="Mühle geschlossen, Steine zum Nehmen pulsieren">&nbsp;
 <img src="../images/iphone-midnight-de.jpg" width="230" alt="Stil Mitternacht">
 </p>
-<img src="../images/ipad-de.jpg" width="700" alt="iPad im Querformat mit Seitenleiste">
+<img src="../images/ipad-de.jpg" width="700" alt="iPad im Querformat, Schalen links und rechts">

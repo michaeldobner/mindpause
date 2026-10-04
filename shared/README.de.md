@@ -6,7 +6,7 @@ Die Hülle ist alles, was alle Spiele von MIND PAUSE teilen. Ein Spiel beschreib
 
 **Faustregel:** Soll eine Änderung in allen Spielen wirken, gehört sie hierher. Betrifft sie nur ein Spiel, gehört sie in dessen Ordner.
 
-Aktuelle Version: **1.4.0**
+Aktuelle Version: **1.5.0**
 
 ## Inhalt
 
@@ -31,7 +31,7 @@ Alle Werte stehen als CSS-Variablen in `tokens.css`. Spiele nutzen für Farben u
 | `--bg`, `--bg-edge` | `#ece8e1`, `#e2ddd4` | `#141519`, `#0d0e11` | Hintergrund mit Vignette |
 | `--ink`, `--ink-soft` | `#1a1d4e`, `#6b6d85` | `#e9e7f2`, `#8f91a6` | Text und Symbole, Nebentexte |
 | `--btn`, `--btn-border` | `#f7f4ef`, 12 % Tinte | `#1e2027`, 8 % Weiß | Schaltflächen |
-| `--card`, `--sheet` | `#faf8f4`, `#f6f3ee` | `#1e2027`, `#1b1d23` | Karten, Blätter, Seitenleiste |
+| `--card`, `--sheet` | `#faf8f4`, `#f6f3ee` | `#1e2027`, `#1b1d23` | Karten, Blätter, Schublade |
 | `--accent` | `#3f6ef0` | `#3f6ef0` | Aktuelle Auswahl, Schalter, Hervorhebung |
 | `--star`, `--hint` | `#e0a526`, `#ffd36b` | gleich | Sterne, Tippring |
 | `--shadow` | weich | kräftiger | Schaltflächen und Karten |
@@ -47,13 +47,14 @@ Alle Werte stehen als CSS-Variablen in `tokens.css`. Spiele nutzen für Farben u
 |---|---|
 | Kopfzeile | Titel des Spiels, Name des aktuellen Levels mit Pfeil, Zähler rechts |
 | Steuerleiste | Bis zu sechs runde Schaltflächen mit Beschriftung, vom Spiel gewählt: `undo`, `hint`, `restart`, `resign`, `levels`, `settings` oder eigene des Spiels (zum Beispiel Halten und Pause bei FUGE). Bei sechs werden sie etwas kleiner, damit sie auch auf das iPhone SE passen |
-| Auswahl | iPhone hoch: Blatt von unten mit Karten zum Wischen. iPhone quer: Schublade von links. iPad quer: feste Seitenleiste |
+| Auswahl | Hochformat: Blatt von unten mit Karten zum Wischen. Querformat (iPhone, iPad, Rechner): Schublade von links. Öffnet sich beim ersten Start von selbst und schließt sich nach einer Wahl |
+| Querformat | Sobald die Fläche deutlich breiter als hoch ist (Seitenverhältnis ab 5:4): Titel, Stufe und Zähler links, Brett in voller Höhe, Steuerung rechts übereinander. Auf dem iPhone kompakter |
 | Levelkarte | Vorschau, Name, Zusatzzeile, bis zu drei Sterne, fünf Schwierigkeitspunkte, aktuelle Karte blau umrandet |
 | Einstellungen | Vom Spiel definierte Auswahl (zum Beispiel der Brettstil), Ton an oder aus, Klangfarbe (Warm, Klar, Weich), vom Spiel definierte Schalter, ein Hinweis, Versionszeile |
-| Ergebniskarte | Titel, Sterne, Text, Statistik, „Nochmal“, optional „Nächste …“, „Letzten Zug zurücknehmen“ |
+| Ergebniskarte | Titel, Sterne, Text, Statistik, „Nochmal“, optional „Nächste …“, „Letzten Zug zurücknehmen“ und „Andere …“ (öffnet die Auswahl) |
 | Rückfrage | Karte auf dem Brett mit Titel, Text und zwei Schaltflächen, zum Beispiel vor dem Aufgeben. Escape bricht ab |
 | Hinweisleiste | Kurze Meldung unten im Brett |
-| Erststart-Hinweis | Sprechblase unter dem Levelnamen, nur einmal pro Spiel |
+| Erster Start | Die Auswahl öffnet sich von selbst. Wird sie geschlossen, zeigt eine Sprechblase am Levelnamen, wo man sie wiederfindet. Nur einmal pro Spiel |
 
 Blätter schließen per Wischen nach unten, Tipp daneben, Kreuz oder Escape. Tippflächen sind nie kleiner als 44 pt. Alle Layouts berücksichtigen Notch, Dynamic Island und Home-Indikator.
 
@@ -62,9 +63,9 @@ Blätter schließen per Wischen nach unten, Tipp daneben, Kreuz oder Escape. Tip
 Ein Spiel ruft in seiner `main.js` `createShell()` auf:
 
 ```js
-import { createShell } from '../../shared/js/shell.js?shell=1.4.0';
-import { createI18n } from '../../shared/js/i18n.js?shell=1.4.0';
-import { createStorage } from '../../shared/js/storage.js?shell=1.4.0';
+import { createShell } from '../../shared/js/shell.js?shell=1.5.0';
+import { createI18n } from '../../shared/js/i18n.js?shell=1.5.0';
+import { createStorage } from '../../shared/js/storage.js?shell=1.5.0';
 
 const storage = createStorage('queen:');
 const i18n = createI18n(QUEEN_STRINGS);         // Texte des Spiels, de und en
@@ -77,7 +78,7 @@ const shell = createShell({
   storage,
   sound,
   buttons: ['undo', 'hint', 'restart', 'levels', 'settings'],
-  levels: { buttonKey: 'modes', titleKey: 'chooseMode', nextKey: 'nextLevel' },
+  levels: { buttonKey: 'modes', titleKey: 'chooseMode', nextKey: 'nextLevel', otherKey: 'otherMode' },
   settings: [
     { id: 'theme', nameKey: 'theme', options: [{ value: 'classic', labelKey: 'themes.classic' }, { value: 'midnight', labelKey: 'themes.midnight' }] },
     { id: 'flip', nameKey: 'flip', textKey: 'flipText' },
@@ -98,7 +99,7 @@ const shell = createShell({
 | `version` | Version des Spiels |
 | `i18n`, `storage`, `sound` | Erzeugt mit `createI18n`, `createStorage` und einer Unterklasse von `SoundEngine` |
 | `buttons` | Welche Schaltflächen die Steuerleiste zeigt, in dieser Reihenfolge. Ein Eintrag ist ein Name der Hülle oder eine eigene Schaltfläche `{ id, icon, labelKey }`: `icon` ist SVG-Inhalt im Feld 24 × 24, ein Tipp ruft `actions[id]` auf |
-| `levels` | Optionale Auswahl: Schlüssel für Beschriftung, Titel und die Schaltfläche „Nächste“ |
+| `levels` | Optionale Auswahl: Schlüssel für Beschriftung, Titel, die Schaltfläche „Nächste“ und den Link „Andere …“ auf der Ergebniskarte |
 | `settings` | Zusätzliche Einstellungen. Ein Schalter hat `id`, `nameKey` und `textKey`. Eine Auswahl hat `id`, `nameKey` und `options` mit `value` und `labelKey`, sie erscheint als Segmentauswahl oben in den Einstellungen |
 | `noteKey`, `coachKey`, `boardLabelKey` | Optionale Texte: Hinweis in den Einstellungen, Erststart-Hinweis, Beschriftung des Bretts |
 | `actions` | Funktionen, die die Hülle aufruft: `undo`, `hint`, `restart`, `again`, `back`, `next`, `selectLevel(id)`, `setting(id, wert)`. Bei einem Schalter ist `wert` der neue Zustand, bei einer Auswahl der gewählte `value` |
@@ -114,12 +115,12 @@ const shell = createShell({
 | `renderLevels(items)` | Füllt die Auswahl. `items`: `{ id, name, meta, stars, difficulty, preview, current }` |
 | `setDisabled(name, bool)`, `setBusy(name, bool)` | Zustand einer Schaltfläche, zum Beispiel während der Tipp rechnet |
 | `setButton(id, { icon, labelKey })` | Symbol und Beschriftung einer Schaltfläche wechseln, zum Beispiel Pause und Weiter |
-| `showResult(opts)`, `hideResult()` | Ergebniskarte. `opts`: `{ title, text, stars, stats, highlight, showNext, showBack }`. `showBack: false` blendet „Letzten Zug zurücknehmen“ aus, für Spiele ohne Zurück |
+| `showResult(opts)`, `hideResult()` | Ergebniskarte. `opts`: `{ title, text, stars, stats, highlight, showNext, showBack, showOther }`. `showBack: false` blendet „Letzten Zug zurücknehmen“ aus, für Spiele ohne Zurück. `showOther: false` blendet „Andere …“ aus |
 | `confirm({ title, text, ok, cancel })` | Rückfrage. Liefert ein Promise mit `true` (ok) oder `false` (abbrechen). `cancel` ist optional, Standard „Abbrechen“ |
 | `toast(text)`, `hideToast()` | Kurze Meldung |
-| `showCoach()` | Erststart-Hinweis, erscheint nur einmal |
+| `showCoach()` | Erster Start: öffnet die Auswahl, beim Schließen folgt die Sprechblase. Nur einmal pro Spiel |
 | `setSetting(id, wert)` | Zeigt den Zustand eines Schalters (`true` oder `false`) oder den gewählten Wert einer Auswahl |
-| `openPanel(name)`, `closePanels()`, `isSidebar()` | Steuerung der Blätter |
+| `openPanel(name)`, `closePanels()` | Steuerung der Blätter |
 
 ### Texte
 
@@ -149,7 +150,7 @@ Ein Spiel erweitert die Klasse um eigene Klänge, SPRING zum Beispiel um `lift`,
 `Gutter` beschreibt jedes Teil nur durch seinen **Winkel** auf einem Kreis und seine Winkelgeschwindigkeit. Reibung, Stöße, Neigung und Fingerbewegungen sind für alle Spiele gleich.
 
 ```js
-import { Gutter } from '../../shared/js/gutter.js?shell=1.4.0';
+import { Gutter } from '../../shared/js/gutter.js?shell=1.5.0';
 
 // Runder Rand wie bei SPRING
 const rim = new Gutter({ radius: 446, marbleRadius: 37, onCollide: (i) => sound.clack(i) });
@@ -180,7 +181,7 @@ Mit `arc` bekommt der Rand Wände an beiden Enden: Teile prallen ab, es gibt kei
 ### Neigen
 
 ```js
-import { Tilt } from '../../shared/js/tilt.js?shell=1.4.0';
+import { Tilt } from '../../shared/js/tilt.js?shell=1.5.0';
 
 const tilt = new Tilt((x, y) => view.setGravity(x, y), storage.load('tilt', false));
 const result = await tilt.enable();   // 'ok', 'off', 'denied' oder 'unsupported'

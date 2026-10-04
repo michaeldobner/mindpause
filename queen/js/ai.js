@@ -1,7 +1,7 @@
 // Computergegner für QUEEN: Minimax mit Alpha-Beta-Schnitt (Negamax), schrittweise vertieft,
 // mit Merkliste bekannter Stellungen und Ruhesuche bei Schlägen. Ohne Darstellung.
 
-import { legalMoves, applyMove, BLUE } from './rules.js?v=1.2.0';
+import { legalMoves, applyMove, BLUE } from './rules.js?v=1.3.0';
 
 // depth: Suchtiefe in Halbzügen. quiet: wie viele Halbzüge ein laufender Schlagabtausch noch zu Ende
 // gerechnet wird. noise: Spielraum in Punkten, gewählt wird zufällig unter Zügen, die höchstens so viel

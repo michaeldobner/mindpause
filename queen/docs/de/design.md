@@ -55,7 +55,7 @@ In beiden Stilen gilt: Zielringe sind weiß, gepunktet und pulsieren. Der Tippri
 
 ## Geometrie
 
-Alles wird in einem festen Brettraum von **1000 × 1280 Einheiten** im Hochformat gezeichnet. Die Darstellung skaliert diesen Raum auf den verfügbaren Platz.
+Alles wird in einem festen Brettraum von **1000 × 1280 Einheiten** im Hochformat gezeichnet. Im Querformat wird die Platte breiter (**1280 × 1040 Einheiten**), das Brett bleibt an seinem Platz, nur die Schalen wandern an die Seiten. Die Darstellung wählt die Form, in der das Brett größer erscheint, und skaliert sie auf den verfügbaren Platz.
 
 | Größe | Wert | Begründung |
 |---|---|---|
@@ -86,14 +86,14 @@ Die Krone der Dame ist eine **Königinnenkrone als feine Goldgravur**, als wäre
 
 Unter jeder Goldlinie liegt eine feine Schattenlinie, das wirkt eingelegt. Auf Elfenbein ist das Gold dunkler (Altgold `#b8892c` bis `#7d5a14`), auf Ebenholz und Keramik heller (`#fbe3a0` bis `#d4a443`), damit die Gravur auf jedem Stein gut lesbar bleibt. Die Formen stehen als Pfade in `CROWN` in `js/themes.js`.
 
-Licht und Krone bleiben immer aufrecht. Dreht sich das Brett (Querformat oder Spiel zu zweit), dreht eine innere Gruppe jeden Stein zurück. So fällt das Licht immer von oben links, und die Krone steht nie auf dem Kopf. Dasselbe gilt für die Koordinaten.
+Licht und Krone bleiben immer aufrecht. Dreht sich das Brett (Spiel zu zweit), dreht eine innere Gruppe jeden Stein zurück. So fällt das Licht immer von oben links, und die Krone steht nie auf dem Kopf. Dasselbe gilt für die Koordinaten.
 
 ## Ausrichtung
 
 | Situation | Darstellung |
 |---|---|
 | Hochformat | Untere Seite unten, Schwarz oben, Schalen über und unter dem Brett |
-| Querformat | Das Brett ist um 90° gedreht: untere Seite links, Schwarz rechts, Schalen links und rechts |
+| Querformat | Die untere Seite bleibt unten wie am echten Tisch. Die Platte wird breiter, die Schalen stehen links (Schwarz) und rechts (untere Seite). Geschlagene Steine füllen die rechte Schale von unten und die linke von oben |
 | Zu zweit mit „Brett drehen“ | Nach jedem Zug dreht sich das Brett um 180° zur Person am Zug |
 
 Die Neigung des Geräts wird in den Brettraum zurückgerechnet, damit Steine in den Schalen in jeder Ausrichtung zur tatsächlich tieferen Seite rutschen.
@@ -123,10 +123,10 @@ Animationen laufen nacheinander über eine Warteschlange. Ein schneller Tipp auf
 | Situation | Anordnung |
 |---|---|
 | iPhone hoch | Schriftzug, Modus und Zähler oben, Brett mittig, sechs Schaltflächen unten (Zurück, Tipp, Neu, Aufgeben, Modi, Mehr), etwas kleiner als bei fünf. Modi und Einstellungen als Blätter von unten |
-| iPhone quer | Schriftzug und Zähler links, gedrehtes Brett mittig, Schaltflächen rechts. Modi als Schublade |
+| iPhone quer | Schriftzug, Modus und Zähler links, Brett mittig mit Schalen links und rechts, Schaltflächen rechts. Modi als Schublade von links |
 | iPhone SE | Zähler zweizeilig und etwas kleiner, damit die Kopfzeile nicht umbricht |
 | iPad hoch | Wie iPhone hoch, mit mehr Platz |
-| iPad quer | Feste Seitenleiste mit allen Modi, Brett und Steuerung rechts |
+| iPad quer | Wie iPhone quer, mit größeren Schaltflächen. Das Brett nutzt die volle Höhe, die Modi kommen als Schublade über den Modusnamen, Modi oder „Anderer Modus“ auf der Ergebniskarte |
 
 <img src="../images/ipad-de.jpg" width="700" alt="iPad quer">
 
