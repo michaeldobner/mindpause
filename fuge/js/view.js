@@ -7,8 +7,8 @@
 // eine hauchfeine Naht, zu anderen Steinen eine sichtbare Fuge. Zellen werden als kleine Bilder
 // (Sprites) einmal je Form, Nachbarschaft und Größe gezeichnet und danach nur noch kopiert.
 
-import { cellsOf, sizeOf } from './pieces.js?v=1.0.1';
-import { WIDTH, HEIGHT, HIDDEN, typeOf } from './game.js?v=1.0.1';
+import { cellsOf, sizeOf } from './pieces.js?v=1.1.0';
+import { WIDTH, HEIGHT, HIDDEN, typeOf } from './game.js?v=1.1.0';
 
 const ROWS = HEIGHT - HIDDEN;
 
@@ -187,27 +187,38 @@ export class FugeView {
       cv.style.width = `${w}px`;
       cv.style.height = `${h}px`;
     }
-    // Einheiten in Zellen: Rand 0,42, Wanne 10 × 20, Abstand 0,42, Leiste 3,3
+    // Einheiten in Zellen: Rand 0,42, Wanne 10 × 20, Abstand 0,42, Leiste 3,3.
+    // Schmal: eine Leiste rechts mit Halten, Nächste und Werten.
+    // Breit (Querformat): Halten und Werte links, Nächste rechts, wie bei solchen Spielen üblich.
+    // Breit wird gewählt, sobald die Wanne dadurch nicht kleiner wird.
     const pad = 0.42;
     const gapX = 0.42;
     const side = 3.3;
-    const unitsW = 2 * pad + WIDTH + gapX + side;
     const unitsH = 2 * pad + ROWS;
     // Etwas Rand, damit der Schatten des Kastens nicht abgeschnitten wird
-    let c = Math.min((w - 8) / unitsW, (h - 18) / unitsH, 44);
+    const fit = (unitsW) => Math.min((w - 8) / unitsW, (h - 18) / unitsH, 44);
+    const narrowW = 2 * pad + WIDTH + gapX + side;
+    const wideW = 2 * pad + WIDTH + 2 * (gapX + side);
+    const wide = fit(wideW) >= fit(narrowW) - 1e-6;
+    const unitsW = wide ? wideW : narrowW;
+    let c = fit(unitsW);
     c = Math.max(8, Math.floor(c * dpr) / dpr); // ganze Gerätepixel: scharfe Kanten
     const W = unitsW * c;
     const H = unitsH * c;
     const snap = (v) => Math.round(v * dpr) / dpr;
     const ox = snap((w - W) / 2);
     const oy = snap((h - H) / 2 - 4);
-    const well = { x: snap(ox + pad * c), y: snap(oy + pad * c), w: WIDTH * c, h: ROWS * c };
-    const sx = well.x + well.w + gapX * c;
     const sw = side * c;
-    const holdBox = { x: sx, y: well.y + 0.62 * c, w: sw, h: 2.3 * c };
-    const nextLabelY = holdBox.y + holdBox.h + 0.42 * c;
-    const nextBox = { x: sx, y: nextLabelY + 0.4 * c, w: sw, h: 6.5 * c };
-    this.g = { w, h, c, ox, oy, W, H, well, side: { x: sx, w: sw }, holdBox, nextBox, nextLabelY };
+    const left = { x: snap(ox + pad * c), w: sw };
+    const well = { x: snap(wide ? left.x + sw + gapX * c : ox + pad * c), y: snap(oy + pad * c), w: WIDTH * c, h: ROWS * c };
+    const right = { x: well.x + well.w + gapX * c, w: sw };
+    const holdSide = wide ? left : right;
+    const holdBox = { x: holdSide.x, y: well.y + 0.62 * c, w: sw, h: 2.3 * c };
+    const nextBox = wide
+      ? { x: right.x, y: well.y + 0.62 * c, w: sw, h: 6.5 * c }
+      : { x: right.x, y: holdBox.y + holdBox.h + 0.82 * c, w: sw, h: 6.5 * c };
+    const nextLabelY = nextBox.y - 0.4 * c;
+    this.g = { w, h, c, ox, oy, W, H, wide, well, holdSide, nextSide: right, statSide: holdSide, holdBox, nextBox, nextLabelY };
 
     this.card.style.left = `${well.x}px`;
     this.card.style.top = `${well.y}px`;
@@ -226,9 +237,10 @@ export class FugeView {
   // Bildschirmlage für die Bedienung
   metrics() {
     const r = this.el.getBoundingClientRect();
-    const { well, holdBox, c } = this.g;
+    const { well, holdBox, c, wide } = this.g;
     return {
       cell: c,
+      wide,
       well: { left: r.left + well.x, top: r.top + well.y, right: r.left + well.x + well.w, bottom: r.top + well.y + well.h },
       hold: { left: r.left + holdBox.x, top: r.top + holdBox.y, right: r.left + holdBox.x + holdBox.w, bottom: r.top + holdBox.y + holdBox.h },
     };
@@ -548,7 +560,8 @@ export class FugeView {
   // ---------- Leiste ----------
 
   drawSide(ctx, stats) {
-    const { c, holdBox, nextBox, nextLabelY, side, well } = this.g;
+    const { c, holdBox, nextBox, nextLabelY, holdSide, nextSide, statSide, well } = this.g;
+    const side = holdSide;
     const game = this.game;
     // Beschriftungen so groß wie möglich, aber nie breiter als die Leiste
     let labelSize = Math.max(8.5, c * 0.32);
@@ -563,7 +576,7 @@ export class FugeView {
     ctx.fillStyle = BOX.label;
     const spacing = labelSize * 0.14;
     this.spaced(ctx, stats.labels.hold, side.x + 2, holdBox.y - c * 0.2, spacing);
-    this.spaced(ctx, stats.labels.next, side.x + 2, nextLabelY + c * 0.2, spacing);
+    this.spaced(ctx, stats.labels.next, nextSide.x + 2, nextLabelY + c * 0.2, spacing);
 
     // Gehaltener Stein
     if (game.hold) {
@@ -598,10 +611,10 @@ export class FugeView {
       const baseY = bottom - (1 - i) * 2.05 * c;
       ctx.font = `600 ${labelSize}px ${SANS}`;
       ctx.fillStyle = BOX.label;
-      this.spaced(ctx, stat.label, side.x + 2, baseY - numSize * 1.02, spacing);
+      this.spaced(ctx, stat.label, statSide.x + 2, baseY - numSize * 1.02, spacing);
       ctx.font = `${numSize}px ${DISPLAY}`;
       ctx.fillStyle = BOX.ivory;
-      ctx.fillText(stat.value, side.x + 1, baseY - c * 0.05);
+      ctx.fillText(stat.value, statSide.x + 1, baseY - c * 0.05);
     });
   }
 

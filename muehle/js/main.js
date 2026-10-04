@@ -1,19 +1,19 @@
 // MÜHLE: Neun Männer Mühle gegen den Computer oder zu zweit an einem Gerät.
 // Die Oberfläche kommt aus der Hülle (shared/js/shell.js), hier steht nur, was MÜHLE eigen ist.
 
-import { createShell } from '../../shared/js/shell.js?shell=1.4.0';
-import { createI18n } from '../../shared/js/i18n.js?shell=1.4.0';
-import { createStorage } from '../../shared/js/storage.js?shell=1.4.0';
-import { DEFAULT_STYLE } from '../../shared/js/sound-engine.js?shell=1.4.0';
-import { Tilt } from '../../shared/js/tilt.js?shell=1.4.0';
-import { WHITE, BLACK, pointAt } from './rules.js?v=1.0.0';
-import { Game } from './game.js?v=1.0.0';
-import { MuehleView } from './view.js?v=1.0.0';
-import { MuehleSound } from './sound.js?v=1.0.0';
-import { THEMES, THEME_IDS, DEFAULT_THEME } from './themes.js?v=1.0.0';
-import { MUEHLE_STRINGS } from './strings.js?v=1.0.0';
+import { createShell } from '../../shared/js/shell.js?shell=1.5.0';
+import { createI18n } from '../../shared/js/i18n.js?shell=1.5.0';
+import { createStorage } from '../../shared/js/storage.js?shell=1.5.0';
+import { DEFAULT_STYLE } from '../../shared/js/sound-engine.js?shell=1.5.0';
+import { Tilt } from '../../shared/js/tilt.js?shell=1.5.0';
+import { WHITE, BLACK, pointAt } from './rules.js?v=1.1.0';
+import { Game } from './game.js?v=1.1.0';
+import { MuehleView } from './view.js?v=1.1.0';
+import { MuehleSound } from './sound.js?v=1.1.0';
+import { THEMES, THEME_IDS, DEFAULT_THEME } from './themes.js?v=1.1.0';
+import { MUEHLE_STRINGS } from './strings.js?v=1.1.0';
 
-export const VERSION = '1.0.0';
+export const VERSION = '1.1.0';
 
 const MODES = [
   { id: 'easy', computer: true, difficulty: 1 },
@@ -68,7 +68,7 @@ const shell = createShell({
   storage,
   sound,
   buttons: ['undo', 'hint', 'restart', 'levels', 'settings'],
-  levels: { buttonKey: 'modes', titleKey: 'chooseMode', nextKey: 'nextLevel' },
+  levels: { buttonKey: 'modes', titleKey: 'chooseMode', nextKey: 'nextLevel', otherKey: 'otherMode' },
   settings: [
     { id: 'theme', nameKey: 'theme', options: THEME_IDS.map((id) => ({ value: id, labelKey: `themes.${id}` })) },
     { id: 'flip', nameKey: 'flip', textKey: 'flipText' },
@@ -237,7 +237,7 @@ async function computerMove() {
 
 let worker = null;
 function askAI(level, only = null) {
-  if (!worker) worker = new Worker(new URL('./ai-worker.js?v=1.0.0', import.meta.url), { type: 'module' });
+  if (!worker) worker = new Worker(new URL('./ai-worker.js?v=1.1.0', import.meta.url), { type: 'module' });
   const id = Math.random();
   return new Promise((resolve) => {
     const onMessage = (e) => {
@@ -472,6 +472,13 @@ window.__game = {
       await humanMove(m);
     },
     checks: {
+      // Die Schalen liegen hoch oben (Gegner) und unten (eigene), quer links und rechts, Weiß bleibt unten
+      Seat() {
+        const box = (el) => el.getBoundingClientRect();
+        const [opp, own] = [...document.querySelectorAll('#board .tray-bed')].map(box);
+        const wide = innerWidth > innerHeight;
+        return (wide ? opp.right < own.left && own.height > own.width : opp.bottom < own.top && own.width > own.height) || 'Schalen falsch';
+      },
       // Eine Mühle schließen: der Zug wartet auf die Wahl des Steins, Zurück nimmt nur diesen halben Zug zurück
       async Mill() {
         await switchMode('duo');

@@ -32,4 +32,4 @@ This documentation describes SPRING completely: how to play, how it looks and so
 <img src="../images/iphone-game-en.jpg" width="230" alt="Game on iPhone">&nbsp;
 <img src="../images/iphone-settings-en.jpg" width="230" alt="Settings">
 </p>
-<img src="../images/ipad-en.jpg" width="700" alt="iPad in landscape with sidebar">
+<img src="../images/ipad-en.jpg" width="700" alt="iPad in landscape">

@@ -35,7 +35,7 @@ KARO ist Klondike, die Patience, die mit Windows berühmt wurde. Gespielt wird m
 | **Tipps** | Ein Löser kennt den Weg und zeigt den nächsten richtigen Zug |
 | **Siegesfeier** | Die springenden Karten von Windows, als ruhige Hommage mit verblassenden Spuren |
 | **Klangdesign** | Papier auf Leinen: Schnippen, Gleiten, Auflegen. Auf den Ablagen der Keramikton der Sammlung |
-| **Für Apple-Geräte gemacht** | iPhone hoch und quer, iPad mit Seitenleiste, Hell- und Dunkelmodus, respektiert den Lautlos-Schalter |
+| **Für Apple-Geräte gemacht** | iPhone und iPad hoch und quer, im Querformat Brett in voller Höhe, Hell- und Dunkelmodus, respektiert den Lautlos-Schalter |
 
 ## So wird gespielt
 

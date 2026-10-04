@@ -55,7 +55,7 @@ Ein Halbzug ist der Zug einer Seite. 30 Halbzüge sind also 15 Züge je Seite.
 | **Schwer** | Computer | Rechnet so tief, wie es in knapp einer Sekunde geht, und spielt immer den besten gefundenen Zug |
 | **Zu zweit** | Mensch | Zwei Personen spielen abwechselnd an einem Gerät |
 
-Den Modus wählst du jederzeit über die Schaltfläche **Modi** (auf dem iPad quer in der Seitenleiste). Ein Wechsel beginnt immer ein neues Spiel. Jeder Modus hat eine eigene Statistik.
+Den Modus wählst du jederzeit über die Schaltfläche **Modi** (oder mit einem Tipp auf den Modusnamen, nach einem Spiel auch über „Anderer Modus“). Ein Wechsel beginnt immer ein neues Spiel. Jeder Modus hat eine eigene Statistik.
 
 <img src="../images/iphone-modes-de.jpg" width="260" alt="Modus wählen">
 
@@ -111,7 +111,7 @@ QUEEN speichert jeden Zug. Schließt du die App mitten im Spiel, geht es beim n�
 
 ## Die Schalen
 
-Geschlagene Steine rollen in eine Schale am Brettrand: im Hochformat oben und unten, im Querformat links und rechts. Jede Seite sammelt ihre Beute auf ihrer eigenen Seite, die untere Seite also die geschlagenen schwarzen Steine.
+Geschlagene Steine rollen in eine Schale am Brettrand: im Hochformat oben und unten, im Querformat links und rechts. Die eigenen Steine stehen immer unten. Jede Seite sammelt ihre Beute in ihrer eigenen Schale, die untere Seite also die geschlagenen schwarzen Steine (im Querformat rechts, von unten her gefüllt).
 
 Die Steine in den Schalen sind lebendig, aber sie stören nie das Spiel:
 

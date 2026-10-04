@@ -119,7 +119,7 @@ You can switch the figure **at any time during play**. The chosen figure **alway
 |---|---|
 | iPhone portrait, iPad portrait | Tap the figure name below SPRING or **Figures**. A sheet slides up from the bottom, swipe sideways through the cards |
 | iPhone landscape | **Figures** opens a drawer from the left with a vertical list |
-| iPad landscape | All figures are always visible in the sidebar on the left, one tap is enough |
+| iPad landscape | **Figures** or a tap on the figure name opens the drawer from the left, it closes after a choice |
 
 Each card shows a preview of the figure, the number of marbles, the stars reached and the difficulty.
 

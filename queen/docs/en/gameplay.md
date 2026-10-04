@@ -55,7 +55,7 @@ A ply is the move of one side, so 30 plies are 15 moves per side.
 | **Hard** | Computer | Looks as deep as it can in just under a second and always plays the best move it finds |
 | **Two players** | Human | Two people take turns on one device |
 
-Choose the mode at any time with the **Modes** button (on an iPad in landscape in the sidebar). Switching always starts a new game. Each mode keeps its own statistics.
+Choose the mode at any time with the **Modes** button (or by tapping the mode name, and after a game via "Other mode"). Switching always starts a new game. Each mode keeps its own statistics.
 
 <img src="../images/iphone-modes-en.jpg" width="260" alt="Choose a mode">
 
@@ -111,7 +111,7 @@ QUEEN saves every move. If you close the app in the middle of a game, it continu
 
 ## The trays
 
-Captured pieces roll into a tray at the edge of the board: at the top and bottom in portrait, on the left and right in landscape. Each side collects its spoils on its own side, so the bottom side keeps the captured black pieces.
+Captured pieces roll into a tray at the edge of the board: at the top and bottom in portrait, on the left and right in landscape. Your own pieces are always at the bottom. Each side collects its spoils in its own tray, so the bottom side keeps the captured black pieces (in landscape on the right, filled from the bottom).
 
 The pieces in the trays are alive, but they never get in the way of the game:
 

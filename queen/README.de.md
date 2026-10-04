@@ -37,7 +37,7 @@ QUEEN bringt das klassische Damespiel in die ruhige Welt von MIND PAUSE: schwarz
 | **Tipps** | Der Computer zeigt dir auf Wunsch den besten Zug |
 | **Sterne** | Bis zu drei Sterne pro Stufe, je nach Zahl der Siege |
 | **Zweisprachig** | Deutsch auf deutsch eingestellten Geräten, sonst Englisch |
-| **Für Apple-Geräte gemacht** | iPhone hoch und quer, iPad mit Seitenleiste, Hell- und Dunkelmodus |
+| **Für Apple-Geräte gemacht** | iPhone und iPad hoch und quer, im Querformat Brett in voller Höhe, Hell- und Dunkelmodus |
 
 ## So wird gespielt
 

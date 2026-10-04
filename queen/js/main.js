@@ -1,19 +1,19 @@
 // QUEEN: Deutsche Dame gegen den Computer oder zu zweit an einem Gerät.
 // Die Oberfläche kommt aus der Hülle (shared/js/shell.js), hier steht nur, was QUEEN eigen ist.
 
-import { createShell } from '../../shared/js/shell.js?shell=1.4.0';
-import { createI18n } from '../../shared/js/i18n.js?shell=1.4.0';
-import { createStorage } from '../../shared/js/storage.js?shell=1.4.0';
-import { DEFAULT_STYLE } from '../../shared/js/sound-engine.js?shell=1.4.0';
-import { Tilt } from '../../shared/js/tilt.js?shell=1.4.0';
-import { BLUE, BLACK } from './rules.js?v=1.2.0';
-import { Game } from './game.js?v=1.2.0';
-import { QueenView } from './view.js?v=1.2.0';
-import { QueenSound } from './sound.js?v=1.2.0';
-import { THEMES, THEME_IDS, DEFAULT_THEME } from './themes.js?v=1.2.0';
-import { QUEEN_STRINGS } from './strings.js?v=1.2.0';
+import { createShell } from '../../shared/js/shell.js?shell=1.5.0';
+import { createI18n } from '../../shared/js/i18n.js?shell=1.5.0';
+import { createStorage } from '../../shared/js/storage.js?shell=1.5.0';
+import { DEFAULT_STYLE } from '../../shared/js/sound-engine.js?shell=1.5.0';
+import { Tilt } from '../../shared/js/tilt.js?shell=1.5.0';
+import { BLUE, BLACK } from './rules.js?v=1.3.0';
+import { Game } from './game.js?v=1.3.0';
+import { QueenView } from './view.js?v=1.3.0';
+import { QueenSound } from './sound.js?v=1.3.0';
+import { THEMES, THEME_IDS, DEFAULT_THEME } from './themes.js?v=1.3.0';
+import { QUEEN_STRINGS } from './strings.js?v=1.3.0';
 
-export const VERSION = '1.2.0';
+export const VERSION = '1.3.0';
 
 const MODES = [
   { id: 'beginner', computer: true, difficulty: 1 },
@@ -67,7 +67,7 @@ const shell = createShell({
   storage,
   sound,
   buttons: ['undo', 'hint', 'restart', 'resign', 'levels', 'settings'],
-  levels: { buttonKey: 'modes', titleKey: 'chooseMode', nextKey: 'nextLevel' },
+  levels: { buttonKey: 'modes', titleKey: 'chooseMode', nextKey: 'nextLevel', otherKey: 'otherMode' },
   settings: [
     { id: 'theme', nameKey: 'theme', options: THEME_IDS.map((id) => ({ value: id, labelKey: `themes.${id}` })) },
     { id: 'flip', nameKey: 'flip', textKey: 'flipText' },
@@ -216,7 +216,7 @@ async function computerMove() {
 
 let worker = null;
 function askAI(level) {
-  if (!worker) worker = new Worker(new URL('./ai-worker.js?v=1.2.0', import.meta.url), { type: 'module' });
+  if (!worker) worker = new Worker(new URL('./ai-worker.js?v=1.3.0', import.meta.url), { type: 'module' });
   const id = Math.random();
   return new Promise((resolve) => {
     const onMessage = (e) => {
@@ -479,6 +479,21 @@ window.__game = {
       const m = game.moves[0];
       if (!m || !view.events.canMove()) return;
       await humanMove(m);
+    },
+    checks: {
+      // Eigene Steine unten, die Schalen liegen hoch oben und unten, quer links (Gegner) und rechts (eigene)
+      Seat() {
+        const box = (el) => el.getBoundingClientRect();
+        const [opp, own] = [...document.querySelectorAll('#board .tray-bed')].map(box);
+        const wide = innerWidth > innerHeight;
+        const trays = wide ? opp.right < own.left && own.height > own.width : opp.bottom < own.top && own.width > own.height;
+        if (!trays) return 'Schalen falsch';
+        const meanY = (cls) => {
+          const ys = [...document.querySelectorAll(`#board .piece.${cls}`)].map((p) => { const b = box(p); return b.top + b.height / 2; });
+          return ys.reduce((a, y) => a + y, 0) / ys.length;
+        };
+        return meanY('p1') > meanY('p2') || 'eigene Steine nicht unten';
+      },
     },
   },
 };

@@ -33,4 +33,4 @@ Diese Dokumentation beschreibt QUEEN vollständig: wie man spielt, wie es aussie
 <img src="../images/iphone-game-de.jpg" width="230" alt="Spiel auf dem iPhone">&nbsp;
 <img src="../images/iphone-settings-de.jpg" width="230" alt="Einstellungen">
 </p>
-<img src="../images/ipad-de.jpg" width="700" alt="iPad im Querformat mit Seitenleiste">
+<img src="../images/ipad-de.jpg" width="700" alt="iPad im Querformat, Brett in voller Höhe">

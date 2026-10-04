@@ -2,6 +2,23 @@
 
 Alle wichtigen Änderungen an der Hülle von MIND PAUSE. [English](CHANGELOG.md)
 
+## 1.5.0 (2026-10-04)
+
+Querformat für alle Spiele neu gedacht. Im Querformat ist die Höhe knapp, deshalb liegen Kopfzeile und Steuerung jetzt neben dem Brett statt darüber und darunter.
+
+### Neu
+* **Ein Querformat für alle Geräte:** Sobald die Fläche deutlich breiter als hoch ist (Seitenverhältnis ab 5:4), stehen Titel, Stufe und Zähler links, das Brett nutzt die volle Höhe, die Schaltflächen stehen rechts übereinander. Das gilt für iPhone, iPad, Rechner und Split View. Auf dem iPhone bleibt es kompakter.
+* **Schublade statt Seitenleiste:** Die feste Seitenleiste auf dem iPad entfällt. Die Auswahl kommt als Schublade von links, über den Namen der Stufe (wieder mit Pfeil) oder die Schaltfläche. Nach einer Wahl schließt sie sich von selbst.
+* **Erster Start:** Die Auswahl öffnet sich einmal von selbst. Wird sie geschlossen, zeigt die Sprechblase am Namen der Stufe, wo man sie wiederfindet.
+* **„Andere …“ auf der Ergebniskarte** öffnet die Auswahl. Neuer Schlüssel `levels.otherKey`, ausblendbar mit `showResult({ showOther: false })`.
+* Im Querformat darf das Brett größer werden als 820 px.
+
+### Entfernt
+* `isSidebar()` und die feste Seitenleiste.
+
+### Tests
+* Der Browser-Test prüft den ersten Start (Auswahl offen, danach Sprechblase) und dass Kopf und Steuerung im Querformat neben, im Hochformat über und unter dem Brett liegen.
+
 ## 1.4.0 (2026-10-04)
 
 ### Neu

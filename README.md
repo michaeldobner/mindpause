@@ -16,11 +16,11 @@ Classic board games, reimagined with tactile design and handcrafted sound. Free,
 
 | | Game | Description | Version |
 |---|---|---|---|
-| <img src="spring/icons/icon.svg" width="56" alt=""> | **[SPRING](spring/README.md)** · [play](https://michaeldobner.github.io/mindpause/spring/) | Peg solitaire on the classic cross-shaped board. Seven figures from easy to masterful, hints, a living rim, tilt | 2.1.1 |
-| <img src="queen/icons/icon.svg" width="56" alt=""> | **[QUEEN](queen/README.md)** · [play](https://michaeldobner.github.io/mindpause/queen/) | German checkers against the computer at four levels or for two players on one device. Ebony, maple and an engraved golden crown, trays for captured pieces | 1.2.0 |
-| <img src="karo/icons/icon.svg" width="56" alt=""> | **[KARO](karo/README.md)** · [play](https://michaeldobner.github.io/mindpause/karo/) | Classic solitaire as on Windows. Draw one or three, points or Vegas, levels that can always be solved, hints | 1.0.2 |
-| <img src="fuge/icons/icon.svg" width="56" alt=""> | **[FUGE](fuge/README.md)** · [play](https://michaeldobner.github.io/mindpause/fuge/) | The classic falling block game as a lacquered wooden box. Classic, Sprint, 3 minutes and an endless Calm mode, gestures instead of buttons | 1.0.1 |
-| <img src="muehle/icons/icon.svg" width="56" alt=""> | **[MÜHLE](muehle/README.md)** · [play](https://michaeldobner.github.io/mindpause/muehle/) | Nine men's morris against the computer on three levels or for two players on one device. Gold lines on black wood, glowing mills, trays as supply | 1.0.0 |
+| <img src="spring/icons/icon.svg" width="56" alt=""> | **[SPRING](spring/README.md)** · [play](https://michaeldobner.github.io/mindpause/spring/) | Peg solitaire on the classic cross-shaped board. Seven figures from easy to masterful, hints, a living rim, tilt | 2.1.2 |
+| <img src="queen/icons/icon.svg" width="56" alt=""> | **[QUEEN](queen/README.md)** · [play](https://michaeldobner.github.io/mindpause/queen/) | German checkers against the computer at four levels or for two players on one device. Ebony, maple and an engraved golden crown, trays for captured pieces, your own pieces always at the bottom | 1.3.0 |
+| <img src="karo/icons/icon.svg" width="56" alt=""> | **[KARO](karo/README.md)** · [play](https://michaeldobner.github.io/mindpause/karo/) | Classic solitaire as on Windows. Draw one or three, points or Vegas, levels that can always be solved, hints | 1.0.3 |
+| <img src="fuge/icons/icon.svg" width="56" alt=""> | **[FUGE](fuge/README.md)** · [play](https://michaeldobner.github.io/mindpause/fuge/) | The classic falling block game as a lacquered wooden box. Classic, Sprint, 3 minutes and an endless Calm mode, gestures instead of buttons, thumb controls in landscape | 1.1.0 |
+| <img src="muehle/icons/icon.svg" width="56" alt=""> | **[MÜHLE](muehle/README.md)** · [play](https://michaeldobner.github.io/mindpause/muehle/) | Nine men's morris against the computer on three levels or for two players on one device. Gold lines on black wood, glowing mills, trays as supply | 1.1.0 |
 
 More games and play across two devices are on the way, see the [roadmap](#roadmap).
 
@@ -31,8 +31,8 @@ All games are built on one common **shell** in [`shared/`](shared/README.md). Ch
 | Shared | Meaning |
 |---|---|
 | **Design tokens** | Fonts, colours, spacing, shadows and motion in `shared/tokens.css` |
-| **Interface** | Header, control bar, picker as sheet, drawer or sidebar, settings, result card with stars, toasts, first launch hint |
-| **Layouts** | iPhone portrait and landscape, iPad with sidebar, light and dark mode, safe areas |
+| **Interface** | Header, control bar, picker as sheet or drawer, open by itself on the first start, settings, result card with stars, toasts, first launch hint |
+| **Layouts** | portrait and landscape on iPhone and iPad, in landscape header on the left, full height board, controls on the right, light and dark mode, safe areas |
 | **Sound engine** | Ceramic on wood in four layers, three sound styles, respects the silent switch |
 | **Living rim** | Physics for marbles and pieces in a rim or in trays: tap, swipe, tilt |
 | **Languages** | German on German devices, English everywhere else |
@@ -70,7 +70,7 @@ Requirements: Node.js 20 or newer and a modern browser. There are no dependencie
 ```bash
 npm start       # local server: http://localhost:3000/ (home), /spring/, /queen/
 npm test        # logic tests of every game and the shell
-npm run e2e     # browser test of every game on iPhone, iPhone SE and iPad
+npm run e2e     # browser test of every game on iPhone portrait and landscape, iPhone SE and iPad landscape
 E2E_ENGINE=webkit npm run e2e   # the same in WebKit, the engine of Safari
 ```
 
@@ -110,7 +110,8 @@ Every reference carries its version (`?v=` for game files, `?shell=` for shell f
 | KARO | Klondike solitaire, draw one or three, Windows and Vegas scoring, solvable levels | Done |
 | FUGE | Falling blocks as a wooden box, four modes, gestures, shell 1.3.0 with custom buttons | Done |
 | MÜHLE | Nine men's morris with WMD rules, three computer levels, two players, design from QUEEN | Done |
-| QUEEN 1.3 | Playing each other on two devices, stage 1: move by link | Planned |
+| Landscape | Shell 1.5.0: landscape for every game, full height board, your own pieces at the bottom, FUGE with thumb controls | Done |
+| QUEEN 1.4 | Playing each other on two devices, stage 1: move by link | Planned |
 | Later | Live with a room code, more games | Idea |
 
 ## Writing style

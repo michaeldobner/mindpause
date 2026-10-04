@@ -2,6 +2,17 @@
 
 Alle wichtigen Änderungen an MÜHLE. [English](CHANGELOG.md)
 
+## 1.1.0 (2026-10-04)
+
+### Neu
+* **Weiß immer unten:** Im Querformat wird das Brett nicht mehr gedreht. Die Platte wird breiter, die Schalen mit Vorrat und genommenen Steinen stehen links (Schwarz) und rechts (Weiß), direkt neben dem Brett.
+* Das Brett wählt selbst die Form, in der es größer erscheint, auch in Split View.
+* „Anderer Modus“ auf der Ergebniskarte, die Modi kommen auf dem iPad als Schublade.
+
+### Technisch
+* Braucht Hülle 1.5.0.
+* Neue Prüfung „Seat“ im Browser-Test.
+
 ## 1.0.0 (2026-10-04)
 
 Erste Version.

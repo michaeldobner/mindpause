@@ -34,7 +34,7 @@ SPRING turns the old wooden board game into a calm, tactile experience. A round,
 | **Sound design** | Ceramic on wood in four layers, tuned to a pentatonic scale that rises with your progress. Three styles: Warm, Clear, Soft |
 | **Stars** | Up to three stars per figure, best result and number of solves are saved |
 | **Bilingual** | German on German devices, English everywhere else |
-| **Made for Apple devices** | iPhone portrait and landscape, iPad with a permanent sidebar, light and dark mode, respects the silent switch |
+| **Made for Apple devices** | iPhone and iPad in portrait and landscape, full height board in landscape, light and dark mode, respects the silent switch |
 
 ## How to play
 

@@ -1,7 +1,7 @@
 // Computergegner für MÜHLE: Minimax mit Alpha-Beta-Schnitt (Negamax), schrittweise vertieft,
 // mit Merkliste bekannter Stellungen. Ohne Darstellung.
 
-import { legalMoves, applyMove, lossReason, positionKey, phaseOf, countOnBoard, MILLS, ADJACENT, POINTS } from './rules.js?v=1.0.0';
+import { legalMoves, applyMove, lossReason, positionKey, phaseOf, countOnBoard, MILLS, ADJACENT, POINTS } from './rules.js?v=1.1.0';
 
 export const LEVELS = {
   easy: { depth: 2, time: 200, noise: 60, blunder: 0.25 },

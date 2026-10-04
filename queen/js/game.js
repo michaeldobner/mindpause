@@ -1,7 +1,7 @@
 // Ein Spiel QUEEN: Brett, wer am Zug ist, Verlauf für Zurück, Spielende und Remis.
 // Jeder Stein hat eine feste Nummer (id), damit die Darstellung ihn flüssig bewegen kann.
 
-import { BLUE, BLACK, DRAW_PLIES, initialBoard, legalMoves, applyMove, countPieces, positionKey, sideOf, isKing } from './rules.js?v=1.2.0';
+import { BLUE, BLACK, DRAW_PLIES, initialBoard, legalMoves, applyMove, countPieces, positionKey, sideOf, isKing } from './rules.js?v=1.3.0';
 
 export class Game {
   constructor() {

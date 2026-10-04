@@ -48,7 +48,7 @@ Gedrechselte Steine wie bei QUEEN, ohne Krone, dafür mit einer kleinen Mittelmu
 
 ## Geometrie
 
-Brettraum 1000 × 1280 Einheiten im Hochformat, wie bei QUEEN.
+Brettraum 1000 × 1280 Einheiten im Hochformat, im Querformat eine breite Platte von 1280 × 1040 Einheiten mit Schalen links und rechts, wie bei QUEEN.
 
 | Größe | Wert | Begründung |
 |---|---|---|
@@ -86,8 +86,8 @@ Animationen laufen über eine Warteschlange nacheinander.
 | Situation | Anordnung |
 |---|---|
 | iPhone hoch | Schriftzug, Modus und Zähler oben, Brett mittig, fünf Schaltflächen unten |
-| iPhone quer | Brett um 90° gedreht, Schalen links und rechts, Schaltflächen rechts |
-| iPad quer | Feste Seitenleiste mit den Modi |
+| iPhone quer | Weiß bleibt unten, die Platte wird breiter, Schalen links (Schwarz) und rechts (Weiß), Schaltflächen rechts |
+| iPad quer | Wie iPhone quer, das Brett nutzt die volle Höhe. Modi als Schublade von links |
 
 <img src="../images/iphone-landscape-dark-de.jpg" width="520" alt="iPhone quer im Dunkelmodus">
 

@@ -34,7 +34,7 @@ SPRING macht aus dem alten Holzbrettspiel ein ruhiges, fast greifbares Erlebnis.
 | **Klangdesign** | Keramik auf Holz in vier Schichten, gestimmt auf eine pentatonische Tonleiter, die mit dem Fortschritt steigt. Drei Klangfarben: Warm, Klar, Weich |
 | **Sterne** | Bis zu drei Sterne pro Figur, bestes Ergebnis und Anzahl der Lösungen werden gespeichert |
 | **Zweisprachig** | Deutsch auf deutsch eingestellten Geräten, sonst Englisch |
-| **Für Apple-Geräte gemacht** | iPhone hoch und quer, iPad mit fester Seitenleiste, Hell- und Dunkelmodus, respektiert den Lautlos-Schalter |
+| **Für Apple-Geräte gemacht** | iPhone und iPad hoch und quer, im Querformat Brett in voller Höhe, Hell- und Dunkelmodus, respektiert den Lautlos-Schalter |
 
 ## So wird gespielt
 

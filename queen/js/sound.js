@@ -1,7 +1,7 @@
 // Klänge von QUEEN: Steine setzen, schlagen und gekrönt werden.
 // Baut auf der Klang-Engine der Hülle auf, die auch die Klänge der Schalen (rim, clack) liefert.
 
-import { SoundEngine, stepFrequency } from '../../shared/js/sound-engine.js?shell=1.4.0';
+import { SoundEngine, stepFrequency } from '../../shared/js/sound-engine.js?shell=1.5.0';
 
 export class QueenSound extends SoundEngine {
   // Stein anheben: weiches Tippen

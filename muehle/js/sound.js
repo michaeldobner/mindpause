@@ -1,7 +1,7 @@
 // Klänge von MÜHLE: Steine setzen und ziehen, Mühle schließen, Steine nehmen.
 // Baut auf der Klang-Engine der Hülle auf, die auch die Klänge der Schalen (rim, clack) liefert.
 
-import { SoundEngine, stepFrequency } from '../../shared/js/sound-engine.js?shell=1.4.0';
+import { SoundEngine, stepFrequency } from '../../shared/js/sound-engine.js?shell=1.5.0';
 
 export class MuehleSound extends SoundEngine {
   // Stein anheben: weiches Tippen

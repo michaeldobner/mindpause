@@ -2,6 +2,17 @@
 
 All notable changes to MÜHLE. [Deutsch](CHANGELOG.de.md)
 
+## 1.1.0 (2026-10-04)
+
+### New
+* **White always at the bottom:** in landscape the board is no longer turned. The plate gets wider, the trays with supply and taken pieces stand on the left (Black) and on the right (White), right next to the board.
+* The board picks the shape in which it appears larger, in Split View too.
+* "Other mode" on the result card, on the iPad the modes come as a drawer.
+
+### Technical
+* Requires shell 1.5.0.
+* New "Seat" check in the browser test.
+
 ## 1.0.0 (2026-10-04)
 
 First version.

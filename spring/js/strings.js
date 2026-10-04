@@ -8,6 +8,7 @@ export const SPRING_STRINGS = {
     figures: 'Figuren',
     chooseFigure: 'Figur wählen',
     coach: 'Hier wechselst du die Figur',
+    otherFigure: 'Andere Figur',
     rating: {
       perfect: ['Meisterhaft', 'Eine Murmel, genau in der Mitte.'],
       one: ['Sehr gut', 'Nur noch eine Murmel übrig.'],
@@ -33,6 +34,7 @@ export const SPRING_STRINGS = {
     figures: 'Figures',
     chooseFigure: 'Choose a figure',
     coach: 'Change the figure here',
+    otherFigure: 'Other figure',
     rating: {
       perfect: ['Masterful', 'One marble, right in the centre.'],
       one: ['Excellent', 'Only one marble left.'],

@@ -150,7 +150,7 @@ On every push the tests check that Easy clearly beats Beginner and Medium clearl
 
 ### `view.js`: class `QueenView`
 
-**Board space.** Drawing happens in fixed units (1000 × 1280, portrait, Blue at the bottom). `orient()` turns the whole world by 90° for landscape and by another 180° for two players. An inner group of every piece turns back, so light and crown stay upright.
+**Board space.** Drawing happens in fixed units, Blue always at the bottom. There are two shapes of the plate: tall (1000 × 1280, trays at the top and bottom) and wide (1280 × 1040, trays left and right). The board sits at the same place in both, only plate and trays change. `orient()` picks the shape in which the board appears larger on the stage and sets the `viewBox`. When switching, each piece keeps its place along its tray. For two players `orient()` turns the world by 180°, an inner group of every piece turns back, so light and crown stay upright.
 
 **Pieces.** There are always 24 SVG pieces, one per number. Each is either on the board or in a tray. The crown is ready as an engraving on every piece and fades in on crowning.
 

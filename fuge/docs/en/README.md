@@ -21,4 +21,4 @@
 | Address | https://michaeldobner.github.io/mindpause/fuge/ |
 | Version | 1.0.1 |
 
-<img src="../images/ipad-de.jpg" width="700" alt="iPad in landscape with sidebar">
+<img src="../images/ipad-de.jpg" width="700" alt="iPad in landscape, hold on the left, next on the right">

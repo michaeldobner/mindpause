@@ -22,4 +22,4 @@
 | Address | https://michaeldobner.github.io/mindpause/karo/ |
 | Version | 1.0.2 |
 
-<img src="../images/ipad-de.jpg" width="700" alt="iPad in landscape with sidebar">
+<img src="../images/ipad-de.jpg" width="700" alt="iPad in landscape">

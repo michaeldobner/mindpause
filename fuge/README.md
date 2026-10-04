@@ -36,7 +36,7 @@ FUGE plays like the original but looks like a design object for the coffee table
 | **Game feel** | Pieces glide softly, rotate visibly, settle with a gleam. Full lines dissolve from the centre outwards |
 | **Sound design** | Wood on wood: soft clicks, a clack when rotating, a muffled set down. Lines ring with the collection's ceramic tone |
 | **Accessible** | Optional patterns on the pieces for colour blindness, respects “Reduce motion” |
-| **Made for Apple devices** | iPhone portrait and landscape, iPad with sidebar, light and dark mode, game saved when you leave |
+| **Made for Apple devices** | iPhone and iPad in portrait and landscape, full height board in landscape, light and dark mode, game saved when you leave |
 
 ## How to play
 

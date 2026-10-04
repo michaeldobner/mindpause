@@ -7,6 +7,7 @@ export const QUEEN_STRINGS = {
     modes: 'Modi',
     chooseMode: 'Modus wählen',
     coach: 'Hier wählst du den Modus',
+    otherMode: 'Anderer Modus',
     mode: {
       beginner: 'Einsteiger',
       easy: 'Leicht',
@@ -56,6 +57,7 @@ export const QUEEN_STRINGS = {
     modes: 'Modes',
     chooseMode: 'Choose a mode',
     coach: 'Choose the mode here',
+    otherMode: 'Other mode',
     mode: {
       beginner: 'Beginner',
       easy: 'Easy',

@@ -34,7 +34,7 @@ MÜHLE (German for "mill") is the oldest board game of the collection and shares
 | **Hints** | The computer shows the best move, and after a mill the best piece to take |
 | **Stars** | Up to three stars per level, depending on the number of wins |
 | **Bilingual** | German on devices set to German, English otherwise |
-| **Made for Apple devices** | iPhone portrait and landscape, iPad with sidebar, light and dark mode |
+| **Made for Apple devices** | iPhone and iPad in portrait and landscape, full height board in landscape, light and dark mode |
 
 ## How to play
 

@@ -1,19 +1,19 @@
 // KARO: Klondike-Patience mit 1 oder 3 Karten, Punkte wie bei Windows oder Vegas.
 // Die Oberfläche kommt aus der Hülle (shared/js/shell.js), hier steht nur, was KARO eigen ist.
 
-import { createShell } from '../../shared/js/shell.js?shell=1.4.0';
-import { createI18n } from '../../shared/js/i18n.js?shell=1.4.0';
-import { createStorage } from '../../shared/js/storage.js?shell=1.4.0';
-import { DEFAULT_STYLE } from '../../shared/js/sound-engine.js?shell=1.4.0';
-import { Game } from './game.js?v=1.0.2';
-import { TableView } from './view.js?v=1.0.2';
-import { KaroSound } from './sound.js?v=1.0.2';
-import { Celebration } from './celebrate.js?v=1.0.2';
-import { deckDefs } from './faces.js?v=1.0.2';
-import { LEVELS, levelById, seedFor } from './levels.js?v=1.0.2';
-import { KARO_STRINGS } from './strings.js?v=1.0.2';
+import { createShell } from '../../shared/js/shell.js?shell=1.5.0';
+import { createI18n } from '../../shared/js/i18n.js?shell=1.5.0';
+import { createStorage } from '../../shared/js/storage.js?shell=1.5.0';
+import { DEFAULT_STYLE } from '../../shared/js/sound-engine.js?shell=1.5.0';
+import { Game } from './game.js?v=1.0.3';
+import { TableView } from './view.js?v=1.0.3';
+import { KaroSound } from './sound.js?v=1.0.3';
+import { Celebration } from './celebrate.js?v=1.0.3';
+import { deckDefs } from './faces.js?v=1.0.3';
+import { LEVELS, levelById, seedFor } from './levels.js?v=1.0.3';
+import { KARO_STRINGS } from './strings.js?v=1.0.3';
 
-export const VERSION = '1.0.2';
+export const VERSION = '1.0.3';
 
 const storage = createStorage('karo:');
 const { load, save } = storage;
@@ -73,7 +73,7 @@ const shell = createShell({
   storage,
   sound,
   buttons: ['undo', 'hint', 'restart', 'levels', 'settings'],
-  levels: { buttonKey: 'levels', titleKey: 'chooseLevel', nextKey: 'nextDeal' },
+  levels: { buttonKey: 'levels', titleKey: 'chooseLevel', nextKey: 'nextDeal', otherKey: 'otherLevel' },
   settings: [
     { id: 'draw3', nameKey: 'draw3', textKey: 'draw3Text' },
     { id: 'vegas', nameKey: 'vegasMode', textKey: 'vegasText' },
@@ -413,7 +413,7 @@ let worker = null;
 let request = 0;
 
 function ask({ fresh = false, budget = 60000 } = {}) {
-  if (!worker) worker = new Worker(new URL('./solver-worker.js?v=1.0.2', import.meta.url), { type: 'module' });
+  if (!worker) worker = new Worker(new URL('./solver-worker.js?v=1.0.3', import.meta.url), { type: 'module' });
   const id = ++request;
   return new Promise((resolve) => {
     const onMessage = (e) => {

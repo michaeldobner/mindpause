@@ -43,7 +43,7 @@ Diese Werte gelten für alle Spiele von MIND PAUSE. Eine Änderung in `shared/to
 | `--ink-soft` | `#6b6d85` | `#8f91a6` | Nebentexte |
 | `--btn` | `#f7f4ef` | `#1e2027` | Schaltflächen |
 | `--card` | `#faf8f4` | `#1e2027` | Karten, Einstellungszeilen |
-| `--sheet` | `#f6f3ee` | `#1b1d23` | Blätter und Seitenleiste |
+| `--sheet` | `#f6f3ee` | `#1b1d23` | Blätter und Schublade |
 | `--accent` | `#3f6ef0` | `#3f6ef0` | Aktive Figur, Schalter, „Meisterhaft“ |
 | `--star` | `#e0a526` | `#e0a526` | Erreichte Sterne |
 | `--hint` | `#ffd36b` | `#ffd36b` | Tippring |
@@ -101,9 +101,9 @@ Alle Animationen nutzen weiches Beschleunigen und Abbremsen. Ist auf dem Gerät 
 | Situation | Anordnung |
 |---|---|
 | iPhone hoch | Schriftzug, Figurenname und Zähler oben, Brett mittig, fünf Schaltflächen unten. Figuren und Einstellungen als Blätter von unten |
-| iPhone quer (Höhe unter 500 px) | Schriftzug und Zähler links, Brett mittig, Schaltflächen rechts übereinander. Figuren als Schublade von links |
+| iPhone quer (Höhe unter 500 px) | Schriftzug, Figur und Zähler links, Brett mittig, Schaltflächen rechts übereinander, kompakt. Figuren als Schublade von links |
 | iPad hoch | Wie iPhone hoch, mit mehr Platz um das Brett |
-| iPad quer (ab 1000 px Breite) | Feste Seitenleiste mit allen Figuren links, Brett und Steuerung rechts. Die Schaltfläche Figuren entfällt |
+| iPad und Rechner quer (Seitenverhältnis ab 5:4) | Wie iPhone quer, mit größeren Schaltflächen. Das Brett nutzt die volle Höhe, die Figuren kommen als Schublade über den Figurennamen, Figuren oder „Andere Figur“ |
 
 Weitere Regeln:
 

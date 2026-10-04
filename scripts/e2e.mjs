@@ -4,6 +4,8 @@
 // Screenshots landen in e2e-output/ (in GitHub Actions als Artefakt zum Herunterladen).
 //
 //   npm run e2e
+//
+// Jedes Spiel startet wie beim ersten Mal: die Auswahl ist offen und wird zuerst geschlossen.
 
 import { chromium, webkit, devices } from 'playwright';
 import http from 'node:http';
@@ -84,6 +86,16 @@ for (const game of games) {
   for (const [name, device, locale] of DEVICES) {
     const label = `${game.title} (${name}, ${locale})`;
     const { ctx, page, errors } = await open(device, locale, `${game.id}/`);
+
+    // Erster Start: die Auswahl öffnet sich von selbst, beim Schließen erscheint die Sprechblase
+    await page.waitForTimeout(500);
+    const firstRun = await page.evaluate(() => document.body.classList.contains('open-levels'));
+    check(firstRun, `${label}: Auswahl beim ersten Start offen`);
+    if (name === 'ipad' || name === 'iphone') await page.screenshot({ path: shot(`${game.id}-${name}-first.png`) });
+    await page.keyboard.press('Escape');
+    await page.waitForTimeout(900);
+    const coach = await page.evaluate(() => !document.body.classList.contains('open-levels') && !document.getElementById('coach')?.hidden);
+    check(coach, `${label}: Auswahl geschlossen, Sprechblase sichtbar`);
     const shell = await page.evaluate(() => {
       const vw = window.innerWidth, vh = window.innerHeight;
       const visible = [...document.querySelectorAll('.top, .controls .icon-btn, #board')].filter((el) => el.offsetParent !== null);
@@ -92,12 +104,19 @@ for (const game of games) {
         return b.left < -1 || b.right > vw + 1 || b.top < -1 || b.bottom > vh + 1;
       });
       const emptyLabels = [...document.querySelectorAll('.controls .icon-btn span')].filter((s) => !s.textContent.trim()).length;
-      return { outside, emptyLabels, hasGame: Boolean(window.__game), title: document.querySelector('.brand')?.textContent };
+      // Querformat: Kopf links und Steuerung rechts neben der Bühne, Hochformat: darüber und darunter
+      const stage = document.getElementById('stage').getBoundingClientRect();
+      const top = document.querySelector('.top').getBoundingClientRect();
+      const nav = document.querySelector('.controls').getBoundingClientRect();
+      const sideBySide = top.right <= stage.left + 1 && nav.left >= stage.right - 1;
+      const stacked = top.bottom <= stage.top + 1 && nav.top >= stage.bottom - 1;
+      return { outside, emptyLabels, sideBySide, stacked, landscape: vw > vh, hasGame: Boolean(window.__game), title: document.querySelector('.brand')?.textContent };
     });
     check(shell.title === game.title, `${label}: Titel`);
     check(!shell.outside, `${label}: nichts ragt aus dem Bildschirm`);
     check(shell.emptyLabels === 0, `${label}: alle Schaltflächen beschriftet`);
     check(shell.hasGame, `${label}: Spiel gestartet`);
+    check(shell.landscape ? shell.sideBySide : shell.stacked, `${label}: ${shell.landscape ? 'Kopf und Steuerung neben dem Brett' : 'Kopf und Steuerung über und unter dem Brett'}`);
 
     // Ein Zug (jedes Spiel stellt dafür window.__game.e2e.move bereit), danach Zurück
     if (name === 'iphone' || name === 'ipad') {

@@ -37,7 +37,7 @@ QUEEN brings the classic game of checkers into the calm world of MIND PAUSE: bla
 | **Hints** | On request the computer shows you the best move |
 | **Stars** | Up to three stars per level, based on the number of wins |
 | **Bilingual** | German on German devices, English everywhere else |
-| **Made for Apple devices** | iPhone portrait and landscape, iPad with sidebar, light and dark mode |
+| **Made for Apple devices** | iPhone and iPad in portrait and landscape, full height board in landscape, light and dark mode |
 
 ## How to play
 

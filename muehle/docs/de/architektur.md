@@ -106,7 +106,7 @@ Bei der Entwicklung gewann Mittel 4:0 gegen Leicht, Schwer gegen Mittel 2 Siege 
 
 ## `view.js`: Klasse `MuehleView`
 
-Wie bei QUEEN: fester Brettraum, Drehung für Querformat und Spiel zu zweit, 18 SVG-Steine mit festen Nummern, zwei Schalen als `Gutter` der Hülle, Warteschlange `run()`.
+Wie bei QUEEN: fester Brettraum mit zwei Formen der Platte (hoch: Schalen oben und unten, breit: Schalen links und rechts, Weiß immer unten), Drehung um 180° beim Spiel zu zweit, 18 SVG-Steine mit festen Nummern, zwei Schalen als `Gutter` der Hülle, Warteschlange `run()`.
 
 **Mühle in zwei Schritten.** Ein eigener Zug, der eine Mühle schließt, wird erst ausgeführt, wenn der Stein zum Nehmen gewählt ist:
 

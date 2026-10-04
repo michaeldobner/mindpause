@@ -43,7 +43,7 @@ These values apply to every MIND PAUSE game. A change in `shared/tokens.css` tak
 | `--ink-soft` | `#6b6d85` | `#8f91a6` | Secondary text |
 | `--btn` | `#f7f4ef` | `#1e2027` | Buttons |
 | `--card` | `#faf8f4` | `#1e2027` | Cards, settings rows |
-| `--sheet` | `#f6f3ee` | `#1b1d23` | Sheets and sidebar |
+| `--sheet` | `#f6f3ee` | `#1b1d23` | Sheets and drawer |
 | `--accent` | `#3f6ef0` | `#3f6ef0` | Current figure, switches, "Masterful" |
 | `--star` | `#e0a526` | `#e0a526` | Stars earned |
 | `--hint` | `#ffd36b` | `#ffd36b` | Hint ring |
@@ -101,9 +101,9 @@ All animations ease in and out. When "Reduce Motion" is on, marbles move to thei
 | Situation | Arrangement |
 |---|---|
 | iPhone portrait | Wordmark, figure name and counter at the top, board in the middle, five buttons at the bottom. Figures and settings as sheets from the bottom |
-| iPhone landscape (height below 500 px) | Wordmark and counter on the left, board in the middle, buttons stacked on the right. Figures as a drawer from the left |
+| iPhone landscape (height below 500 px) | Wordmark, figure and counter on the left, board in the middle, buttons stacked on the right, compact. Figures as a drawer from the left |
 | iPad portrait | Like iPhone portrait, with more space around the board |
-| iPad landscape (from 1000 px wide) | Permanent sidebar with all figures on the left, board and controls on the right. The Figures button is hidden |
+| iPad and computer landscape (aspect ratio from 5:4) | Like iPhone landscape, with larger buttons. The board uses the full height, figures come as a drawer via the figure name, Figures or "Other figure" |
 
 Further rules:
 
