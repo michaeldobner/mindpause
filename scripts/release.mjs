@@ -45,6 +45,13 @@ if (target === 'shell') {
     [/export const VERSION = '[^']+';/, `export const VERSION = '${version}';`],
     [/^const VERSION = '[^']+';/m, `const VERSION = '${version}';`],
   ]);
+  // Das Symbol auf der Startseite trägt die Version, damit der Browser kein altes Bild zeigt
+  const list = readFileSync('games.json', 'utf8');
+  const next = list.replace(new RegExp(`"${target}/icons/icon\\.svg(\\?v=[^"]*)?"`), `"${target}/icons/icon.svg?v=${version}"`);
+  if (next !== list) {
+    writeFileSync('games.json', next);
+    console.log('aktualisiert: games.json');
+  }
 } else {
   console.error(`Unbekanntes Ziel: ${target}. Erlaubt: shell, ${games.join(', ')}`);
   process.exit(1);
