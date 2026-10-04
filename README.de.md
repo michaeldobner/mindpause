@@ -18,6 +18,7 @@ Klassische Brettspiele, neu gedacht, mit fast greifbarem Design und handgemachte
 |---|---|---|---|
 | <img src="spring/icons/icon.svg" width="56" alt=""> | **[SPRING](spring/README.de.md)** · [spielen](https://michaeldobner.github.io/mindpause/spring/) | Solohalma auf dem klassischen Kreuzbrett. Sieben Figuren von leicht bis meisterhaft, Tipps, lebendiger Rand, Neigen | 2.1.1 |
 | <img src="queen/icons/icon.svg" width="56" alt=""> | **[QUEEN](queen/README.de.md)** · [spielen](https://michaeldobner.github.io/mindpause/queen/) | Deutsche Dame gegen den Computer in drei Stufen oder zu zweit an einem Gerät. Goldene Krone, Schalen für geschlagene Steine | 1.0.0 |
+| <img src="karo/icons/icon.svg" width="56" alt=""> | **[KARO](karo/README.de.md)** · [spielen](https://michaeldobner.github.io/mindpause/karo/) | Die klassische Patience wie bei Windows. 1 oder 3 Karten, Punkte oder Vegas, sicher lösbare Stufen, Tipps | 1.0.0 |
 
 Weitere Spiele und das Spiel auf zwei Geräten sind in Arbeit, siehe [Roadmap](#roadmap).
 
@@ -50,6 +51,7 @@ mindpause/
 │  └─ tests/               Tests der Hülle
 ├─ spring/                 SPRING, siehe spring/README.de.md
 ├─ queen/                  QUEEN, siehe queen/README.de.md
+├─ karo/                   KARO, siehe karo/README.de.md
 ├─ scripts/
 │  ├─ release.mjs          setzt die Version eines Spiels oder der Hülle
 │  └─ e2e.mjs              Browser-Test der ganzen Sammlung
@@ -100,6 +102,7 @@ Jeder Verweis trägt seine Version (`?v=` für Dateien eines Spiels, `?shell=` f
 | SPRING | Solohalma, 7 Figuren, Tipps, Neigen | Fertig |
 | Sammlung | Hülle, Startseite, Tests über alle Spiele | Fertig |
 | QUEEN | Deutsche Dame, drei Computerstufen, zu zweit an einem Gerät | Fertig |
+| KARO | Klondike-Patience, 1 oder 3 Karten, Punkte nach Windows und Vegas, sicher lösbare Stufen | Fertig |
 | QUEEN 1.1 | Gegeneinander auf zwei Geräten, Stufe 1: Zug per Link | Geplant |
 | Später | Live mit Raumcode, weitere Spiele | Idee |
 

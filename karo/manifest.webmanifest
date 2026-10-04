@@ -1,0 +1,19 @@
+{
+  "name": "KARO",
+  "short_name": "Karo",
+  "description": "Classic Klondike solitaire with draw one or draw three, Windows and Vegas scoring. Part of MIND PAUSE.",
+  "id": "./",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#ece8e1",
+  "theme_color": "#ece8e1",
+  "categories": ["games", "card"],
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" },
+    { "src": "icons/icon.svg", "sizes": "any", "type": "image/svg+xml" }
+  ]
+}
