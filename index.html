@@ -2,137 +2,93 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
-  <title>SPRING</title>
-  <meta name="description" content="SPRING: the classic peg solitaire on the English 33-hole board. Das klassische Solohalma auf dem englischen Kreuzbrett.">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>MIND PAUSE</title>
+  <meta name="description" content="Calm, beautifully crafted puzzle games for iPhone and iPad. Free, offline, no ads.">
   <meta name="theme-color" content="#ece8e1" media="(prefers-color-scheme: light)">
   <meta name="theme-color" content="#141519" media="(prefers-color-scheme: dark)">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="default">
-  <meta name="apple-mobile-web-app-title" content="Spring">
-  <link rel="manifest" href="manifest.webmanifest">
-  <link rel="icon" href="icons/icon.svg" type="image/svg+xml">
-  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
-  <link rel="stylesheet" href="css/style.css?v=2.0.3">
+  <link rel="icon" href="spring/icons/icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="shared/tokens.css?shell=1.0.0">
+  <style>
+    html, body { overflow: auto; height: auto; }
+    .home {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: max(28px, env(safe-area-inset-top)) max(16px, env(safe-area-inset-right)) max(28px, env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left));
+    }
+    .home-brand {
+      margin: 18px 0 6px;
+      font-family: var(--font-display);
+      font-weight: 400;
+      font-size: clamp(34px, 9vw, 54px);
+      letter-spacing: 0.18em;
+    }
+    .home-tagline {
+      margin: 0 0 30px;
+      max-width: 34em;
+      font-size: 17px;
+      line-height: 1.5;
+      color: var(--ink-soft);
+    }
+    .games { display: grid; gap: 16px; margin: 0; padding: 0; list-style: none; }
+    .game {
+      display: grid;
+      grid-template-columns: 88px 1fr;
+      gap: 18px;
+      align-items: center;
+      padding: 16px;
+      border: 1px solid var(--btn-border);
+      border-radius: 24px;
+      background: var(--card);
+      box-shadow: var(--shadow);
+      color: inherit;
+      text-decoration: none;
+      transition: transform 0.15s ease;
+    }
+    .game:active { transform: scale(0.98); }
+    .game img { width: 88px; height: 88px; border-radius: 20px; }
+    .game-title { margin: 0; font-family: var(--font-display); font-weight: 400; font-size: 26px; letter-spacing: 0.14em; }
+    .game-sub { margin: 2px 0 6px; font-size: 12px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-soft); }
+    .game-text { margin: 0; font-size: 15px; line-height: 1.45; }
+    .home-foot { margin-top: 34px; font-size: 13px; line-height: 1.6; color: var(--ink-soft); }
+    .home-foot a { color: inherit; }
+  </style>
 </head>
 <body>
-  <div class="app">
-    <!-- Figurenauswahl: Blatt von unten, Schublade (iPhone quer) oder feste Seitenleiste (iPad quer) -->
-    <aside id="panel" class="panel" aria-labelledby="panel-title">
-      <div class="grabber" aria-hidden="true"></div>
-      <div class="panel-head">
-        <h2 id="panel-title" data-i18n="chooseFigure"></h2>
-        <button id="panel-close" class="close-btn" type="button" data-i18n-label="close">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg>
-        </button>
-      </div>
-      <ul id="figure-list" class="figure-list"></ul>
-    </aside>
-
-    <header class="top">
-      <div class="titles">
-        <h1 class="brand">SPRING</h1>
-        <button id="figure-name" class="figure-name" type="button" aria-haspopup="dialog">
-          <span id="figure-label"></span>
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
-        </button>
-        <div id="coach" class="coach" role="status" hidden data-i18n="coach"></div>
-      </div>
-      <div class="counter" aria-live="polite">
-        <span id="count" class="count">32</span>
-        <span id="count-label" class="count-label"></span>
-      </div>
-    </header>
-
-    <main class="stage">
-      <svg id="board" class="board" role="img" data-i18n-label="boardLabel"></svg>
-
-      <section id="result" class="result" hidden aria-live="polite">
-        <div class="card">
-          <p class="result-kicker" data-i18n="gameOver"></p>
-          <h2 id="result-title" class="result-title"></h2>
-          <div id="result-stars" class="stars" aria-hidden="true"></div>
-          <p id="result-text" class="result-text"></p>
-          <p id="result-stats" class="result-stats"></p>
-          <div class="result-actions">
-            <button id="again" class="btn ghost" type="button" data-i18n="again"></button>
-            <button id="next" class="btn solid" type="button">
-              <span data-i18n="nextFigure"></span> <span aria-hidden="true">→</span>
-            </button>
+  <main class="home">
+    <h1 class="home-brand">MIND PAUSE</h1>
+    <p class="home-tagline" id="tagline"></p>
+    <ul class="games" id="games"></ul>
+    <p class="home-foot" id="foot"></p>
+  </main>
+  <script type="module">
+    const de = (navigator.languages?.[0] || navigator.language || 'en').toLowerCase().startsWith('de');
+    const lang = de ? 'de' : 'en';
+    const text = {
+      de: {
+        tagline: 'Ruhige, sorgfältig gestaltete Denkspiele für iPhone und iPad. Klassische Brettspiele, neu gedacht. Kostenlos, offline, ohne Werbung.',
+        foot: 'Tipp: Öffne ein Spiel in Safari und wähle „Teilen“ und „Zum Home-Bildschirm“. Dann startet es wie eine App, auch ohne Internet.',
+      },
+      en: {
+        tagline: 'Calm, beautifully crafted puzzle games for iPhone and iPad. Classic board games, reimagined. Free, offline, no ads.',
+        foot: 'Tip: open a game in Safari and choose “Share” and “Add to Home Screen”. It then starts like an app, even without internet.',
+      },
+    }[lang];
+    document.documentElement.lang = lang;
+    document.getElementById('tagline').textContent = text.tagline;
+    document.getElementById('foot').textContent = text.foot;
+    const games = await (await fetch('games.json', { cache: 'no-cache' })).json();
+    document.getElementById('games').innerHTML = games.map((g) => `
+      <li>
+        <a class="game" href="${g.id}/">
+          <img src="${g.icon}" alt="">
+          <div>
+            <h2 class="game-title">${g.title}</h2>
+            <p class="game-sub">${g.subtitle[lang]}</p>
+            <p class="game-text">${g.description[lang]}</p>
           </div>
-          <button id="back" class="link-btn" type="button" data-i18n="undoLast"></button>
-        </div>
-      </section>
-
-      <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
-    </main>
-
-    <nav class="controls">
-      <button id="undo" class="icon-btn" type="button">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/></svg>
-        <span data-i18n="undo"></span>
-      </button>
-      <button id="hint" class="icon-btn" type="button">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18h6M10 21h4"/><path d="M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2.1h5c0-.9.4-1.6 1-2.1A6 6 0 0 0 12 3z"/></svg>
-        <span data-i18n="hint"></span>
-      </button>
-      <button id="restart" class="icon-btn" type="button">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.34-5.66"/><path d="M20 4v5h-5"/></svg>
-        <span data-i18n="restart"></span>
-      </button>
-      <button id="figures" class="icon-btn" type="button" aria-haspopup="dialog">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="5" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="12" cy="19" r="2"/><circle cx="5" cy="12" r="2"/><circle cx="19" cy="12" r="2"/></svg>
-        <span data-i18n="figures"></span>
-      </button>
-      <button id="settings-btn" class="icon-btn" type="button" aria-haspopup="dialog">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h10M18 7h2M4 17h2M10 17h10"/><circle cx="16" cy="7" r="2"/><circle cx="8" cy="17" r="2"/></svg>
-        <span data-i18n="settings"></span>
-      </button>
-    </nav>
-  </div>
-
-  <div id="scrim" class="scrim" hidden></div>
-
-  <!-- Einstellungen -->
-  <section id="settings" class="sheet" role="dialog" aria-modal="true" aria-labelledby="settings-title">
-    <div class="grabber" aria-hidden="true"></div>
-    <div class="panel-head">
-      <h2 id="settings-title" data-i18n="settingsTitle"></h2>
-      <button id="settings-close" class="close-btn" type="button" data-i18n-label="close">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg>
-      </button>
-    </div>
-
-    <div class="setting">
-      <div>
-        <p class="setting-name" data-i18n="sound"></p>
-        <p class="setting-text" data-i18n="soundOn"></p>
-      </div>
-      <button id="sound-toggle" class="switch" type="button" role="switch" aria-checked="true" data-i18n-label="sound"><span></span></button>
-    </div>
-
-    <div class="setting column">
-      <p class="setting-name" data-i18n="soundStyle"></p>
-      <div id="style-choice" class="segmented" role="radiogroup" data-i18n-label="soundStyle">
-        <button type="button" role="radio" data-style="warm" data-i18n="styles.warm"></button>
-        <button type="button" role="radio" data-style="clear" data-i18n="styles.clear"></button>
-        <button type="button" role="radio" data-style="soft" data-i18n="styles.soft"></button>
-      </div>
-    </div>
-
-    <div class="setting">
-      <div>
-        <p class="setting-name" data-i18n="tilt"></p>
-        <p class="setting-text" data-i18n="tiltText"></p>
-      </div>
-      <button id="tilt-toggle" class="switch" type="button" role="switch" aria-checked="false" data-i18n-label="tilt"><span></span></button>
-    </div>
-
-    <p class="setting-note" data-i18n="rimHint"></p>
-    <p id="version" class="setting-version"></p>
-  </section>
-
-  <script type="module" src="js/main.js?v=2.0.3"></script>
+        </a>
+      </li>`).join('');
+  </script>
 </body>
 </html>

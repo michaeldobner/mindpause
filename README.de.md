@@ -1,112 +1,104 @@
 <div align="center">
 
-# SPRING
+# MIND PAUSE
 
-**Das klassische Solohalma für iPhone und iPad.**
+**Ruhige, sorgfältig gestaltete Denkspiele für iPhone und iPad.**
 
-33 Felder. 32 Murmeln. Ein Ziel: eine einzige Murmel, genau in der Mitte.
+Klassische Brettspiele, neu gedacht, mit fast greifbarem Design und handgemachtem Klang. Kostenlos, offline, ohne Werbung.
 
-[**▶ Jetzt spielen**](https://michaeldobner.github.io/solohalma/) · [English](README.md) · [Dokumentation](docs/de/README.md) · [Changelog](CHANGELOG.de.md)
+[**▶ MIND PAUSE öffnen**](https://michaeldobner.github.io/mindpause/) · [English](README.md) · [Hülle](shared/README.de.md)
 
-[![Tests](https://github.com/michaeldobner/solohalma/actions/workflows/tests.yml/badge.svg)](https://github.com/michaeldobner/solohalma/actions/workflows/tests.yml)
-
-<img src="docs/images/iphone-game-de.jpg" width="260" alt="SPRING auf dem iPhone: klassisches Brett mit Tipp">&nbsp;&nbsp;
-<img src="docs/images/iphone-figures-de.jpg" width="260" alt="Figur wählen">&nbsp;&nbsp;
-<img src="docs/images/iphone-result-de.jpg" width="260" alt="Ergebnis mit drei Sternen">
+[![Tests](https://github.com/michaeldobner/mindpause/actions/workflows/tests.yml/badge.svg)](https://github.com/michaeldobner/mindpause/actions/workflows/tests.yml)
 
 </div>
 
-## Warum SPRING
+## Spiele
 
-SPRING macht aus dem alten Holzbrettspiel ein ruhiges, fast greifbares Erlebnis. Ein rundes, tiefblaues Brett, glänzende blaue und schwarze Murmeln und Klänge, gestimmt wie ein kleines Instrument. Keine Werbung, kein Konto, kein Tracking. Es öffnet sich im Browser, lässt sich wie eine App auf den Home-Bildschirm legen und funktioniert offline.
+| | Spiel | Beschreibung | Version |
+|---|---|---|---|
+| <img src="spring/icons/icon.svg" width="56" alt=""> | **[SPRING](spring/README.de.md)** · [spielen](https://michaeldobner.github.io/mindpause/spring/) | Solohalma auf dem klassischen Kreuzbrett. Sieben Figuren von leicht bis meisterhaft, Tipps, lebendiger Rand, Neigen | 2.1.0 |
 
-## Highlights
+Weitere Spiele sind in Arbeit, siehe [Roadmap](#roadmap).
 
-| | |
+## Was alle Spiele teilen
+
+Alle Spiele bauen auf einer gemeinsamen **Hülle** in [`shared/`](shared/README.de.md) auf. Wird dort etwas geändert, zum Beispiel eine Schrift, ändert es sich in allen Spielen.
+
+| Gemeinsam | Bedeutung |
 |---|---|
-| **7 Figuren** | Vom sanften *Kreuz* mit 6 Murmeln bis zum *Klassisch*-Brett mit 32, jede auf Lösbarkeit geprüft |
-| **Jederzeit wechseln** | Die Figur lässt sich mitten im Spiel wechseln. Das Brett baut sich sichtbar um und ein neues Spiel beginnt |
-| **Tipps** | Ein eingebauter Löser zeigt den nächsten richtigen Zug, direkt aus der aktuellen Stellung |
-| **Lebendiger Rand** | Geschlagene Murmeln rollen in den Rand. Antippen oder Wischen lässt sie mit echter Physik rollen, anstoßen und zur Ruhe kommen |
-| **Neigen** | Optional: iPhone neigen und die Murmeln im Rand rollen bergab |
-| **Klangdesign** | Keramik auf Holz in vier Schichten, gestimmt auf eine pentatonische Tonleiter, die mit dem Fortschritt steigt. Drei Klangfarben: Warm, Klar, Weich |
-| **Sterne** | Bis zu drei Sterne pro Figur, bestes Ergebnis und Anzahl der Lösungen werden gespeichert |
-| **Zweisprachig** | Deutsch auf deutsch eingestellten Geräten, sonst Englisch |
-| **Für Apple-Geräte gemacht** | iPhone hoch und quer, iPad mit fester Seitenleiste, Hell- und Dunkelmodus, respektiert den Lautlos-Schalter |
+| **Design-Tokens** | Schriften, Farben, Abstände, Schatten und Bewegung in `shared/tokens.css` |
+| **Oberfläche** | Kopfzeile, Steuerleiste, Auswahl als Blatt, Schublade oder Seitenleiste, Einstellungen, Ergebniskarte mit Sternen, Hinweise, Erststart-Hinweis |
+| **Layouts** | iPhone hoch und quer, iPad mit Seitenleiste, Hell- und Dunkelmodus, sichere Ränder |
+| **Klang-Engine** | Keramik auf Holz in vier Schichten, drei Klangfarben, respektiert den Lautlos-Schalter |
+| **Sprachen** | Deutsch auf deutsch eingestellten Geräten, sonst Englisch |
+| **Offline** | Jedes Spiel lässt sich als eigene App auf den Home-Bildschirm legen und läuft ohne Internet |
 
-## So wird gespielt
+Jedes Spiel behält seine eigenen Regeln, sein Brett, seine Klänge, README, Changelog, Dokumentation, Version und Adresse.
 
-1. Eine Murmel springt **waagerecht oder senkrecht** über eine benachbarte Murmel auf ein freies Feld.
-2. Die übersprungene Murmel wird entfernt und rollt in den Rand.
-3. Das Spiel endet, wenn kein Sprung mehr möglich ist.
+## Aufbau des Repositorys
 
-**Ziel:** eine Murmel übrig lassen, am besten in der Mitte. Alle Regeln, Bewertung und Tipps: [Spielregeln](docs/de/spielregeln.md).
+```
+mindpause/
+├─ index.html              Startseite der Sammlung (aus games.json erzeugt)
+├─ games.json              Liste aller Spiele
+├─ shared/                 die Hülle, siehe shared/README.de.md
+│  ├─ tokens.css           Design-Tokens
+│  ├─ shell.css            Layout und Bausteine
+│  ├─ js/                  Hülle, Sprachen, Speichern, Klang-Engine
+│  └─ tests/               Tests der Hülle
+├─ spring/                 SPRING, siehe spring/README.de.md
+├─ scripts/
+│  ├─ release.mjs          setzt die Version eines Spiels oder der Hülle
+│  └─ e2e.mjs              Browser-Test der ganzen Sammlung
+├─ tests/                  Tests über die ganze Sammlung
+└─ .github/workflows/      Tests bei jedem Push
+```
 
-## Auf iPhone oder iPad installieren
+## Entwicklung
 
-1. **https://michaeldobner.github.io/solohalma/** in **Safari** öffnen.
-2. Auf **Teilen** tippen, dann **Zum Home-Bildschirm**.
-3. Fertig. SPRING startet im Vollbild wie eine App und funktioniert auch ohne Internet.
-
-## Dokumentation
-
-| Dokument | Inhalt |
-|---|---|
-| [Spielregeln](docs/de/spielregeln.md) | Regeln, Figuren, Bewertung, Bedienung, Tipps, Rand und Neigen |
-| [Design-System](docs/de/design.md) | Farben, Typografie, Brettgeometrie, Bewegung, Layouts |
-| [Klangdesign](docs/de/klang.md) | Klangschichten, Stimmung, Mischung, Klangfarben |
-| [Architektur](docs/de/architektur.md) | Module, Datenmodell, Physik im Rand, Löser, Ablauf eines Zugs |
-| [Entwicklung](docs/de/entwicklung.md) | Lokal starten, Tests, Konventionen, Testen auf dem iPhone |
-| [Erweitern](docs/de/erweitern.md) | Neue Figuren, Farbthemen, neue Sprachen, Roadmap |
-| [Deployment](docs/de/deployment.md) | GitHub Pages, Veröffentlichung, Offline-Cache, Fehlerbehebung |
-
-## Schnellstart für Entwicklung
+Voraussetzungen: Node.js ab Version 20 und ein moderner Browser. Es gibt keine Abhängigkeiten und keinen Build-Schritt.
 
 ```bash
-npm start   # lokaler Server
-npm test    # 30 automatische Tests
+npm start       # lokaler Server: http://localhost:3000/ (Startseite), /spring/ (SPRING)
+npm test        # Logik-Tests aller Spiele und der Hülle
+npm run e2e     # Browser-Test aller Spiele auf iPhone, iPhone SE und iPad
 ```
 
-Keine Abhängigkeiten, kein Build-Schritt. Reines HTML, CSS und JavaScript-Module.
+Der Browser-Test braucht einmalig Playwright: `npm install --no-save playwright && npx playwright install chromium`.
 
-## Technik
+Bei jedem Push führt GitHub Actions beides aus. Der Browser-Test lädt Screenshots aller Spiele zum Herunterladen hoch (Artefakt „screenshots“). So lassen sich Änderungen an der Hülle in allen Spielen auf einen Blick prüfen.
 
-| Bereich | Umsetzung |
-|---|---|
-| Sprache | HTML, CSS, JavaScript (ES-Module) |
-| Grafik | SVG, gestochen scharf auf jedem Display |
-| Klang | Web Audio API, live erzeugt, keine Audiodateien |
-| Tipps | Löser mit Tiefensuche in einem Web Worker |
-| Offline | Service Worker und Web App Manifest |
-| Speicherung | `localStorage` auf dem Gerät |
-| Hosting | GitHub Pages, direkt aus `main` |
-| Tests | Node.js Test-Runner, bei jedem Push |
+## Veröffentlichung
 
-## Projektstruktur
+* **Hosting:** GitHub Pages, Branch `main`, Ordner `/ (root)`. Für öffentliche Repositorys kostenlos.
+* **Arbeitsweise:** Jede Änderung läuft über einen Pull Request. Sind die Tests grün, wird er in `main` übernommen und der Branch automatisch gelöscht. Ein bis zwei Minuten später ist alles live.
+* **Versionen:** Jedes Spiel hat seine eigene Version, die Hülle ebenfalls.
 
-```
-├─ index.html              Einstiegsseite
-├─ css/style.css           Layout, Farben, Hell- und Dunkelmodus
-├─ js/
-│  ├─ main.js              verbindet alle Teile
-│  ├─ figures.js           die 7 Figuren als Daten
-│  ├─ game.js              Spiellogik
-│  ├─ view.js              Brett, Animationen, Touch-Eingabe
-│  ├─ gutter.js            Physik im Rand
-│  ├─ sound.js             Klang-Engine
-│  ├─ solver.js            Löser für Tipps
-│  ├─ solver-worker.js     rechnet den Löser im Hintergrund
-│  ├─ tilt.js              Bewegungssensor
-│  ├─ i18n.js              Deutsch und Englisch
-│  └─ storage.js           Speicherung auf dem Gerät
-├─ icons/                  App-Symbole
-├─ sw.js                   Offline-Betrieb
-├─ manifest.webmanifest    Installation als App
-├─ scripts/release.mjs     setzt eine neue Version überall
-├─ tests/                  automatische Tests
-└─ docs/                   Dokumentation (de, en, Bilder)
+```bash
+node scripts/release.mjs spring 2.2.0   # neue Version von SPRING
+node scripts/release.mjs shell 1.1.0    # neue Version der Hülle, betrifft alle Spiele
 ```
 
-## Version
+Jeder Verweis trägt seine Version (`?v=` für Dateien eines Spiels, `?shell=` für Dateien der Hülle). Ein Gerät mischt deshalb nach einem Update nie alte und neue Dateien. `tests/release.test.js` prüft das bei jedem Push.
 
-Aktuelle Version: **2.0.3**. Siehe [Changelog](CHANGELOG.de.md).
+## Ein Spiel hinzufügen
+
+1. Ordner mit der Kennung des Spiels anlegen, zum Beispiel `dame/`.
+2. Denselben Aufbau wie `spring/` verwenden: `index.html`, `js/main.js`, `js/strings.js`, `css/<kennung>.css`, `sw.js`, `manifest.webmanifest`, `icons/`, `tests/`, `README.md`, `README.de.md`, `CHANGELOG.md`, `CHANGELOG.de.md`, `docs/de`, `docs/en`.
+3. In `main.js` `createShell()` der Hülle aufrufen, siehe [Doku der Hülle](shared/README.de.md#ein-spiel-anbinden).
+4. `window.__game` mit `history` und `e2e.move()` für den Browser-Test bereitstellen.
+5. Eintrag in `games.json` ergänzen. Startseite, Release-Skript und Tests nehmen das Spiel automatisch auf.
+6. Zeile in der Spieletabelle oben ergänzen.
+
+## Roadmap
+
+| Schritt | Inhalt | Status |
+|---|---|---|
+| SPRING | Solohalma, 7 Figuren, Tipps, Neigen | Fertig |
+| Sammlung | Hülle, Startseite, Tests über alle Spiele | Fertig |
+| Nächstes Spiel | Dame gegen den Computer und zu zweit an einem Gerät | Geplant |
+| Später | Gegeneinander auf zwei Geräten | Idee |
+
+## Schreibstil
+
+Texte und Dokumentation gibt es immer auf Deutsch und Englisch, ohne Gedankenstriche. Kommentare im Code sind auf Deutsch.
