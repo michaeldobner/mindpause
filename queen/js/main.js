@@ -1,11 +1,11 @@
 // QUEEN: Deutsche Dame gegen den Computer oder zu zweit an einem Gerät.
 // Die Oberfläche kommt aus der Hülle (shared/js/shell.js), hier steht nur, was QUEEN eigen ist.
 
-import { createShell } from '../../shared/js/shell.js?shell=1.1.0';
-import { createI18n } from '../../shared/js/i18n.js?shell=1.1.0';
-import { createStorage } from '../../shared/js/storage.js?shell=1.1.0';
-import { DEFAULT_STYLE } from '../../shared/js/sound-engine.js?shell=1.1.0';
-import { Tilt } from '../../shared/js/tilt.js?shell=1.1.0';
+import { createShell } from '../../shared/js/shell.js?shell=1.2.0';
+import { createI18n } from '../../shared/js/i18n.js?shell=1.2.0';
+import { createStorage } from '../../shared/js/storage.js?shell=1.2.0';
+import { DEFAULT_STYLE } from '../../shared/js/sound-engine.js?shell=1.2.0';
+import { Tilt } from '../../shared/js/tilt.js?shell=1.2.0';
 import { BLUE, BLACK } from './rules.js?v=1.0.0';
 import { Game } from './game.js?v=1.0.0';
 import { QueenView } from './view.js?v=1.0.0';

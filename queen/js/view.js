@@ -5,7 +5,7 @@
 // Im Querformat dreht eine Transformation das Brett um 90°, die Schalen liegen dann links und
 // rechts. Beim Spiel zu zweit kann sich das Brett zusätzlich nach jedem Zug um 180° drehen.
 
-import { Gutter } from '../../shared/js/gutter.js?shell=1.1.0';
+import { Gutter } from '../../shared/js/gutter.js?shell=1.2.0';
 import { BLUE, BLACK } from './rules.js?v=1.0.0';
 import { Game } from './game.js?v=1.0.0';
 

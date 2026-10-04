@@ -4,7 +4,7 @@
 // Dateien der Hülle ?shell=<Version der Hülle> (siehe scripts/release.mjs).
 // So können sich alte und neue Dateien nie mischen.
 const VERSION = '2.1.1';
-const SHELL = '1.1.0';
+const SHELL = '1.2.0';
 const CACHE = `spring-v${VERSION}-shell${SHELL}`;
 
 const FILES = [

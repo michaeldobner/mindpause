@@ -6,7 +6,7 @@ Die Hülle ist alles, was alle Spiele von MIND PAUSE teilen. Ein Spiel beschreib
 
 **Faustregel:** Soll eine Änderung in allen Spielen wirken, gehört sie hierher. Betrifft sie nur ein Spiel, gehört sie in dessen Ordner.
 
-Aktuelle Version: **1.1.0**
+Aktuelle Version: **1.2.0**
 
 ## Inhalt
 
@@ -46,7 +46,7 @@ Alle Werte stehen als CSS-Variablen in `tokens.css`. Spiele nutzen für Farben u
 | Baustein | Verhalten |
 |---|---|
 | Kopfzeile | Titel des Spiels, Name des aktuellen Levels mit Pfeil, Zähler rechts |
-| Steuerleiste | Bis zu fünf runde Schaltflächen mit Beschriftung, vom Spiel gewählt: `undo`, `hint`, `restart`, `levels`, `settings` |
+| Steuerleiste | Bis zu fünf runde Schaltflächen mit Beschriftung, vom Spiel gewählt: `undo`, `hint`, `restart`, `levels`, `settings` oder eigene des Spiels (zum Beispiel Halten und Pause bei FUGE) |
 | Auswahl | iPhone hoch: Blatt von unten mit Karten zum Wischen. iPhone quer: Schublade von links. iPad quer: feste Seitenleiste |
 | Levelkarte | Vorschau, Name, Zusatzzeile, bis zu drei Sterne, fünf Schwierigkeitspunkte, aktuelle Karte blau umrandet |
 | Einstellungen | Ton an oder aus, Klangfarbe (Warm, Klar, Weich), vom Spiel definierte Schalter, ein Hinweis, Versionszeile |
@@ -61,9 +61,9 @@ Blätter schließen per Wischen nach unten, Tipp daneben, Kreuz oder Escape. Tip
 Ein Spiel ruft in seiner `main.js` `createShell()` auf:
 
 ```js
-import { createShell } from '../../shared/js/shell.js?shell=1.1.0';
-import { createI18n } from '../../shared/js/i18n.js?shell=1.1.0';
-import { createStorage } from '../../shared/js/storage.js?shell=1.1.0';
+import { createShell } from '../../shared/js/shell.js?shell=1.2.0';
+import { createI18n } from '../../shared/js/i18n.js?shell=1.2.0';
+import { createStorage } from '../../shared/js/storage.js?shell=1.2.0';
 
 const storage = createStorage('queen:');
 const i18n = createI18n(QUEEN_STRINGS);         // Texte des Spiels, de und en
@@ -93,7 +93,7 @@ const shell = createShell({
 | `title` | Titel in Großbuchstaben, erscheint in Kopfzeile, Browser-Tab und Versionszeile |
 | `version` | Version des Spiels |
 | `i18n`, `storage`, `sound` | Erzeugt mit `createI18n`, `createStorage` und einer Unterklasse von `SoundEngine` |
-| `buttons` | Welche Schaltflächen die Steuerleiste zeigt, in dieser Reihenfolge |
+| `buttons` | Welche Schaltflächen die Steuerleiste zeigt, in dieser Reihenfolge. Ein Eintrag ist ein Name der Hülle oder eine eigene Schaltfläche `{ id, icon, labelKey }`: `icon` ist SVG-Inhalt im Feld 24 × 24, ein Tipp ruft `actions[id]` auf |
 | `levels` | Optionale Auswahl: Schlüssel für Beschriftung, Titel und die Schaltfläche „Nächste“ |
 | `settings` | Zusätzliche Schalter in den Einstellungen: `id` und Schlüssel für Name und Beschreibung |
 | `noteKey`, `coachKey`, `boardLabelKey` | Optionale Texte: Hinweis in den Einstellungen, Erststart-Hinweis, Beschriftung des Bretts |
@@ -109,7 +109,8 @@ const shell = createShell({
 | `setLevelLabel(text)` | Name des aktuellen Levels, setzt auch den Browser-Tab |
 | `renderLevels(items)` | Füllt die Auswahl. `items`: `{ id, name, meta, stars, difficulty, preview, current }` |
 | `setDisabled(name, bool)`, `setBusy(name, bool)` | Zustand einer Schaltfläche, zum Beispiel während der Tipp rechnet |
-| `showResult(opts)`, `hideResult()` | Ergebniskarte. `opts`: `{ title, text, stars, stats, highlight, showNext }` |
+| `setButton(id, { icon, labelKey })` | Symbol und Beschriftung einer Schaltfläche wechseln, zum Beispiel Pause und Weiter |
+| `showResult(opts)`, `hideResult()` | Ergebniskarte. `opts`: `{ title, text, stars, stats, highlight, showNext, showBack }`. `showBack: false` blendet „Letzten Zug zurücknehmen“ aus, für Spiele ohne Zurück |
 | `toast(text)`, `hideToast()` | Kurze Meldung |
 | `showCoach()` | Erststart-Hinweis, erscheint nur einmal |
 | `setSetting(id, an)` | Zeigt den Zustand eines Spielschalters |
@@ -143,7 +144,7 @@ Ein Spiel erweitert die Klasse um eigene Klänge, SPRING zum Beispiel um `lift`,
 `Gutter` beschreibt jedes Teil nur durch seinen **Winkel** auf einem Kreis und seine Winkelgeschwindigkeit. Reibung, Stöße, Neigung und Fingerbewegungen sind für alle Spiele gleich.
 
 ```js
-import { Gutter } from '../../shared/js/gutter.js?shell=1.1.0';
+import { Gutter } from '../../shared/js/gutter.js?shell=1.2.0';
 
 // Runder Rand wie bei SPRING
 const rim = new Gutter({ radius: 446, marbleRadius: 37, onCollide: (i) => sound.clack(i) });
@@ -174,7 +175,7 @@ Mit `arc` bekommt der Rand Wände an beiden Enden: Teile prallen ab, es gibt kei
 ### Neigen
 
 ```js
-import { Tilt } from '../../shared/js/tilt.js?shell=1.1.0';
+import { Tilt } from '../../shared/js/tilt.js?shell=1.2.0';
 
 const tilt = new Tilt((x, y) => view.setGravity(x, y), storage.load('tilt', false));
 const result = await tilt.enable();   // 'ok', 'off', 'denied' oder 'unsupported'
