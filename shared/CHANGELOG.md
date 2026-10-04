@@ -2,6 +2,13 @@
 
 All notable changes to the MIND PAUSE shell. [Deutsch](CHANGELOG.de.md)
 
+## 1.3.0 (2026-10-04)
+
+### New
+* `resign` button (Resign, flag icon) for the control bar. Up to six buttons; with six they get a little smaller and still fit on the iPhone SE and in landscape.
+* `confirm({ title, text, ok, cancel })`: confirmation as a card on the board, returns `true` or `false`. Escape cancels.
+* New texts "Resign" and "Cancel" in both languages.
+
 ## 1.2.0 (2026-10-04)
 
 ### New

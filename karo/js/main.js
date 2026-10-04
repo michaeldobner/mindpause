@@ -1,10 +1,10 @@
 // KARO: Klondike-Patience mit 1 oder 3 Karten, Punkte wie bei Windows oder Vegas.
 // Die Oberfläche kommt aus der Hülle (shared/js/shell.js), hier steht nur, was KARO eigen ist.
 
-import { createShell } from '../../shared/js/shell.js?shell=1.2.0';
-import { createI18n } from '../../shared/js/i18n.js?shell=1.2.0';
-import { createStorage } from '../../shared/js/storage.js?shell=1.2.0';
-import { DEFAULT_STYLE } from '../../shared/js/sound-engine.js?shell=1.2.0';
+import { createShell } from '../../shared/js/shell.js?shell=1.3.0';
+import { createI18n } from '../../shared/js/i18n.js?shell=1.3.0';
+import { createStorage } from '../../shared/js/storage.js?shell=1.3.0';
+import { DEFAULT_STYLE } from '../../shared/js/sound-engine.js?shell=1.3.0';
 import { Game } from './game.js?v=1.0.0';
 import { TableView } from './view.js?v=1.0.0';
 import { KaroSound } from './sound.js?v=1.0.0';

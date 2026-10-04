@@ -11,12 +11,13 @@ const ICONS = {
   restart: '<path d="M20 12a8 8 0 1 1-2.34-5.66"/><path d="M20 4v5h-5"/>',
   levels: '<circle cx="12" cy="5" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="12" cy="19" r="2"/><circle cx="5" cy="12" r="2"/><circle cx="19" cy="12" r="2"/>',
   settings: '<path d="M4 7h10M18 7h2M4 17h2M10 17h10"/><circle cx="16" cy="7" r="2"/><circle cx="8" cy="17" r="2"/>',
+  resign: '<path d="M6 21V4"/><path d="M6 4h11l-2.5 4L17 12H6"/>',
   close: '<path d="m6 6 12 12M18 6 6 18"/>',
   chevron: '<path d="m6 9 6 6 6-6"/>',
 };
 
 // Version der Hülle. Ändern nur über: node scripts/release.mjs shell <version>
-export const SHELL_VERSION = '1.2.0';
+export const SHELL_VERSION = '1.3.0';
 
 const SIDEBAR_QUERY = '(min-width: 1000px) and (orientation: landscape) and (min-height: 600px)';
 
@@ -46,7 +47,7 @@ export function createShell(config) {
   // ---------- Aufbau ----------
 
   const icon = (name) => `<svg viewBox="0 0 24 24" aria-hidden="true">${ICONS[name]}</svg>`;
-  const buttonLabel = { undo: 'undo', hint: 'hint', restart: 'restart', levels: levels?.buttonKey, settings: 'settings' };
+  const buttonLabel = { undo: 'undo', hint: 'hint', restart: 'restart', resign: 'resign', levels: levels?.buttonKey, settings: 'settings' };
 
   document.body.insertAdjacentHTML('afterbegin', `
     <div class="app${levels ? '' : ' no-levels'}">
@@ -93,10 +94,20 @@ export function createShell(config) {
             <button id="back" class="link-btn" type="button" data-i18n="undoLast"></button>
           </div>
         </section>
+        <section id="confirm" class="result confirm" hidden role="alertdialog" aria-modal="true" aria-labelledby="confirm-title">
+          <div class="card">
+            <h2 id="confirm-title" class="result-title"></h2>
+            <p id="confirm-text" class="result-text"></p>
+            <div class="result-actions">
+              <button id="confirm-cancel" class="btn ghost" type="button"></button>
+              <button id="confirm-ok" class="btn solid" type="button"></button>
+            </div>
+          </div>
+        </section>
         <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
       </main>
 
-      <nav class="controls">
+      <nav class="controls${buttons.length > 5 ? ' many' : ''}">
         ${buttons.map((name) => `
         <button id="btn-${name}" class="icon-btn" type="button" data-action="${name}"
                 ${name === 'levels' || name === 'settings' ? 'aria-haspopup="dialog"' : ''}>
@@ -249,6 +260,27 @@ export function createShell(config) {
     $('#result').hidden = true;
   }
 
+  // Rückfrage auf dem Brett, zum Beispiel vor dem Aufgeben. Ergebnis: true bei ok, sonst false.
+  // opts: { title, text, ok, cancel }
+  let confirmDone = null;
+  function confirm(opts) {
+    if (confirmDone) confirmDone(false);
+    $('#confirm-title').textContent = opts.title;
+    $('#confirm-text').textContent = opts.text || '';
+    $('#confirm-ok').textContent = opts.ok;
+    $('#confirm-cancel').textContent = opts.cancel || t('cancel');
+    $('#confirm').hidden = false;
+    requestAnimationFrame(() => $('#confirm').classList.add('show'));
+    return new Promise((resolve) => {
+      confirmDone = (answer) => {
+        confirmDone = null;
+        $('#confirm').classList.remove('show');
+        $('#confirm').hidden = true;
+        resolve(answer);
+      };
+    });
+  }
+
   let toastTimer = null;
   function toast(text, ms = 3200) {
     const el = $('#toast');
@@ -319,6 +351,8 @@ export function createShell(config) {
   });
 
   $('#again').addEventListener('click', () => act('again'));
+  $('#confirm-ok').addEventListener('click', () => confirmDone && confirmDone(true));
+  $('#confirm-cancel').addEventListener('click', () => confirmDone && confirmDone(false));
   $('#next').addEventListener('click', () => act('next'));
   $('#back').addEventListener('click', () => act('back'));
 
@@ -338,7 +372,11 @@ export function createShell(config) {
 
   $('#settings-close').addEventListener('click', closePanels);
   $('#scrim').addEventListener('click', closePanels);
-  document.addEventListener('keydown', (e) => e.key === 'Escape' && closePanels());
+  document.addEventListener('keydown', (e) => {
+    if (e.key !== 'Escape') return;
+    if (confirmDone) confirmDone(false);
+    else closePanels();
+  });
   swipeToClose($('#settings'));
 
   $('#sound-toggle').addEventListener('click', () => {
@@ -396,6 +434,7 @@ export function createShell(config) {
     setBusy,
     showResult,
     hideResult,
+    confirm,
     toast,
     hideToast,
     showCoach,

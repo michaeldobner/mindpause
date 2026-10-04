@@ -6,7 +6,7 @@ The shell is everything every MIND PAUSE game shares. A game only describes what
 
 **Rule of thumb:** if a change should affect every game, it belongs here. If it only concerns one game, it belongs in that game's folder.
 
-Current version: **1.2.0**
+Current version: **1.3.0**
 
 ## Contents
 
@@ -46,11 +46,12 @@ All values live as CSS variables in `tokens.css`. Games never use fixed values f
 | Building block | Behaviour |
 |---|---|
 | Header | Title of the game, name of the current level with a chevron, counter on the right |
-| Control bar | Up to five round buttons with labels, chosen by the game: `undo`, `hint`, `restart`, `levels`, `settings` |
+| Control bar | Up to six round buttons with labels, chosen by the game: `undo`, `hint`, `restart`, `resign`, `levels`, `settings`. With six they get a little smaller so they fit on the iPhone SE too |
 | Picker | iPhone portrait: sheet from the bottom with cards to swipe. iPhone landscape: drawer from the left. iPad landscape: permanent sidebar |
 | Level card | Preview, name, meta line, up to three stars, five difficulty dots, current card outlined in blue |
 | Settings | Choices defined by the game (for example the board style), sound on or off, sound style (Warm, Clear, Soft), switches defined by the game, a note, version line |
 | Result card | Title, stars, text, statistics, "Play again", optional "Next …", "Undo last move" |
+| Confirmation | Card on the board with title, text and two buttons, for example before resigning. Escape cancels |
 | Toast | Short message at the bottom of the board |
 | First launch hint | Speech bubble below the level name, only once per game |
 
@@ -61,9 +62,9 @@ Sheets close on swipe down, tap outside, the cross or Escape. Touch targets are 
 A game calls `createShell()` in its `main.js`:
 
 ```js
-import { createShell } from '../../shared/js/shell.js?shell=1.2.0';
-import { createI18n } from '../../shared/js/i18n.js?shell=1.2.0';
-import { createStorage } from '../../shared/js/storage.js?shell=1.2.0';
+import { createShell } from '../../shared/js/shell.js?shell=1.3.0';
+import { createI18n } from '../../shared/js/i18n.js?shell=1.3.0';
+import { createStorage } from '../../shared/js/storage.js?shell=1.3.0';
 
 const storage = createStorage('queen:');
 const i18n = createI18n(QUEEN_STRINGS);         // texts of the game, de and en
@@ -113,6 +114,7 @@ const shell = createShell({
 | `renderLevels(items)` | Fills the picker. `items`: `{ id, name, meta, stars, difficulty, preview, current }` |
 | `setDisabled(name, bool)`, `setBusy(name, bool)` | State of a button, for example while the hint is computing |
 | `showResult(opts)`, `hideResult()` | Result card. `opts`: `{ title, text, stars, stats, highlight, showNext }` |
+| `confirm({ title, text, ok, cancel })` | Confirmation. Returns a promise with `true` (ok) or `false` (cancel). `cancel` is optional, default "Cancel" |
 | `toast(text)`, `hideToast()` | Short message |
 | `showCoach()` | First launch hint, shown only once |
 | `setSetting(id, value)` | Shows the state of a switch (`true` or `false`) or the selected value of a choice |
@@ -122,7 +124,7 @@ const shell = createShell({
 
 `createI18n(gameStrings)` merges the shell's texts with the game's. Both languages need the same keys, the test `shared/tests/i18n.test.js` checks this for every game. Plural: `{ one: 'marble', other: 'marbles' }`, used with `t('marbles', { n })`.
 
-Texts of the shell: undo, hint, new, more, close, difficulty, game over, play again, undo last move, the restart message, thinking, settings, sound, sound style with the three styles, version and the collection name.
+Texts of the shell: undo, hint, new, resign, cancel, more, close, difficulty, game over, play again, undo last move, the restart message, thinking, settings, sound, sound style with the three styles, version and the collection name.
 
 ### Sounds
 
@@ -146,7 +148,7 @@ A game extends the class with its own sounds, for example SPRING with `lift`, `l
 `Gutter` describes every piece only by its **angle** on a circle and its angular velocity. Friction, collisions, tilt and finger input are the same for every game.
 
 ```js
-import { Gutter } from '../../shared/js/gutter.js?shell=1.2.0';
+import { Gutter } from '../../shared/js/gutter.js?shell=1.3.0';
 
 // Round rim as in SPRING
 const rim = new Gutter({ radius: 446, marbleRadius: 37, onCollide: (i) => sound.clack(i) });
@@ -177,7 +179,7 @@ With `arc` the rim gets walls at both ends: pieces bounce off, and there is no p
 ### Tilt
 
 ```js
-import { Tilt } from '../../shared/js/tilt.js?shell=1.2.0';
+import { Tilt } from '../../shared/js/tilt.js?shell=1.3.0';
 
 const tilt = new Tilt((x, y) => view.setGravity(x, y), storage.load('tilt', false));
 const result = await tilt.enable();   // 'ok', 'off', 'denied' or 'unsupported'

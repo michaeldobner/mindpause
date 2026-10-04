@@ -86,22 +86,47 @@ test('Bewertung ist symmetrisch', () => {
   assert.equal(evaluate(g.board, BLUE), -evaluate(g.board, BLACK));
 });
 
-test('Mittel gewinnt deutlich gegen Leicht', () => {
-  let mediumWins = 0;
-  const games = 4;
+// Jede Stufe soll die nächstschwächere klar schlagen
+function ladder(strong, weak, games, seedBase) {
+  let wins = 0;
   for (let k = 0; k < games; k++) {
     const g = new Game();
-    const random = seeded(100 + k);
-    const mediumSide = k % 2 === 0 ? BLUE : BLACK;
+    const random = seeded(seedBase + k);
+    const strongSide = k % 2 === 0 ? BLUE : BLACK;
     let plies = 0;
     while (!g.isOver && plies < 160) {
-      const level = g.turn === mediumSide ? 'medium' : 'easy';
+      const level = g.turn === strongSide ? strong : weak;
       g.apply(g.match(chooseMove(g.board, g.turn, level, { random })));
       plies++;
     }
-    if (g.result && g.result.winner === mediumSide) mediumWins++;
+    if (g.result && g.result.winner === strongSide) wins++;
   }
-  assert.ok(mediumWins >= 3, `Mittel gewann ${mediumWins} von ${games}`);
+  return wins;
+}
+
+test('Leicht gewinnt deutlich gegen Einsteiger', () => {
+  const wins = ladder('easy', 'beginner', 10, 300);
+  assert.ok(wins >= 7, `Leicht gewann ${wins} von 10`);
+});
+
+test('Mittel gewinnt deutlich gegen Leicht', () => {
+  const wins = ladder('medium', 'easy', 6, 100);
+  assert.ok(wins >= 4, `Mittel gewann ${wins} von 6`);
+});
+
+test('Aufgeben beendet das Spiel, wird gespeichert und lässt sich zurücknehmen', () => {
+  const g = new Game();
+  g.apply(g.moves[0]);
+  g.resign(BLUE);
+  assert.deepEqual(g.result, { winner: BLACK, resigned: true });
+  assert.ok(g.isOver);
+  const copy = new Game();
+  copy.restore(JSON.parse(JSON.stringify(g.serialize())));
+  assert.ok(copy.isOver);
+  g.resign(null);
+  assert.equal(g.result, null);
+  g.reset();
+  assert.equal(g.resigned, null);
 });
 
 test('Tippen auf ein Ziel wählt den Schlagweg mit den meisten Steinen', () => {

@@ -92,7 +92,8 @@ Capture sequences are found by depth-first search: the search continues from eve
 | `findMove(from, to)` | Move for an input. If several capture paths lead to the same square, the longest wins |
 | `movesFrom(square)`, `match(move)` | Moves of a piece, map the computer's move onto an own legal move |
 | `apply(move)`, `undo()` | Play and take back a move |
-| `counts`, `result`, `isOver` | State. `result` is `null`, `{ winner }` or `{ draw: 'repetition' \| 'quiet' }` |
+| `resign(side)` | The side resigns, `null` takes it back. Saved with the game |
+| `counts`, `result`, `isOver` | State. `result` is `null`, `{ winner }`, `{ winner, resigned: true }` or `{ draw: 'repetition' \| 'quiet' }` |
 | `pieceAt(square)` | `{ id, side, king }` or `null` |
 | `serialize()`, `restore(data)` | Save and load the game |
 
@@ -107,7 +108,7 @@ The computer searches with **negamax and alpha-beta pruning**, like a classic ch
 | Iterative deepening | First one ply, then two and so on, until depth or time is reached. When time runs out, the result of the last complete depth counts |
 | Transposition table | Known positions are not calculated twice, and their best move is tried first |
 | Move ordering | Best known move, then captures of many pieces, then crownings |
-| Quiescence search | If a mandatory capture is pending at the end of the search depth, the search goes on for up to eight more plies. The computer never misses a capture sequence |
+| Quiescence search | If a mandatory capture is pending at the end of the search depth, the exchange is calculated further, depending on the level for up to eight plies (`quiet`). At Hard the computer never misses a capture sequence, low levels deliberately see less far |
 | Randomness among equal moves | Games do not always go the same way |
 
 **Evaluation** of a position from the point of view of one side:
@@ -120,16 +121,30 @@ The computer searches with **negamax and alpha-beta pruning**, like a classic ch
 | Piece or queen in the centre (4×4 squares) | plus 8 |
 | Queen | 320 |
 | Fewer than 10 pieces on the board | Everything times 1.15, so trading pays off when ahead |
+| Clear lead in the endgame (at most 9 pieces, at least 150 points ahead) | The stronger side's queens earn points for closing in on the last opposing pieces, for the long diagonal and for leaving the opponent few moves. A won endgame is finished quickly |
 
 **Levels** (`LEVELS`):
 
-| Level | Depth | Time | Margin | Mistakes |
-|---|---|---|---|---|
-| Easy | 2 | 200 ms | 90 points | 22 % random move |
-| Medium | 5 | 500 ms | 12 points | none |
-| Hard | up to 14 | 900 ms | 0 | none |
+| Level | Depth | Quiescence | Time | Margin | Careless |
+|---|---|---|---|---|---|
+| Beginner | 1 | 0 | 150 ms | 60 points | always |
+| Easy | 2 | 1 | 250 ms | 35 points | 50 % of moves |
+| Medium | 4 | 6 | 500 ms | 10 points | 20 % of moves |
+| Hard | up to 14 | 8 | 900 ms | 0 | never |
 
-Margin means: the move is chosen at random among all moves at most that many points worse than the best. Checked in the tests: Medium clearly beats Easy. During development Medium won 10:0 against Easy and Hard 4:0 against Medium.
+* **Margin:** the move is chosen at random among all moves at most that many points worse than the best.
+* **Careless:** such a move is chosen as at Beginner, only looking at the own move. It imitates a person who sometimes looks closely and sometimes does not. No piece is ever given away on purpose, mistakes only come from overlooking.
+
+**Balancing.** Measured with many games of the levels against each other:
+
+| Match | Result |
+|---|---|
+| Beginner against random moves | about even (21:19) |
+| Easy against Beginner | 34:6 |
+| Medium against Easy | 35:5 |
+| Hard against Medium | 12:0 |
+
+On every push the tests check that Easy clearly beats Beginner and Medium clearly beats Easy.
 
 `chooseMove(board, side, level, { random, now })` returns the move. Randomness and clock can be replaced in tests. The Web Worker receives `{ id, board, side, level }` and answers with `{ id, move }`, so the interface stays smooth. Hints use the same worker at Hard level.
 
@@ -143,7 +158,9 @@ Margin means: the move is chosen at random among all moves at most that many poi
 |---|---|
 | `setGame(game)` | Set a position without animation (app start) |
 | `sync(game)` | Bring every piece to its place with animation: after New, Undo, mode switch |
-| `play(record)` | Animate a move: jump the path square by square, captured pieces into the tray, crowning |
+| `play(record)` | Animate the computer's move: the piece lifts, moves slowly jump by jump, jumped pieces fade, then tray and crowning |
+| `playNow(record, fromPos, { slow })` | The same sequence directly, fast for own moves, slow with `slow` |
+| `markLast(move)` | Subtly lighten the start and target squares of the last move (`url(#q-last)`), `null` removes the marker |
 | `toTray(id)` | Roll a piece into the tray of the capturing side |
 | `select(square)`, `showHint(move)` | Selection, target rings, hint ring |
 | `setFlip(on)` | Turn the board for two players |
@@ -184,12 +201,13 @@ Grain and diamond lattice are SVG patterns generated in code, without image file
 |---|---|
 | `humanMove(move)` | Play the move, save, animate, then `afterMove()` |
 | `afterMove()` | Update the display, check for the end, turn the board for two players, otherwise `computerMove()` |
-| `computerMove()` | Ask the worker, pause at least 450 ms, play the move. A request number discards stale answers after Undo, New or a mode switch |
+| `computerMove()` | Ask the worker, pause at least 700 ms, play the move and show it slowly. A request number discards stale answers after Undo, New or a mode switch |
 | `hint()` | Show the best move for the side to move |
 | `checkEnd()` | Result card, statistics, stars, sound |
 | `newGame()` | New game. The old one is kept for an immediate Undo |
 | `undo()` | Against the computer back to your own last move, a thinking computer is cancelled |
 | `switchMode(id)` | Switch mode, always with a new game |
+| `resign()` | Confirmation through `shell.confirm()`, then `game.resign(side)` and the result card. Undo takes back the resignation and its statistics entry |
 | `setTheme(id)` | Switch and save the board style, the board fades smoothly |
 | `sideName(side)` | Colour name of a side in the current style for the header and the result card |
 
