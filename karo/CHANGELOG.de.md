@@ -2,6 +2,15 @@
 
 Alle wichtigen Änderungen an KARO. [English](CHANGELOG.md)
 
+## 1.0.1 (2026-10-04)
+
+### Behoben
+* **Siegesfeier auf dem iPhone:** Die Karten springen jetzt nach dem Sieg zuverlässig von den Ablagen. Bisher wartete die Feier, bis Safari alle 52 Kartenbilder fertig hatte, und startete dabei manchmal nie. Die Bilder werden jetzt schon während des Spiels im Hintergrund vorbereitet. Fehlt beim Sieg noch eines, springt die Karte als schlichte Karte mit Wert und Farbe.
+* **Bewegung reduzieren:** Die Siegesfeier fällt nicht mehr weg. Die Karten fallen dann ruhiger, langsamer und ohne Spuren.
+
+### Technik
+* Der Browser-Test prüft die Siegesfeier und läuft zusätzlich mit WebKit, der Engine von Safari auf iPhone und iPad.
+
 ## 1.0.0 (2026-10-04)
 
 Erste Version von KARO, dem zweiten Spiel der Sammlung MIND PAUSE.

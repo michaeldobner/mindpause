@@ -18,7 +18,7 @@ Classic board games, reimagined with tactile design and handcrafted sound. Free,
 |---|---|---|---|
 | <img src="spring/icons/icon.svg" width="56" alt=""> | **[SPRING](spring/README.md)** · [play](https://michaeldobner.github.io/mindpause/spring/) | Peg solitaire on the classic cross-shaped board. Seven figures from easy to masterful, hints, a living rim, tilt | 2.1.1 |
 | <img src="queen/icons/icon.svg" width="56" alt=""> | **[QUEEN](queen/README.md)** · [play](https://michaeldobner.github.io/mindpause/queen/) | German checkers against the computer at three levels or for two players on one device. Ebony, maple and an engraved golden crown, trays for captured pieces | 1.1.0 |
-| <img src="karo/icons/icon.svg" width="56" alt=""> | **[KARO](karo/README.md)** · [play](https://michaeldobner.github.io/mindpause/karo/) | Classic solitaire as on Windows. Draw one or three, points or Vegas, levels that can always be solved, hints | 1.0.0 |
+| <img src="karo/icons/icon.svg" width="56" alt=""> | **[KARO](karo/README.md)** · [play](https://michaeldobner.github.io/mindpause/karo/) | Classic solitaire as on Windows. Draw one or three, points or Vegas, levels that can always be solved, hints | 1.0.1 |
 
 More games and play across two devices are on the way, see the [roadmap](#roadmap).
 
@@ -67,6 +67,7 @@ Requirements: Node.js 20 or newer and a modern browser. There are no dependencie
 npm start       # local server: http://localhost:3000/ (home), /spring/, /queen/
 npm test        # logic tests of every game and the shell
 npm run e2e     # browser test of every game on iPhone, iPhone SE and iPad
+E2E_ENGINE=webkit npm run e2e   # the same in WebKit, the engine of Safari
 ```
 
 The browser test needs Playwright once: `npm install --no-save playwright && npx playwright install chromium`.

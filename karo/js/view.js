@@ -7,7 +7,7 @@
 //
 // Bedienung: Tippen legt eine Karte an den besten Platz, Ziehen geht auch.
 
-import { suitOf } from './cards.js?v=1.0.0';
+import { suitOf } from './cards.js?v=1.0.1';
 
 const TAP_SLOP = 8; // Pixel, ab denen aus einem Tippen ein Ziehen wird
 const RATIO = 1.4;
@@ -196,6 +196,7 @@ export class TableView {
       el.dataset.pos = key;
       el.classList.toggle('up', p.up);
       el.classList.toggle('gone', this.hidden.has(c));
+      el.classList.remove('flying');
       if (deal) {
         const i = dealOrder.get(c);
         el.style.transitionDelay = i === undefined ? '0ms' : `${i * 32}ms`;
@@ -292,7 +293,20 @@ export class TableView {
 
   hideCard(c) {
     this.hidden.add(c);
-    this.cards[c].classList.add('gone');
+    const el = this.cards[c];
+    el.classList.remove('flying');
+    el.classList.add('gone');
+  }
+
+  // Eine Karte der Siegesfeier frei über die Matte bewegen, ohne Übergang und über allem
+  flyCard(c, x, y) {
+    const el = this.cards[c];
+    if (!el.classList.contains('flying')) {
+      el.classList.add('flying', 'up');
+      el.style.transitionDelay = '0ms';
+    }
+    el.style.zIndex = '3000';
+    el.style.transform = `translate(${x}px, ${y}px)`;
   }
 
   // ---------- Bedienung ----------
