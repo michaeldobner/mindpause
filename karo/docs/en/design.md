@@ -51,19 +51,15 @@ The interface around the mat uses the collection's design tokens from `shared/to
 
 ### Shape system of the court cards
 
-Every figure wears a gown shaped as a long hexagon with the same patterned bands:
-
-| Band | Design |
-|---|---|
-| Edge | stripes in cream and the accent colour along the edges |
-| Collar | black band with white sawtooth |
-| Dot row | dots in the accent colour with a white core (a cord band for the jack) |
-| Lenses | black lenses with a white wavy line and dots at the sides |
-| Centre | black diamond with a light diamond |
+Every figure wears a gown shaped as a long hexagon with stripes in cream and the accent colour along the edges. Collar and patterns tell the ranks apart:
 
 | Element | King | Queen | Jack |
 |---|---|---|---|
 | Gown | wide and angular | narrow at the shoulders | slender |
+| Collar | black band with zigzag on both sides | black band with sawtooth | black band with pennants |
+| Pattern band | checkerboard | dot row with white cores | cord |
+| Sides | round discs of arcs | black lenses with a wavy line | herringbone |
+| Centre | hexagon with ochre | diamond | circle |
 | Head | stepped crown, beard | hood in the gown colour, small crown to the side | tall cap with dot band |
 | Attribute | sceptre | flower | sword |
 
@@ -74,7 +70,7 @@ Every figure wears a gown shaped as a long hexagon with the same patterned bands
 | Clubs | petrol | ochre |
 | Diamonds | ochre | orange |
 
-The faces are fine line drawings: closed eyes, a long nose, small red lips. Calm and meditative, the signature of the deck.
+The faces are fine line drawings: half-open eyes with a lowered gaze, slender brows, a long nose, small red lips. Calm and inward, the signature of the deck.
 
 ## Layouts
 

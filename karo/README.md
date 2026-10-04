@@ -20,7 +20,7 @@ Part of the [MIND PAUSE](../README.md) collection.
 
 ## Why KARO
 
-KARO is Klondike, the solitaire that became famous with Windows. It is played with a deck designed just for it, in the style of classic designer decks: pure white paper, delicate Didot indices, twelve large diagonal court cards with patterned bands and closed eyes, harlequin diamonds on the back. The cards lie on a dark linen mat with gold embossing. No ads, no account, no tracking. Runs in the browser, installs like an app and works offline.
+KARO is Klondike, the solitaire that became famous with Windows. It is played with a deck designed just for it, in the style of classic designer decks: pure white paper, delicate Didot indices, twelve large diagonal court cards with patterned bands and a lowered gaze, harlequin diamonds on the back. The cards lie on a dark linen mat with gold embossing. No ads, no account, no tracking. Runs in the browser, installs like an app and works offline.
 
 ## Highlights
 

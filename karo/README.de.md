@@ -20,7 +20,7 @@ Ein Spiel der Sammlung [MIND PAUSE](../README.de.md).
 
 ## Warum KARO
 
-KARO ist Klondike, die Patience, die mit Windows berühmt wurde. Gespielt wird mit einem eigens gestalteten Kartendeck im Stil klassischer Designer-Decks: reinweißes Papier, feine Didot-Indizes, zwölf große, diagonal liegende Bildkarten mit Musterbändern und geschlossenen Augen, Harlekin-Rauten auf der Rückseite. Die Karten liegen auf einer dunklen Leinenmatte mit Goldprägung. Keine Werbung, kein Konto, kein Tracking. Läuft im Browser, lässt sich wie eine App installieren und funktioniert offline.
+KARO ist Klondike, die Patience, die mit Windows berühmt wurde. Gespielt wird mit einem eigens gestalteten Kartendeck im Stil klassischer Designer-Decks: reinweißes Papier, feine Didot-Indizes, zwölf große, diagonal liegende Bildkarten mit Musterbändern und gesenktem Blick, Harlekin-Rauten auf der Rückseite. Die Karten liegen auf einer dunklen Leinenmatte mit Goldprägung. Keine Werbung, kein Konto, kein Tracking. Läuft im Browser, lässt sich wie eine App installieren und funktioniert offline.
 
 ## Highlights
 

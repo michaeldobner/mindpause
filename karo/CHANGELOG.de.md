@@ -12,7 +12,7 @@ Erste Version von KARO, dem zweiten Spiel der Sammlung MIND PAUSE.
 * **Punkte wie bei Windows**: +5 vom Stapel auf eine Spalte, +10 auf eine Ablage, +5 fürs Aufdecken, −15 von der Ablage zurück, Abzug für Durchgänge und Zeit, Zeitbonus beim Sieg.
 * **Vegas**: 52 Einsatz, 5 je Karte auf einer Ablage, 1 Durchgang (1 Karte) oder 3 Durchgänge (3 Karten), fortlaufendes Konto.
 * **Sechs Stufen**: Leicht, Mittel, Schwer, Meisterhaft (je 200 vorab geprüfte, sicher lösbare Spiele pro Ziehmodus), Tagesspiel und Zufall.
-* **Eigenes Kartendeck** im Stil klassischer Designer-Decks: reinweißes Papier, feine Didot-Indizes, große diagonale Bildkarten mit Musterbändern, Harlekin-Rückseite.
+* **Eigenes Kartendeck** im Stil klassischer Designer-Decks: reinweißes Papier, feine Didot-Indizes, große diagonale Bildkarten mit eigenem Muster je Rang und gesenktem Blick, Harlekin-Rückseite.
 * **Tippen oder Ziehen**, unbegrenztes Zurück, Tipps über den Löser, automatisches Beenden.
 * **Siegesfeier** mit springenden Karten und verblassenden Spuren.
 * **Klänge** aus Papier und Leinen, mit dem Keramikton der Sammlung auf den Ablagen.

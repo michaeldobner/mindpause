@@ -51,19 +51,15 @@ Die Oberfläche um die Matte nutzt die Design-Tokens der Sammlung aus `shared/to
 
 ### Formensystem der Bildkarten
 
-Jede Figur trägt ein Gewand als langes Sechseck mit denselben Musterbändern:
-
-| Band | Gestaltung |
-|---|---|
-| Rand | Streifen in Creme und der Akzentfarbe entlang der Kanten |
-| Kragen | schwarzes Band mit weißen Sägezähnen |
-| Punktreihe | Punkte in der Akzentfarbe mit weißem Kern (beim Buben ein Kordelband) |
-| Linsen | schwarze Linsen mit weißer Wellenlinie und Punkten an den Seiten |
-| Mitte | schwarze Raute mit heller Raute |
+Jede Figur trägt ein Gewand als langes Sechseck mit Streifen in Creme und der Akzentfarbe entlang der Kanten. Kragen und Muster unterscheiden die Ränge:
 
 | Element | König | Dame | Bube |
 |---|---|---|---|
 | Gewand | breit und kantig | schmal an den Schultern | schlank |
+| Kragen | schwarzes Band mit Zickzack nach beiden Seiten | schwarzes Band mit Sägezahn | schwarzes Band mit Wimpeln |
+| Musterband | Schachbrett | Punktreihe mit weißem Kern | Kordel |
+| Seiten | runde Scheiben aus Bögen | schwarze Linsen mit Wellenlinie | Fischgrät |
+| Mitte | Sechseck mit Ocker | Raute | Kreis |
 | Kopf | Krone mit Stufen, Bart | Haube in der Gewandfarbe, kleine Krone seitlich | hohe Kappe mit Punktband |
 | Attribut | Zepter | Blüte | Schwert |
 
@@ -74,7 +70,7 @@ Jede Figur trägt ein Gewand als langes Sechseck mit denselben Musterbändern:
 | Kreuz | Petrol | Ocker |
 | Karo | Ocker | Orange |
 
-Die Gesichter sind feine Linienzeichnungen: geschlossene Augen, lange Nase, kleiner roter Mund. Ruhig und meditativ, das Erkennungszeichen des Decks.
+Die Gesichter sind feine Linienzeichnungen: halb geöffnete Augen mit gesenktem Blick, schmale Brauen, lange Nase, kleiner roter Mund. Ruhig und in sich gekehrt, das Erkennungszeichen des Decks.
 
 ## Layouts
 

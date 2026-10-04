@@ -213,6 +213,39 @@ function courtHalf(card) {
       <circle cx="-8" cy="-6" r="1.8" fill="${COLORS.paper}"/><circle cx="9" cy="6" r="1.8" fill="${COLORS.paper}"/>
     </g>`;
 
+  // Muster je Rang: der König mit Schachbrett und Bögen, die Dame mit Punkten und Linsen,
+  // der Bube mit Kordel und Fischgrät
+  let checks = '';
+  for (let x = -112, i = 0; x < 112; x += 8, i++) {
+    checks += `<rect x="${x}" y="-44" width="8" height="5" fill="${i % 2 ? ink : p.accent}"/><rect x="${x}" y="-39" width="8" height="5" fill="${i % 2 ? p.accent : ink}"/>`;
+  }
+  const arcs = (cx, cy, rot) => `<g transform="translate(${cx} ${cy}) rotate(${rot})">
+      ${[[24, ink], [18, p.accent], [12, p.stripe], [6, ink]].map(([r, c]) => `<path d="M${-r} 0A${r} ${r} 0 0 1 ${r} 0z" fill="${c}"/>`).join('')}
+    </g>`;
+  const herringbone = (cx) => {
+    let out = `<rect x="${cx - 13}" y="-34" width="26" height="36" fill="${p.accent}"/>`;
+    for (let y = -26; y <= 2; y += 7) out += `<path d="M${cx - 10} ${y}L${cx} ${y - 6}L${cx + 10} ${y}" fill="none" stroke="${ink}" stroke-width="2.6"/>`;
+    return out;
+  };
+  // Kragen: König mit Zickzack nach beiden Seiten, Dame mit Sägezahn, Bube mit Wimpeln
+  let collar = `<rect x="-110" y="-70" width="220" height="19" fill="${ink}"/>`;
+  if (rank === 13) {
+    for (let x = -110; x < 110; x += 11) collar += `<path d="M${x} -51L${x + 5.5} -59L${x + 11} -51z M${x + 5.5} -70L${x + 11} -62L${x + 16.5} -70z" fill="${COLORS.paper}"/>`;
+  } else if (rank === 12) {
+    collar += teeth;
+  } else {
+    for (let x = -110; x < 110; x += 14) collar += `<path d="M${x} -70L${x + 7} -56L${x + 14} -70z" fill="${p.accent}"/><circle cx="${x + 7}" cy="-64" r="1.6" fill="${ink}"/>`;
+  }
+  const pattern = {
+    13: `${checks}${arcs(-50, 0, 0)}${arcs(50, 0, 0)}
+      <path d="M0-30l10 8v8l-10 8-10-8v-8z" fill="${ink}"/><path d="M0-24l5 4v4l-5 4-5-4v-4z" fill="${COLORS.ochre}"/>`,
+    12: `${dots}${lens(-52, -13, -58)}${lens(52, -13, 58)}
+      <path d="M0-28l8 10-8 10-8-10z" fill="${ink}"/><path d="M0-23l4 5-4 5-4-5z" fill="${p.accent}"/>`,
+    11: `<path d="M-110-39h220" stroke="${p.accent}" stroke-width="9"/><path d="M-110-39h220" stroke="${p.stripe}" stroke-width="3" stroke-dasharray="6 5"/>
+      ${herringbone(-44)}${herringbone(44)}
+      <circle cx="0" cy="-16" r="8" fill="${ink}"/><circle cx="0" cy="-16" r="3.5" fill="${p.accent}"/>`,
+  }[rank];
+
   let behind = '';
   // Attribut in der Hand: Zepter, Blüte oder Schwert
   if (rank === 13) {
@@ -238,14 +271,8 @@ function courtHalf(card) {
       <path d="${edge}" fill="none" stroke="${p.accent}" stroke-width="34"/>
       <path d="${edge}" fill="none" stroke="${p.stripe}" stroke-width="24"/>
       <path d="${edge}" fill="none" stroke="${p.gown}" stroke-width="9"/>
-      <rect x="-110" y="-70" width="220" height="19" fill="${ink}"/>
-      ${teeth}
-      ${rank === 11
-        ? `<path d="M-110-39h220" stroke="${p.accent}" stroke-width="9"/><path d="M-110-39h220" stroke="${p.stripe}" stroke-width="3" stroke-dasharray="6 5"/>`
-        : dots}
-      ${lens(-52, -13, -58)}
-      ${lens(52, -13, 58)}
-      <path d="M0-28l8 10-8 10-8-10z" fill="${ink}"/><path d="M0-23l4 5-4 5-4-5z" fill="${p.accent}"/>
+      ${collar}
+      ${pattern}
     </g>
     <path d="${edge}" fill="none" stroke="${ink}" stroke-width="1.4" stroke-linejoin="round"/>`;
 
@@ -258,16 +285,22 @@ function courtHalf(card) {
     head += `<path d="M-21-112Q-24-150 0-151Q24-150 21-112z" fill="${ink}"/>`;
   }
 
-  // Hals und Gesicht als feine Linienzeichnung: Augen gesenkt, lange Nase, kleiner roter Mund
+  // Hals und Gesicht als feine Linienzeichnung: halb geöffnete Augen mit gesenktem Blick,
+  // lange Nase, kleiner roter Mund
   const line = `fill="none" stroke="${ink}" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"`;
   head += `<path d="M-8-92V-104h16V-92" fill="${COLORS.skin}" stroke="${ink}" stroke-width="1.2"/>`;
   if (rank === 13) {
     head += `<path d="M-19-122Q-21-90 0-84Q21-90 19-122z" fill="${ink}"/>`;
   }
   head += `<ellipse cx="0" cy="-124" rx="17.5" ry="23" fill="${COLORS.skin}" stroke="${ink}" stroke-width="1.3"/>
-    <path d="M-13-134q6-4 11-1M2-135q5-3 11 1" ${line}/>
-    <path d="M-12-127q5 4 10 0M2-127q5 4 10 0" ${line}/>
-    <path d="M-11.5-127.5l-1.5 2.4M12.5-127.5l1.5 2.4" ${line}/>
+    <path d="M-14-135q6-4.5 12-1.2M2-136.2q6-3.3 12 1.2" fill="none" stroke="${ink}" stroke-width="1.1" stroke-linecap="round"/>
+    ${[-7, 7].map((x) => `<g transform="translate(${x} -127)">
+      <path d="M-5.6 0Q0-3.6 5.6 0Q0 2.8-5.6 0z" fill="${COLORS.paper}"/>
+      <path d="M-2.4-0.9a2.4 2.4 0 0 0 4.8 0z" fill="${ink}"/>
+      <path d="M-5.8 0.2Q0-4.4 5.8 0.2" fill="none" stroke="${ink}" stroke-width="1.7" stroke-linecap="round"/>
+      <path d="M-4.6 1.1Q0 3 4.6 1.1" fill="none" stroke="${ink}" stroke-width="0.6" stroke-linecap="round"/>
+      <path d="M${x < 0 ? -5.8 : 5.8} 0.2l${x < 0 ? -1.8 : 1.8}-1.4" fill="none" stroke="${ink}" stroke-width="1" stroke-linecap="round"/>
+    </g>`).join('')}
     <path d="M0-131L-2.4-115.5Q0-113.5 3-115.5" ${line}/>
     <path d="M-4.6-108.5Q0-105 4.6-108.5Q0-110.6-4.6-108.5z" fill="${COLORS.red}"/>`;
   if (rank === 13) {
