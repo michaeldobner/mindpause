@@ -1,0 +1,12 @@
+[
+  {
+    "id": "spring",
+    "title": "SPRING",
+    "subtitle": { "de": "Solohalma", "en": "Peg Solitaire" },
+    "description": {
+      "de": "Das klassische Murmelspiel auf dem Kreuzbrett. Sieben Figuren von leicht bis meisterhaft.",
+      "en": "The classic marble game on the cross-shaped board. Seven figures from easy to masterful."
+    },
+    "icon": "spring/icons/icon.svg"
+  }
+]
