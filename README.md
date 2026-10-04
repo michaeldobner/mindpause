@@ -17,7 +17,7 @@ Classic board games, reimagined with tactile design and handcrafted sound. Free,
 | | Game | Description | Version |
 |---|---|---|---|
 | <img src="spring/icons/icon.svg" width="56" alt=""> | **[SPRING](spring/README.md)** · [play](https://michaeldobner.github.io/mindpause/spring/) | Peg solitaire on the classic cross-shaped board. Seven figures from easy to masterful, hints, a living rim, tilt | 2.1.1 |
-| <img src="queen/icons/icon.svg" width="56" alt=""> | **[QUEEN](queen/README.md)** · [play](https://michaeldobner.github.io/mindpause/queen/) | German checkers against the computer at three levels or for two players on one device. Golden crown, trays for captured pieces | 1.0.0 |
+| <img src="queen/icons/icon.svg" width="56" alt=""> | **[QUEEN](queen/README.md)** · [play](https://michaeldobner.github.io/mindpause/queen/) | German checkers against the computer at three levels or for two players on one device. Ebony, maple and an engraved golden crown, trays for captured pieces | 1.1.0 |
 
 More games and play across two devices are on the way, see the [roadmap](#roadmap).
 
@@ -79,7 +79,7 @@ On every push GitHub Actions runs both. The browser test uploads screenshots of 
 
 ```bash
 node scripts/release.mjs spring 2.2.0   # new version of SPRING
-node scripts/release.mjs shell 1.1.0    # new version of the shell, affects every game
+node scripts/release.mjs shell 1.3.0    # new version of the shell, affects every game
 ```
 
 Every reference carries its version (`?v=` for game files, `?shell=` for shell files). A device therefore never mixes old and new files after an update. `tests/release.test.js` checks this on every push.
@@ -100,7 +100,7 @@ Every reference carries its version (`?v=` for game files, `?shell=` for shell f
 | SPRING | Peg solitaire, 7 figures, hints, tilt | Done |
 | Collection | Shell, home page, tests across all games | Done |
 | QUEEN | German checkers, three computer levels, two players on one device | Done |
-| QUEEN 1.1 | Playing each other on two devices, stage 1: move by link | Planned |
+| QUEEN 1.2 | Playing each other on two devices, stage 1: move by link | Planned |
 | Later | Live with a room code, more games | Idea |
 
 ## Writing style

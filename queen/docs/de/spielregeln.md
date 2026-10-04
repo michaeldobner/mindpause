@@ -17,9 +17,9 @@
 
 ## Das Brett
 
-Gespielt wird auf einem Brett mit 8×8 Feldern, aber nur auf den 32 dunklen Feldern. Jede Seite beginnt mit 12 Steinen auf den dunklen Feldern ihrer ersten drei Reihen. **Blau** sitzt unten und beginnt, **Schwarz** sitzt oben. Die beiden mittleren Reihen sind zu Beginn frei.
+Gespielt wird auf einem Brett mit 8×8 Feldern, aber nur auf den 32 dunklen Feldern. Jede Seite beginnt mit 12 Steinen auf den dunklen Feldern ihrer ersten drei Reihen. **Weiß** sitzt unten und beginnt, **Schwarz** sitzt oben. Im Brettstil Mitternacht heißt die untere Seite **Blau**. Die beiden mittleren Reihen sind zu Beginn frei.
 
-Gegen den Computer spielst du immer Blau.
+Gegen den Computer spielst du immer die untere Seite, also Weiß oder Blau.
 
 ## Regeln der Deutschen Dame
 
@@ -29,7 +29,7 @@ Gegen den Computer spielst du immer Blau.
 | Schlagen | Ein Stein springt diagonal über einen gegnerischen Stein auf das freie Feld direkt dahinter. Steine schlagen **vorwärts und rückwärts** |
 | Schlagpflicht | Kann eine Seite schlagen, **muss** sie schlagen. Gibt es mehrere Schlagmöglichkeiten, ist die Wahl frei. Es muss nicht der längste Schlag sein |
 | Mehrfachschlag | Kann der Stein nach einem Sprung weiterschlagen, muss er weiterspringen, bis kein Schlag mehr möglich ist. Ein Stein darf dabei nicht zweimal übersprungen werden. Geschlagene Steine verschwinden erst am Ende des Zugs |
-| Dame | Endet der Zug eines Steins auf der gegnerischen Grundreihe, wird er zur **Dame** und trägt eine goldene Krone. Erreicht ein Stein die Grundreihe mitten in einem Mehrfachschlag und kann weiterschlagen, springt er als einfacher Stein weiter und wird nicht gekrönt |
+| Dame | Endet der Zug eines Steins auf der gegnerischen Grundreihe, wird er zur **Dame** und trägt eine gravierte goldene Krone. Erreicht ein Stein die Grundreihe mitten in einem Mehrfachschlag und kann weiterschlagen, springt er als einfacher Stein weiter und wird nicht gekrönt |
 | Fliegende Dame | Eine Dame zieht diagonal vorwärts und rückwärts über **beliebig viele freie Felder**. Sie schlägt einen gegnerischen Stein aus der Ferne und darf auf jedem freien Feld dahinter landen |
 
 QUEEN prüft alle Regeln selbst. Du kannst keinen ungültigen Zug machen, und das Spiel zeigt dir beim Antippen eines Steins alle erlaubten Ziele.
@@ -104,7 +104,7 @@ QUEEN speichert jeden Zug. Schließt du die App mitten im Spiel, geht es beim n�
 
 ## Die Schalen
 
-Geschlagene Steine rollen in eine Schale am Brettrand: im Hochformat oben und unten, im Querformat links und rechts. Jede Seite sammelt ihre Beute auf ihrer eigenen Seite, Blau also die geschlagenen schwarzen Steine.
+Geschlagene Steine rollen in eine Schale am Brettrand: im Hochformat oben und unten, im Querformat links und rechts. Jede Seite sammelt ihre Beute auf ihrer eigenen Seite, die untere Seite also die geschlagenen schwarzen Steine.
 
 Die Steine in den Schalen sind lebendig, aber sie stören nie das Spiel:
 
@@ -118,6 +118,7 @@ Unter **Mehr**:
 
 | Einstellung | Wirkung |
 |---|---|
+| Brett | Klassik (Ebenholz, Ahorn, Elfenbein, Gold) oder Mitternacht (Tiefblau, Keramik). Der Wechsel geht jederzeit, auch mitten im Spiel |
 | Ton | Klänge an oder aus |
 | Klangfarbe | Warm, Klar oder Weich. Gilt für alle Spiele von MIND PAUSE |
 | Brett drehen | Beim Spiel zu zweit dreht sich das Brett nach jedem Zug zur Person am Zug. So kann ein iPad flach zwischen zwei Personen liegen |

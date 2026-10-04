@@ -22,6 +22,7 @@ queen/index.html
      ├─ js/rules.js               Rules of German checkers (no rendering)
      ├─ js/game.js                Game state, undo, end of game, draws (no rendering)
      ├─ js/view.js                SVG board, pieces, crown, animations, input
+     │   ├─ js/themes.js          board styles and crown engraving
      │   └─ ../shared/js/gutter.js  Physics of the pieces in the trays
      ├─ js/sound.js               QUEEN sounds (extends the shell's sound engine)
      └─ js/ai-worker.js           Web Worker for computer moves and hints
@@ -42,7 +43,7 @@ Core principle: **rules → game state → rendering**. `rules.js`, `game.js` an
 | Title | `QUEEN` |
 | Buttons | Undo, Hint, New, Modes, More |
 | Selection | Modes, with preview, stars and difficulty |
-| Extra settings | Turn the board, Tilt |
+| Extra settings | Board choice (Classic, Midnight), switches Turn the board and Tilt |
 | Note in the settings | "Swipe across the pieces in the trays" |
 | Actions | Undo, hint, new, play again, next level, select mode, toggle settings |
 
@@ -58,7 +59,7 @@ The board is a list of 64 numbers, index = row · 8 + column. Play happens on sq
 | `1`, `2` | Blue piece, blue queen |
 | `-1`, `-2` | Black piece, black queen |
 
-Blue (`BLUE = 1`) starts in rows 5 to 7 and moves up, Black (`BLACK = -1`) in rows 0 to 2.
+Blue (`BLUE = 1`) starts in rows 5 to 7 and moves up, Black (`BLACK = -1`) in rows 0 to 2. In the code the bottom side is always `BLUE`, even when it appears as White in the Classic style. The displayed name comes from the board style.
 
 A **move** is `{ from, to, path, captured, crown }`:
 
@@ -136,7 +137,7 @@ Margin means: the move is chosen at random among all moves at most that many poi
 
 **Board space.** Drawing happens in fixed units (1000 × 1280, portrait, Blue at the bottom). `orient()` turns the whole world by 90° for landscape and by another 180° for two players. An inner group of every piece turns back, so light and crown stay upright.
 
-**Pieces.** There are always 24 SVG pieces, one per number. Each is either on the board or in a tray.
+**Pieces.** There are always 24 SVG pieces, one per number. Each is either on the board or in a tray. The crown is ready as an engraving on every piece and fades in on crowning.
 
 | Method | Purpose |
 |---|---|
@@ -146,6 +147,7 @@ Margin means: the move is chosen at random among all moves at most that many poi
 | `toTray(id)` | Roll a piece into the tray of the capturing side |
 | `select(square)`, `showHint(move)` | Selection, target rings, hint ring |
 | `setFlip(on)` | Turn the board for two players |
+| `setTheme(name)` | Switch the board style: only replaces the gradient and pattern definitions |
 | `setGravity(x, y)` | Turn the tilt back into board space and pass it to both trays |
 
 **Trays.** Each tray is a `Gutter` of the shell with an arc section (`arc`) on a very large virtual circle (radius 10,000). On that circle the arc is practically straight, and the proven physics of SPRING (friction, collisions, tilt) applies unchanged. `arc` puts walls at both ends, `speedScale` converts speeds for the large radius.
@@ -164,6 +166,18 @@ Margin means: the move is chosen at random among all moves at most that many poi
 
 **Events to `main.js`:** `canMove`, `move`, `lift`, `invalid`, `land`, `hop`, `crown`, `rim`, `clack`, `done`.
 
+### `themes.js`: board styles and crown
+
+Every part of the board refers to gradients and patterns with fixed names, for example `url(#q-plate)`, `url(#q-light)`, `url(#q-p1)` for the pieces of the bottom side or `url(#q-p1-engrave)` for their engraving. A board style in `THEMES` is just a list of such definitions. Whatever a style does not need (grain, diamond lattice, coordinates in the Midnight style) gets an empty or transparent definition. `view.js` therefore needs no special cases, and switching is instant.
+
+| Export | Contents |
+|---|---|
+| `THEMES` | `classic` and `midnight`, each with `defs` and the colour names of the sides (`sides`) |
+| `THEME_IDS`, `DEFAULT_THEME` | Order in the choice, default `classic` |
+| `CROWN` | Lines, shapes, dots and ermine tails of the crown for a piece of radius 44 |
+
+Grain and diamond lattice are SVG patterns generated in code, without image files.
+
 ### `main.js`: flow
 
 | Function | Purpose |
@@ -176,6 +190,8 @@ Margin means: the move is chosen at random among all moves at most that many poi
 | `newGame()` | New game. The old one is kept for an immediate Undo |
 | `undo()` | Against the computer back to your own last move, a thinking computer is cancelled |
 | `switchMode(id)` | Switch mode, always with a new game |
+| `setTheme(id)` | Switch and save the board style, the board fades smoothly |
+| `sideName(side)` | Colour name of a side in the current style for the header and the result card |
 
 ### Storage
 
@@ -186,6 +202,7 @@ All values live in `localStorage` through `createStorage('queen:')` with the pre
 | `queen:mode` | Last chosen mode |
 | `queen:game` | `{ mode, state }`, the running game, resumed on start |
 | `queen:stats` | Per mode: `games`, `wins`, `losses`, `draws` |
+| `queen:theme` | Board style: `classic` or `midnight` |
 | `queen:flip`, `queen:tilt` | Turn the board, tilt |
 | `queen:sound`, `queen:soundStyle` | Sound on or off, sound style |
 | `queen:coachSeen` | First-run hint already shown |

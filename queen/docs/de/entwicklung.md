@@ -20,6 +20,7 @@ Danach QUEEN unter `http://localhost:3000/queen/` öffnen. Die Sprache folgt der
 |---|---|
 | `queen/tests/rules.test.js` | Startstellung, Ziehen nur vorwärts, Schlagen auch rückwärts, Schlagpflicht, vollständiger Mehrfachschlag, kein doppeltes Überspringen, fliegende Dame mit freier Landung, Krönung, kein Krönen bei weiterem Schlag, Spielende ohne Züge |
 | `queen/tests/game.test.js` | Zug und Zurück stellen alles wieder her, Steinnummern, Remis durch Stillstand und Wiederholung, Speichern und Fortsetzen, längster Schlagweg beim Antippen, Computer nimmt gewinnbringenden Schlag, symmetrische Bewertung, **Mittel gewinnt deutlich gegen Leicht** |
+| `queen/tests/themes.test.js` | Jeder Brettstil definiert dieselben Verläufe und Muster, Namen und Seitenfarben in beiden Sprachen |
 | `shared/tests/gutter.test.js` | Unter anderem die Schalen: Wände, Ruhe, 12 Steine passen hinein, Neigen schiebt zur Wand |
 | `shared/tests/tilt.test.js` | Schwerkraft aus Gerätewinkeln, Schalter für Neigen |
 | `shared/tests/i18n.test.js` | Unter anderem: Texte von QUEEN haben in beiden Sprachen dieselben Schlüssel und keine Gedankenstriche |
@@ -33,7 +34,8 @@ Der Browser-Test `npm run e2e` öffnet QUEEN auf iPhone, iPhone quer, iPhone SE 
 2. Mehrfachschlag, Krönung, fliegende Dame.
 3. Zu zweit mit und ohne „Brett drehen“.
 4. Hoch- und Querformat, Schalen antippen und wischen, Neigen.
-5. Hell- und Dunkelmodus.
+5. Beide Brettstile, Wechsel mitten im Spiel, Krone auf Elfenbein, Ebenholz und Keramik.
+6. Hell- und Dunkelmodus.
 
 ## Auf iPhone oder iPad testen
 

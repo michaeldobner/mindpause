@@ -45,6 +45,14 @@ All rules live in `queen/js/rules.js`. Typical variants:
 
 For every variant write the tests in `queen/tests/rules.test.js` first. A variant as a setting needs a rules parameter for `legalMoves()` and separate statistics.
 
+## New board style
+
+1. Add an entry to `THEMES` in `queen/js/themes.js`, most easily as a copy of `classic`. Every definition name must be present (`q-plate`, `q-grain`, `q-tray`, `q-lattice`, `q-tray-edge`, `q-frame`, `q-frame-line`, `q-light`, `q-dark`, `q-sq-grain`, `q-coord` and for both sides `p1`, `p2` the body plus `-ring`, `-ring2`, `-edge`, `-shine`, `-engrave`). Anything not needed gets `empty()` or a transparent colour.
+2. Set `sides`, for example `{ p1: 'white', p2: 'black' }`, and add new colour names under `side` in `queen/js/strings.js`.
+3. Add the id to `THEME_IDS` and the name under `themes` in both languages. The choice in the settings grows by itself.
+4. Add colours for the mode previews in `queen/css/queen.css` with `body[data-theme="…"]`.
+5. Check that the crown engraving is legible on both piece colours and that black pieces are clearly visible on the dark squares.
+
 ## New language
 
 1. Add a block with the same keys as `de` and `en` to `shared/js/i18n.js` (shell texts) and to `queen/js/strings.js` (QUEEN texts).
@@ -75,6 +83,7 @@ The game logic is ready for this: a move is fully described by `{ from, path }` 
 | Version | Contents | Status |
 |---|---|---|
 | 1.0 | German checkers, three computer levels, two players, crown, trays, hints, stars, bilingual | Done |
-| 1.1 | Move by link for playing on two devices | Planned |
+| 1.1 | Classic and Midnight board styles, engraved queen's crown | Done |
+| 1.2 | Move by link for playing on two devices | Planned |
 | 1.x | Better evaluation, Master level, replaying a game | Planned |
 | 2.0 | Live with a room code | Idea |

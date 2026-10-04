@@ -45,6 +45,14 @@ Alle Regeln stecken in `queen/js/rules.js`. Typische Varianten:
 
 Für jede Variante zuerst Tests in `queen/tests/rules.test.js` schreiben. Eine Variante als Einstellung braucht einen Regel-Parameter für `legalMoves()` und eigene Statistiken.
 
+## Neuer Brettstil
+
+1. In `THEMES` in `queen/js/themes.js` einen Eintrag ergänzen, am einfachsten als Kopie von `classic`. Alle Namen der Definitionen müssen vorhanden sein (`q-plate`, `q-grain`, `q-tray`, `q-lattice`, `q-tray-edge`, `q-frame`, `q-frame-line`, `q-light`, `q-dark`, `q-sq-grain`, `q-coord` und für beide Seiten `p1`, `p2` jeweils Körper, `-ring`, `-ring2`, `-edge`, `-shine`, `-engrave`). Was nicht gebraucht wird, bekommt `empty()` oder eine durchsichtige Farbe.
+2. `sides` festlegen, zum Beispiel `{ p1: 'white', p2: 'black' }`, und neue Farbnamen unter `side` in `queen/js/strings.js` ergänzen.
+3. Die ID in `THEME_IDS` aufnehmen und den Namen unter `themes` in beiden Sprachen eintragen. Die Auswahl in den Einstellungen erweitert sich von selbst.
+4. Farben für die Vorschau der Modi in `queen/css/queen.css` mit `body[data-theme="…"]` ergänzen.
+5. Prüfen, dass die Gravur der Krone auf beiden Steinfarben lesbar ist und schwarze Steine auf den dunklen Feldern gut zu sehen sind.
+
 ## Neue Sprache
 
 1. In `shared/js/i18n.js` (Texte der Hülle) und in `queen/js/strings.js` (Texte von QUEEN) je einen Block mit denselben Schlüsseln wie `de` und `en` anlegen.
@@ -75,6 +83,7 @@ Die Spiellogik ist darauf vorbereitet: Ein Zug lässt sich mit `{ from, path }` 
 | Version | Inhalt | Status |
 |---|---|---|
 | 1.0 | Deutsche Dame, drei Computerstufen, Zu zweit, Krone, Schalen, Tipps, Sterne, zweisprachig | Fertig |
-| 1.1 | Zug per Link für das Spiel auf zwei Geräten | Geplant |
+| 1.1 | Brettstile Klassik und Mitternacht, gravierte Königinnenkrone | Fertig |
+| 1.2 | Zug per Link für das Spiel auf zwei Geräten | Geplant |
 | 1.x | Bessere Bewertung, Stufe Meister, Partie nachspielen | Geplant |
 | 2.0 | Live mit Raumcode | Idee |

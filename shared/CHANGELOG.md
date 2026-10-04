@@ -2,6 +2,11 @@
 
 All notable changes to the MIND PAUSE shell. [Deutsch](CHANGELOG.de.md)
 
+## 1.2.0 (2026-10-04)
+
+### New
+* Settings can now hold a choice besides switches: a `settings` entry with `options` appears as a segmented control at the top of the settings, for example for QUEEN's board style. `setSetting(id, value)` and the `setting(id, value)` action carry the selected value.
+
 ## 1.1.0 (2026-10-04)
 
 Building blocks for QUEEN, available to every game.

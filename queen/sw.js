@@ -3,8 +3,8 @@
 // Jede Version lädt nur ihre eigenen Dateien: Dateien von QUEEN tragen ?v=<Version>,
 // Dateien der Hülle ?shell=<Version der Hülle> (siehe scripts/release.mjs).
 // So können sich alte und neue Dateien nie mischen.
-const VERSION = '1.0.0';
-const SHELL = '1.1.0';
+const VERSION = '1.1.0';
+const SHELL = '1.2.0';
 const CACHE = `queen-v${VERSION}-shell${SHELL}`;
 
 const FILES = [
@@ -16,7 +16,7 @@ const FILES = [
   './icons/icon-512.png',
   './icons/apple-touch-icon.png',
   `./css/queen.css?v=${VERSION}`,
-  ...['main', 'strings', 'rules', 'game', 'ai', 'ai-worker', 'view', 'sound']
+  ...['main', 'strings', 'rules', 'game', 'ai', 'ai-worker', 'view', 'sound', 'themes']
     .map((name) => `./js/${name}.js?v=${VERSION}`),
   `../shared/tokens.css?shell=${SHELL}`,
   `../shared/shell.css?shell=${SHELL}`,

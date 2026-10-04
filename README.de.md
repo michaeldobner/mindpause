@@ -17,7 +17,7 @@ Klassische Brettspiele, neu gedacht, mit fast greifbarem Design und handgemachte
 | | Spiel | Beschreibung | Version |
 |---|---|---|---|
 | <img src="spring/icons/icon.svg" width="56" alt=""> | **[SPRING](spring/README.de.md)** · [spielen](https://michaeldobner.github.io/mindpause/spring/) | Solohalma auf dem klassischen Kreuzbrett. Sieben Figuren von leicht bis meisterhaft, Tipps, lebendiger Rand, Neigen | 2.1.1 |
-| <img src="queen/icons/icon.svg" width="56" alt=""> | **[QUEEN](queen/README.de.md)** · [spielen](https://michaeldobner.github.io/mindpause/queen/) | Deutsche Dame gegen den Computer in drei Stufen oder zu zweit an einem Gerät. Goldene Krone, Schalen für geschlagene Steine | 1.0.0 |
+| <img src="queen/icons/icon.svg" width="56" alt=""> | **[QUEEN](queen/README.de.md)** · [spielen](https://michaeldobner.github.io/mindpause/queen/) | Deutsche Dame gegen den Computer in drei Stufen oder zu zweit an einem Gerät. Ebenholz, Ahorn und eine gravierte Goldkrone, Schalen für geschlagene Steine | 1.1.0 |
 
 Weitere Spiele und das Spiel auf zwei Geräten sind in Arbeit, siehe [Roadmap](#roadmap).
 
@@ -79,7 +79,7 @@ Bei jedem Push führt GitHub Actions beides aus. Der Browser-Test lädt Screensh
 
 ```bash
 node scripts/release.mjs spring 2.2.0   # neue Version von SPRING
-node scripts/release.mjs shell 1.1.0    # neue Version der Hülle, betrifft alle Spiele
+node scripts/release.mjs shell 1.3.0    # neue Version der Hülle, betrifft alle Spiele
 ```
 
 Jeder Verweis trägt seine Version (`?v=` für Dateien eines Spiels, `?shell=` für Dateien der Hülle). Ein Gerät mischt deshalb nach einem Update nie alte und neue Dateien. `tests/release.test.js` prüft das bei jedem Push.
@@ -100,7 +100,7 @@ Jeder Verweis trägt seine Version (`?v=` für Dateien eines Spiels, `?shell=` f
 | SPRING | Solohalma, 7 Figuren, Tipps, Neigen | Fertig |
 | Sammlung | Hülle, Startseite, Tests über alle Spiele | Fertig |
 | QUEEN | Deutsche Dame, drei Computerstufen, zu zweit an einem Gerät | Fertig |
-| QUEEN 1.1 | Gegeneinander auf zwei Geräten, Stufe 1: Zug per Link | Geplant |
+| QUEEN 1.2 | Gegeneinander auf zwei Geräten, Stufe 1: Zug per Link | Geplant |
 | Später | Live mit Raumcode, weitere Spiele | Idee |
 
 ## Schreibstil
