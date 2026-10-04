@@ -1,10 +1,15 @@
-// Das Kartendeck von KARO als SVG: Rückseite mit Harlekin-Rauten, Zahlkarten, Asse und
-// zwölf Bildkarten im Art-déco-Stil. Alles wird einmal als <symbol> angelegt und von jeder
+// Das Kartendeck von KARO als SVG. Alles wird einmal als <symbol> angelegt und von jeder
 // Karte mit <use> eingebunden. Gestochen scharf auf jedem Display, nur wenige KB.
 //
+// Gestaltung im Stil klassischer Designer-Decks:
+//   * reinweißes Papier, keine Rahmen, viel Weißraum
+//   * feiner Index in Didot: Wert über der Farbe, oben links und gedreht unten rechts
+//   * Bildkarten als große, diagonal liegende Figuren über die ganze Karte, um 180° gespiegelt,
+//     mit Musterbändern (Sägezahn, Punktreihe, Linsen mit Wellenlinie, Streifen am Rand)
+//   * Rückseite mit Harlekin-Rauten in diagonalen Bahnen
+//
 // Maße einer Karte: 250 × 350 (Seitenverhältnis wie echte Spielkarten 63 × 88 mm).
-// Oben liegt die Kopfzeile mit Wert und Farbe. Sie muss allein lesbar sein, denn in den
-// Spalten sieht man von verdeckten Karten nur diesen Streifen.
+// Der Index oben links muss allein lesbar sein, denn in den Spalten sieht man oft nur diesen Streifen.
 
 import { suitOf, rankOf } from './cards.js?v=1.0.0';
 
@@ -12,18 +17,19 @@ export const W = 250;
 export const H = 350;
 
 export const COLORS = {
-  paper: '#fbf8f2',
-  cream: '#f4ecdc',
-  ink: '#1c1d2a',
-  red: '#c63b2c',
-  gold: '#c9a961',
-  petrol: '#1f5a50',
-  orange: '#e08a3c',
-  blue: '#3e9ad3',
-  rust: '#b5532a',
-  indigo: '#454c96',
+  paper: '#fdfcf9',
+  cream: '#f2e8d6',
+  ink: '#1b1c26',
+  red: '#c8382b',
+  petrol: '#1e5c52',
+  orange: '#e39a4a',
+  blue: '#4aa0d8',
+  rust: '#c0652f',
+  periwinkle: '#6f78b8',
+  navy: '#2b3070',
   ochre: '#d9a441',
-  skin: '#f7efe2',
+  green: '#2f6b5c',
+  skin: '#f8f2e9',
 };
 
 const DISPLAY = "Didot, 'Bodoni 72', 'Bodoni MT', 'Playfair Display', Georgia, 'Times New Roman', serif";
@@ -36,7 +42,7 @@ export const RANK_LABELS = {
 };
 
 // ---------- Farbsymbole ----------
-// Eigene Zeichnung, etwas weicher und runder als üblich. Im Feld 100 × 100, ohne Füllfarbe,
+// Klassisch, leicht weich gezeichnet. Im Feld 100 × 100, ohne Füllfarbe,
 // damit sie gefüllt (Karten) und als Kontur (leere Ablagen) nutzbar sind.
 
 const SUIT_SHAPES = [
@@ -50,55 +56,58 @@ const SUIT_SHAPES = [
   '<path d="M50 3c9 17 21 33 38 47-17 14-29 30-38 47-9-17-21-33-38-47C29 36 41 20 50 3z"/>',
 ];
 
+const suitSymbols = () => SUIT_SHAPES.map((shape, i) => `<symbol id="karo-suit-${i}" viewBox="0 0 100 100">${shape}</symbol>`).join('');
+
 // ---------- Rückseite ----------
-// Rauten in diagonalen Bahnen: Petrol als Grund, dazwischen Reihen aus Creme mit Orange
-// und Creme mit Himmelblau, wie bei einem Harlekin-Muster.
+// Längliche Rauten in diagonalen Bahnen: Petrol als Grund, dazwischen Bahnen aus
+// Creme mit Orange und Creme mit Himmelblau.
 
 function backSymbol() {
-  const a = 17; // halbe Breite einer Raute
-  const b = 29; // halbe Höhe einer Raute
-  const inset = 11;
+  const a = 16; // halbe Breite einer Raute
+  const b = 30; // halbe Höhe einer Raute
+  const inset = 9;
   let shapes = '';
   for (let u = -14; u < 22; u++) {
     for (let v = -14; v < 22; v++) {
       const x = (u - v) * a + 125;
       const y = (u + v) * b - 140;
       if (x < -a || x > W + a || y < -b || y > H + b) continue;
-      // Petrol im Schachbrett, dazwischen Bahnen aus Orange, Creme und Blau
       const m = ((u % 4) + 4) % 4;
       let fill = COLORS.petrol;
-      if ((u + v) % 2 !== 0) fill = [COLORS.cream, COLORS.orange, COLORS.cream, COLORS.blue][m];
+      if (m === 1) fill = v % 2 === 0 ? COLORS.cream : COLORS.orange;
+      if (m === 3) fill = v % 2 === 0 ? COLORS.cream : COLORS.blue;
       shapes += `<path d="M${x} ${y - b}L${x + a} ${y}L${x} ${y + b}L${x - a} ${y}z" fill="${fill}"/>`;
     }
   }
   return `<symbol id="karo-back" viewBox="0 0 ${W} ${H}">
-    <clipPath id="karo-back-clip"><rect x="${inset}" y="${inset}" width="${W - inset * 2}" height="${H - inset * 2}" rx="8"/></clipPath>
-    <rect width="${W}" height="${H}" rx="16" fill="${COLORS.cream}"/>
+    <clipPath id="karo-back-clip"><rect x="${inset}" y="${inset}" width="${W - inset * 2}" height="${H - inset * 2}" rx="9"/></clipPath>
+    <rect width="${W}" height="${H}" rx="16" fill="${COLORS.paper}"/>
     <g clip-path="url(#karo-back-clip)">${shapes}</g>
-    <rect x="${inset}" y="${inset}" width="${W - inset * 2}" height="${H - inset * 2}" rx="8" fill="none" stroke="rgba(28,29,42,0.25)" stroke-width="1"/>
   </symbol>`;
 }
 
-// ---------- Vorderseiten ----------
+// ---------- Index und Symbole ----------
 
 const pip = (suit, cx, cy, size, flip = false) => {
-  const x = cx - size / 2;
-  const y = cy - size / 2;
   const t = flip ? ` transform="rotate(180 ${cx} ${cy})"` : '';
-  return `<use href="#karo-suit-${suit}" x="${x}" y="${y}" width="${size}" height="${size}" fill="${suitColor(suit)}"${t}/>`;
+  return `<use href="#karo-suit-${suit}" x="${cx - size / 2}" y="${cy - size / 2}" width="${size}" height="${size}" fill="${suitColor(suit)}"${t}/>`;
 };
 
-// Kopfzeile: links groß der Wert, rechts die Farbe
-function header(card, lang) {
+// Feiner Index: Wert in Didot über der Farbe. Eine hauchdünne Kontur in derselben Farbe
+// stärkt die Haarlinien der Didot, damit der Wert auch auf kleinen Karten lesbar bleibt.
+function index(card, lang) {
   const suit = suitOf(card);
   const label = RANK_LABELS[lang][rankOf(card) - 1];
+  const color = suitColor(suit);
   const wide = label.length > 1;
-  return `<text x="${wide ? 12 : 18}" y="80" font-family="${DISPLAY}" font-size="${wide ? 80 : 86}" font-weight="700"
-      fill="${suitColor(suit)}" ${wide ? 'textLength="92" lengthAdjust="spacingAndGlyphs"' : ''}>${label}</text>
-    ${pip(suit, 202, 46, 62)}`;
+  const one = `<text x="38" y="77" text-anchor="middle" font-family="${DISPLAY}" font-size="${wide ? 68 : 78}"
+      fill="${color}" stroke="${color}" stroke-width="2" ${wide ? 'textLength="66" lengthAdjust="spacingAndGlyphs"' : ''}>${label}</text>
+    ${pip(suit, 38, 102, 34)}`;
+  return `${one}<g transform="rotate(180 125 175)">${one}</g>`;
 }
 
-// Anordnung der Symbole auf den Zahlkarten: [Spalte, Zeile 0 bis 1]
+// ---------- Zahlkarten und Asse ----------
+
 const L = 0;
 const M = 1;
 const R = 2;
@@ -116,183 +125,195 @@ const PIPS = {
 
 function numberBody(card) {
   const suit = suitOf(card);
-  const xs = [76, 125, 174];
-  const top = 136;
-  const bottom = 314;
-  return PIPS[rankOf(card)].map(([c, r]) => pip(suit, xs[c], top + r * (bottom - top), 46, r > 0.5)).join('');
+  const xs = [96, 131, 166];
+  const top = 80;
+  const bottom = 270;
+  return PIPS[rankOf(card)].map(([c, r]) => pip(suit, xs[c], top + r * (bottom - top), 34, r > 0.5)).join('');
 }
 
-// Ass: großes Symbol in einem Rautenrahmen mit feiner Goldlinie.
-// Das Pik-Ass trägt als Signatur des Decks ein Ornament.
+// Ass: ein einzelnes Symbol auf weißem Grund. Das Pik-Ass trägt als Signatur des Decks
+// die Muster der Bildkarten: Sägezahnkranz, Punktreihe und eine Linse mit Wellenlinie.
 function aceBody(card) {
   const suit = suitOf(card);
+  if (suit !== 0) return pip(suit, 125, 175, 74);
   const cx = 125;
-  const cy = 222;
-  const frame = (dx, dy, w) => `<path d="M${cx} ${cy - dy}L${cx + dx} ${cy}L${cx} ${cy + dy}L${cx - dx} ${cy}z" fill="none" stroke="${COLORS.gold}" stroke-width="${w}"/>`;
-  let art = frame(96, 116, 2.4) + frame(86, 104, 1);
-  if (suit === 0) {
-    let rays = '';
-    for (let i = 0; i < 24; i++) {
-      const ang = (i / 24) * Math.PI * 2;
-      const r1 = 64;
-      const r2 = i % 2 ? 72 : 78;
-      rays += `<line x1="${cx + Math.cos(ang) * r1}" y1="${cy + Math.sin(ang) * r1}" x2="${cx + Math.cos(ang) * r2}" y2="${cy + Math.sin(ang) * r2}"/>`;
-    }
-    art += `<g stroke="${COLORS.gold}" stroke-width="2" stroke-linecap="round">${rays}</g>
-      <circle cx="${cx}" cy="${cy}" r="58" fill="${COLORS.cream}" stroke="${COLORS.gold}" stroke-width="1.6"/>
-      ${pip(0, cx, cy, 84)}
-      <path d="M${cx} ${cy - 22}l7 12-7 12-7-12z" fill="${COLORS.gold}"/>`;
-  } else {
-    art += pip(suit, cx, cy, 104);
+  const cy = 175;
+  let teeth = '';
+  for (let i = 0; i < 36; i++) {
+    const a = (i / 36) * Math.PI * 2;
+    const b = ((i + 0.5) / 36) * Math.PI * 2;
+    const c = ((i + 1) / 36) * Math.PI * 2;
+    const p = (ang, r) => `${(cx + Math.cos(ang) * r).toFixed(1)} ${(cy + Math.sin(ang) * r).toFixed(1)}`;
+    teeth += `<path d="M${p(a, 74)}L${p(b, 64)}L${p(c, 74)}z" fill="${COLORS.paper}"/>`;
   }
-  return art;
+  let dots = '';
+  for (let i = 0; i < 18; i++) {
+    const a = (i / 18) * Math.PI * 2;
+    dots += `<circle cx="${(cx + Math.cos(a) * 58).toFixed(1)}" cy="${(cy + Math.sin(a) * 58).toFixed(1)}" r="3.4" fill="${COLORS.red}"/>`;
+  }
+  return `<circle cx="${cx}" cy="${cy}" r="80" fill="${COLORS.ink}"/>
+    ${teeth}
+    <circle cx="${cx}" cy="${cy}" r="64" fill="${COLORS.rust}"/>
+    ${dots}
+    <circle cx="${cx}" cy="${cy}" r="51" fill="${COLORS.cream}"/>
+    ${pip(0, cx, cy + 2, 66)}
+    <path d="M${cx - 10} ${cy + 1}q5-5 10 0t10 0" fill="none" stroke="${COLORS.cream}" stroke-width="2.2" stroke-linecap="round"/>`;
 }
 
 // ---------- Bildkarten ----------
-// Ein festes Formensystem, damit alle zwölf Figuren wie aus einer Hand wirken:
-// gespiegelt (oben und unten gleich), ein ovales Gesicht mit geschlossenen Augen,
-// ein Gewand als Sechseck mit Musterbändern, eine Kopfbedeckung je Rang und ein Attribut.
+// Eine Hälfte der Figur wird in einem eigenen Koordinatensystem gezeichnet: Ursprung in der
+// Kartenmitte, Kopf nach oben (negatives y). Die ganze Figur liegt um 28° gedreht diagonal
+// auf der Karte, die zweite Hälfte ist die erste um 180° gedreht.
 
-const COURT_STYLE = [
-  // Pik: Indigo, Winkel
-  { gown: COLORS.indigo, trim: COLORS.ink, band: COLORS.cream, motif: 'chevron', hair: COLORS.ink },
-  // Herz: Rost, Halbkreise
-  { gown: COLORS.rust, trim: COLORS.red, band: COLORS.cream, motif: 'arc', hair: COLORS.ink },
-  // Kreuz: Petrol, Punkte
-  { gown: COLORS.petrol, trim: COLORS.ink, band: COLORS.cream, motif: 'dot', hair: COLORS.ink },
-  // Karo: Ocker, Rauten
-  { gown: COLORS.ochre, trim: COLORS.orange, band: COLORS.cream, motif: 'diamond', hair: COLORS.ink },
+const TILT = 28;
+
+const COURT_PALETTE = [
+  // Pik: Taubenblau mit Marine
+  { gown: COLORS.periwinkle, stripe: COLORS.navy, accent: COLORS.cream, dot: COLORS.navy, hood: COLORS.navy },
+  // Herz: Rost mit Zinnober
+  { gown: COLORS.rust, stripe: COLORS.red, accent: COLORS.cream, dot: COLORS.red, hood: COLORS.rust },
+  // Kreuz: Petrol mit Ocker
+  { gown: COLORS.green, stripe: COLORS.ochre, accent: COLORS.cream, dot: COLORS.ochre, hood: COLORS.green },
+  // Karo: Ocker mit Orange
+  { gown: COLORS.ochre, stripe: COLORS.orange, accent: COLORS.cream, dot: COLORS.red, hood: COLORS.orange },
 ];
 
-function motifRow(kind, y, color, from = -60, to = 60, step = 12) {
-  let out = '';
-  for (let x = from; x <= to; x += step) {
-    if (kind === 'chevron') out += `<path d="M${x - 5} ${y + 3}l5-6 5 6" fill="none" stroke="${color}" stroke-width="2.2" stroke-linejoin="round"/>`;
-    if (kind === 'arc') out += `<path d="M${x - 5} ${y + 3}a5 5 0 0 1 10 0z" fill="${color}"/>`;
-    if (kind === 'dot') out += `<circle cx="${x}" cy="${y}" r="2.8" fill="${color}"/>`;
-    if (kind === 'diamond') out += `<path d="M${x} ${y - 5}l4 5-4 5-4-5z" fill="${color}"/>`;
-  }
-  return out;
-}
+// Umriss des Gewands je Rang: der König breit und kantig, die Dame schmal an den Schultern,
+// der Bube schlank
+const GOWN = {
+  13: [[-98, 0], [-84, -48], [-52, -74], [52, -74], [84, -48], [98, 0]],
+  12: [[-94, 0], [-76, -46], [-40, -75], [40, -75], [76, -46], [94, 0]],
+  11: [[-86, 0], [-72, -50], [-38, -75], [38, -75], [72, -50], [86, 0]],
+};
 
-// Eine Hälfte der Figur, Ursprung in der Mitte der Karte, nach oben negativ (bis -118)
-function courtHalf(suit, rank) {
-  const s = COURT_STYLE[suit];
+const pts = (list) => list.map(([x, y]) => `${x} ${y}`).join('L');
+
+function courtHalf(card) {
+  const suit = suitOf(card);
+  const rank = rankOf(card);
+  const p = COURT_PALETTE[suit];
   const ink = COLORS.ink;
-  const line = `stroke="${ink}" stroke-width="1.8" stroke-linejoin="round"`;
-  const id = `karo-gown-${suit}-${rank}`;
+  const g = GOWN[rank];
+  const clip = `karo-gc-${card}`;
+  // Ein Hauch über die Mitte hinaus, damit sich beide Hälften nahtlos überlappen
+  const g2 = g.map(([x, y]) => [x, y === 0 ? 1.5 : y]);
+  const outline = `M${pts(g2)}z`;
+  const edge = `M${pts(g2)}`; // ohne die Mittelkante, dort treffen sich beide Hälften
 
-  // Gewand
-  const gown = 'M-64 0L-70-28Q-62-52-36-60H36Q62-52 70-28L64 0z';
-  let art = `<clipPath id="${id}"><path d="${gown}"/></clipPath>
-    <path d="${gown}" fill="${s.gown}" ${line}/>
-    <g clip-path="url(#${id})">
-      <rect x="-90" y="-36" width="180" height="14" fill="${s.band}"/>
-      ${motifRow(s.motif, -29, s.trim, -84, 84, 12)}
-      <rect x="-90" y="-12" width="180" height="5" fill="${s.trim}"/>
-      <rect x="-13" y="-60" width="26" height="60" fill="${s.trim}"/>
-      ${motifRow(s.motif === 'chevron' ? 'diamond' : s.motif, -48, s.band, 0, 0)}
-      ${motifRow(s.motif === 'chevron' ? 'diamond' : s.motif, -17, s.band, 0, 0)}
+  // Sägezahnband unter dem Hals
+  let teeth = '';
+  for (let x = -100; x < 100; x += 11) teeth += `<path d="M${x} -52L${x + 5.5} -63L${x + 11} -52z" fill="${COLORS.paper}"/>`;
+  // Punktreihe
+  let dots = '';
+  for (let x = -90; x <= 90; x += 17) dots += `<circle cx="${x}" cy="-39" r="5.2" fill="${p.dot}"/><circle cx="${x}" cy="-39" r="1.9" fill="${COLORS.paper}"/>`;
+  // Linse mit Wellenlinie und Punkten
+  const lens = (cx, cy, rot) => `<g transform="translate(${cx} ${cy}) rotate(${rot})">
+      <path d="M-26 0Q0-17 26 0Q0 17-26 0z" fill="${ink}"/>
+      <path d="M-17 1q4-5 8 0t8 0 8 0 8 0" fill="none" stroke="${COLORS.paper}" stroke-width="1.8" stroke-linecap="round"/>
+      <circle cx="-8" cy="-6" r="1.8" fill="${COLORS.paper}"/><circle cx="9" cy="6" r="1.8" fill="${COLORS.paper}"/>
     </g>`;
 
-  // Kragen
-  art += `<path d="M-34-60Q0-38 34-60z" fill="${COLORS.cream}" ${line}/>
-    ${motifRow('dot', -55, s.trim, -18, 18, 9)}`;
-
-  // Hals und Gesicht
-  art += `<rect x="-7" y="-66" width="14" height="10" fill="${COLORS.skin}" ${line}/>`;
+  let behind = '';
+  // Attribut in der Hand: Zepter, Blüte oder Schwert
   if (rank === 13) {
-    // König: Bart
-    art += `<path d="M-19-82Q-20-54 0-52 20-54 19-82z" fill="${s.hair}"/>`;
-  }
-  if (rank === 12) {
-    // Dame: langes Haar zu beiden Seiten
-    art += `<path d="M-22-90Q-34-62-24-52H24Q34-62 22-90z" fill="${s.hair}"/>`;
-  }
-  art += `<ellipse cx="0" cy="-80" rx="18" ry="22" fill="${COLORS.skin}" ${line}/>
-    <path d="M-11-83q4.5 4 9 0M2-83q4.5 4 9 0" fill="none" stroke="${ink}" stroke-width="1.6" stroke-linecap="round"/>
-    <path d="M0-80l-2.5 8h4" fill="none" stroke="${ink}" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
-    <path d="M-5-66q5 3 10 0" fill="none" stroke="${COLORS.red}" stroke-width="2" stroke-linecap="round"/>`;
-  if (rank === 13) art += `<path d="M-9-68q9-4 18 0" fill="none" stroke="${COLORS.cream}" stroke-width="1.4"/>`;
-
-  // Kopfbedeckung
-  if (rank === 13) {
-    art += `<path d="M-19-98V-112l7 5 6-11 6 8 6-8 6 11 7-5V-98z" fill="${COLORS.ochre}" ${line}/>
-      <rect x="-19" y="-101" width="38" height="5" fill="${s.trim}" ${line}/>
-      <circle cx="0" cy="-107" r="2.6" fill="${COLORS.red}"/>`;
+    behind += `<path d="M-60-30L-66-136" stroke="${COLORS.ochre}" stroke-width="4" stroke-linecap="round"/>
+      <path d="M-67-150l7 9-7 9-7-9z" fill="${COLORS.ochre}" stroke="${ink}" stroke-width="1.2"/>`;
   } else if (rank === 12) {
-    art += `<path d="M-17-97A17 15 0 0 1 17-97z" fill="${COLORS.ochre}" ${line}/>
-      <circle cx="-11" cy="-108" r="3.2" fill="${COLORS.cream}" ${line}/>
-      <circle cx="0" cy="-114" r="3.2" fill="${COLORS.cream}" ${line}/>
-      <circle cx="11" cy="-108" r="3.2" fill="${COLORS.cream}" ${line}/>
-      <path d="M-17-97h34" stroke="${s.trim}" stroke-width="3"/>`;
-  } else {
-    art += `<path d="M-20-96Q-22-112 0-112 22-112 24-98z" fill="${s.gown}" ${line}/>
-      <path d="M-21-97h44" stroke="${s.trim}" stroke-width="3.5"/>
-      <path d="M14-108Q34-124 46-110 30-112 18-102z" fill="${COLORS.cream}" ${line}/>
-      <path d="M16-104Q32-116 44-110" fill="none" stroke="${s.trim}" stroke-width="1.2"/>`;
-  }
-
-  // Attribut in der Hand
-  if (rank === 13) {
-    art += `<path d="M54-6L60-92" stroke="${COLORS.ochre}" stroke-width="4" stroke-linecap="round"/>
-      <path d="M60-104l6 9-6 9-6-9z" fill="${COLORS.ochre}" ${line}/>`;
-  } else if (rank === 12) {
-    art += `<path d="M56-8Q52-50 60-80" fill="none" stroke="${COLORS.petrol}" stroke-width="2.6"/>
-      <g ${line}>${[0, 1, 2, 3, 4].map((i) => {
+    behind += `<path d="M-58-36Q-70-80-64-120" fill="none" stroke="${COLORS.green}" stroke-width="2.4"/>
+      <path d="M-62-78q-12-6-16 4q10 4 16-4z" fill="${COLORS.green}"/>
+      <g stroke="${ink}" stroke-width="1">${[0, 1, 2, 3, 4].map((i) => {
         const a = (i / 5) * Math.PI * 2;
-        return `<circle cx="${60 + Math.cos(a) * 7}" cy="${-88 + Math.sin(a) * 7}" r="5.5" fill="${COLORS.red}"/>`;
+        return `<circle cx="${(-64 + Math.cos(a) * 6.5).toFixed(1)}" cy="${(-128 + Math.sin(a) * 6.5).toFixed(1)}" r="5" fill="${COLORS.red}"/>`;
       }).join('')}</g>
-      <circle cx="60" cy="-88" r="3.6" fill="${COLORS.ochre}"/>`;
+      <circle cx="-64" cy="-128" r="3.4" fill="${COLORS.ochre}"/>`;
   } else {
-    art += `<path d="M58-8L58-70" stroke="${COLORS.ochre}" stroke-width="3.4" stroke-linecap="round"/>
-      <circle cx="58" cy="-78" r="8" fill="none" stroke="${COLORS.ochre}" stroke-width="3.4"/>
-      <path d="M58-22h8M58-30h6" stroke="${COLORS.ochre}" stroke-width="3.4"/>`;
+    behind += `<path d="M-60-30L-64-144" stroke="${COLORS.cream}" stroke-width="4.5"/>
+      <path d="M-60-30L-64-144" stroke="${ink}" stroke-width="1" stroke-dasharray="0" fill="none"/>
+      <path d="M-72-50h22" stroke="${ink}" stroke-width="4" stroke-linecap="round"/>
+      <path d="M-64-144l-3-8 3-6 3 6z" fill="${COLORS.cream}" stroke="${ink}" stroke-width="1"/>`;
   }
-  art += `<circle cx="54" cy="-18" r="6" fill="${COLORS.skin}" ${line}/>`;
-  return art;
+  let art = `<clipPath id="${clip}"><path d="${outline}"/></clipPath>
+    <g clip-path="url(#${clip})">
+      <path d="${outline}" fill="${p.gown}"/>
+      <path d="${edge}" fill="none" stroke="${p.accent}" stroke-width="34"/>
+      <path d="${edge}" fill="none" stroke="${p.stripe}" stroke-width="24"/>
+      <path d="${edge}" fill="none" stroke="${p.gown}" stroke-width="9"/>
+      <rect x="-110" y="-70" width="220" height="19" fill="${ink}"/>
+      ${teeth}
+      ${rank === 11
+        ? `<path d="M-110-39h220" stroke="${p.accent}" stroke-width="9"/><path d="M-110-39h220" stroke="${p.stripe}" stroke-width="3" stroke-dasharray="6 5"/>`
+        : dots}
+      ${lens(-52, -13, -58)}
+      ${lens(52, -13, 58)}
+      <path d="M0-28l8 10-8 10-8-10z" fill="${ink}"/><path d="M0-23l4 5-4 5-4-5z" fill="${p.accent}"/>
+    </g>
+    <path d="${edge}" fill="none" stroke="${ink}" stroke-width="1.4" stroke-linejoin="round"/>`;
+
+  let head = '';
+  // Kopfbedeckung hinter dem Kopf: Haube der Dame, Haar von König und Bube
+  if (rank === 12) {
+    head += `<path d="M-30-90Q-40-128-22-152Q0-170 22-152Q40-128 30-90z" fill="${p.hood}" stroke="${ink}" stroke-width="1.3"/>
+      <path d="M-24-92Q-32-126-17-146Q0-160 17-146Q32-126 24-92" fill="none" stroke="${COLORS.cream}" stroke-width="2.2"/>`;
+  } else {
+    head += `<path d="M-21-112Q-24-150 0-151Q24-150 21-112z" fill="${ink}"/>`;
+  }
+
+  // Hals und Gesicht als feine Linienzeichnung: Augen gesenkt, lange Nase, kleiner roter Mund
+  const line = `fill="none" stroke="${ink}" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"`;
+  head += `<path d="M-8-92V-104h16V-92" fill="${COLORS.skin}" stroke="${ink}" stroke-width="1.2"/>`;
+  if (rank === 13) {
+    head += `<path d="M-19-122Q-21-90 0-84Q21-90 19-122z" fill="${ink}"/>`;
+  }
+  head += `<ellipse cx="0" cy="-124" rx="17.5" ry="23" fill="${COLORS.skin}" stroke="${ink}" stroke-width="1.3"/>
+    <path d="M-13-134q6-4 11-1M2-135q5-3 11 1" ${line}/>
+    <path d="M-12-127q5 4 10 0M2-127q5 4 10 0" ${line}/>
+    <path d="M-11.5-127.5l-1.5 2.4M12.5-127.5l1.5 2.4" ${line}/>
+    <path d="M0-131L-2.4-115.5Q0-113.5 3-115.5" ${line}/>
+    <path d="M-4.6-108.5Q0-105 4.6-108.5Q0-110.6-4.6-108.5z" fill="${COLORS.red}"/>`;
+  if (rank === 13) {
+    head += `<path d="M-12-102q12-4 24 0" fill="none" stroke="${COLORS.cream}" stroke-width="1.2"/>`;
+  }
+
+  // Krone, Haube oder Kappe
+  if (rank === 13) {
+    head += `<path d="M-20-144V-162l8 6 6-12 6 9 6-9 6 12 8-6V-144z" fill="${COLORS.ochre}" stroke="${ink}" stroke-width="1.3"/>
+      <rect x="-20" y="-148" width="40" height="5" fill="${p.stripe}" stroke="${ink}" stroke-width="1.1"/>
+      <circle cx="0" cy="-156" r="2.6" fill="${COLORS.red}"/>`;
+  } else if (rank === 12) {
+    head += `<g transform="rotate(24 0 -150)">
+        <path d="M-14-150l3-13 5 8 6-12 6 12 5-8 3 13z" fill="${COLORS.cream}" stroke="${ink}" stroke-width="1.2"/>
+        <path d="M-14-150h28" stroke="${COLORS.red}" stroke-width="3"/>
+        <circle cx="0" cy="-166" r="2.2" fill="${COLORS.red}"/>
+      </g>`;
+  } else {
+    head += `<path d="M-20-140Q-23-170 2-178Q24-172 21-140z" fill="${p.gown}" stroke="${ink}" stroke-width="1.3"/>
+      <path d="M-21-146h42" stroke="${ink}" stroke-width="6"/>
+      ${[-15, -7, 1, 9, 17].map((x) => `<circle cx="${x}" cy="-146" r="1.6" fill="${COLORS.paper}"/>`).join('')}`;
+  }
+
+  art += `<g transform="translate(0 -74) scale(1.35) translate(0 92)">${head}</g>`;
+  return behind + art;
 }
 
 function courtBody(card) {
-  const suit = suitOf(card);
-  const rank = rankOf(card);
-  const s = COURT_STYLE[suit];
-  const x = 20;
-  const y = 98;
-  const w = 210;
-  const h = 238;
-  const cy = y + h / 2;
-  const clip = `karo-court-${card}`;
-  const half = courtHalf(suit, rank);
-  // Feines Punktraster als Hintergrund
-  let dots = '';
-  for (let yy = y + 10; yy < y + h; yy += 14) {
-    for (let xx = x + 10 + ((yy - y) % 28 ? 7 : 0); xx < x + w; xx += 14) dots += `<circle cx="${xx}" cy="${yy}" r="1.1"/>`;
-  }
-  return `<clipPath id="${clip}"><rect x="${x}" y="${y}" width="${w}" height="${h}" rx="10"/></clipPath>
-    <g clip-path="url(#${clip})">
-      <rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${COLORS.cream}"/>
-      <g fill="${s.gown}" opacity="0.18">${dots}</g>
-      <g id="karo-half-${card}" transform="translate(125 ${cy})">${half}</g>
-      <use href="#karo-half-${card}" transform="rotate(180 125 ${cy})"/>
-      <path d="M${x} ${cy}H${x + w}" stroke="${COLORS.gold}" stroke-width="1.6"/>
-      <path d="M125 ${cy - 7}l7 7-7 7-7-7z" fill="${COLORS.gold}"/>
-    </g>
-    <rect x="${x}" y="${y}" width="${w}" height="${h}" rx="10" fill="none" stroke="${COLORS.gold}" stroke-width="2.4"/>
-    <rect x="${x + 5}" y="${y + 5}" width="${w - 10}" height="${h - 10}" rx="7" fill="none" stroke="${COLORS.gold}" stroke-width="0.8"/>`;
+  const half = `karo-half-${card}`;
+  return `<g transform="translate(125 175) rotate(${TILT})">
+      <g id="${half}">${courtHalf(card)}</g>
+      <use href="#${half}" transform="rotate(180)"/>
+    </g>`;
 }
 
 function faceSymbol(card, lang) {
   const rank = rankOf(card);
   const body = rank === 1 ? aceBody(card) : rank > 10 ? courtBody(card) : numberBody(card);
+  const clip = `karo-card-${card}`;
   return `<symbol id="karo-face-${card}" viewBox="0 0 ${W} ${H}">
+    <clipPath id="${clip}"><rect width="${W}" height="${H}" rx="16"/></clipPath>
     <rect width="${W}" height="${H}" rx="16" fill="${COLORS.paper}"/>
-    ${header(card, lang)}
-    ${body}
+    <g clip-path="url(#${clip})">${body}</g>
+    ${index(card, lang)}
   </symbol>`;
 }
-
-const suitSymbols = () => SUIT_SHAPES.map((shape, i) => `<symbol id="karo-suit-${i}" viewBox="0 0 100 100">${shape}</symbol>`).join('');
 
 // Alle Symbole als ein unsichtbares SVG zum Einfügen in die Seite
 export function deckDefs(lang = 'en') {

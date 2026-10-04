@@ -4,11 +4,11 @@
 
 ## Guiding idea
 
-A **fine deck of cards lying on a linen mat.** The mood follows classic designer playing cards: slate, gold foil, harlequin diamonds, Art Deco. Everything is flat and graphic, yet feels like paper. The deck is drawn especially for KARO.
+A **fine deck of cards lying on a linen mat.** The model is classic designer playing cards: pure white paper, delicate Didot indices, large diagonal court cards with patterned bands, harlequin diamonds on the back. Everything is flat and graphic. The deck is drawn especially for KARO.
 
 | Principle | Meaning |
 |---|---|
-| **Legibility first** | Every card has a header with a large rank and suit symbol. In the columns, often only this strip is visible |
+| **Legibility first** | The index in the top left is large enough to read even in the narrow strip visible in the columns |
 | **Tangibility** | Soft shadows, a 3D turn when revealing, cards fly over the others |
 | **Calm** | Short, soft motion. The celebration is a slow homage, not fireworks |
 | **Reliability** | One tap is enough. Undo reverts anything done by accident |
@@ -20,13 +20,13 @@ A **fine deck of cards lying on a linen mat.** The mood follows classic designer
 | Role | Hex |
 |---|---|
 | Mat | `#26343a` → `#172025`, linen texture, gold line at the edge |
-| Embossing, frames | `#c9a961` |
-| Paper | `#fbf8f2` |
+| Mat embossing | `#c9a961` |
+| Paper | `#fdfcf9` |
 | Cream | `#f4ecdc` |
-| Back | petrol `#1f5a50`, orange `#e08a3c`, sky blue `#3e9ad3`, cream |
-| Red suits | vermilion `#c63b2c` |
-| Black suits | ink `#1c1d2a` |
-| Court cards | rust `#b5532a`, indigo `#454c96`, ochre `#d9a441`, petrol |
+| Back | petrol `#1e5c52`, orange `#e39a4a`, sky blue `#4aa0d8`, cream `#f2e8d6` |
+| Red suits | vermilion `#c8382b` |
+| Black suits | ink `#1b1c26` |
+| Court cards | periwinkle `#6f78b8` with navy `#2b3070`, rust `#c0652f` with vermilion, petrol `#2f6b5c` with ochre, ochre `#d9a441` with orange |
 
 The interface around the mat uses the collection's design tokens from `shared/tokens.css`.
 
@@ -35,34 +35,46 @@ The interface around the mat uses the collection's design tokens from `shared/to
 | Role | Typeface |
 |---|---|
 | KARO wordmark, score | Didot, Bodoni 72, fallback Georgia (from the shell) |
-| Ranks on the cards | Didot bold. German B, D, K, English J, Q, K |
+| Card index | Didot regular with a hairline outline, rank above suit, top left and turned bottom right. German B, D, K, English J, Q, K |
 
 ## The deck
 
 | Part | Design |
 |---|---|
-| **Back** | Harlequin diamonds: petrol in a checkerboard, with bands of cream, orange and blue between, and a cream border |
-| **Header** | large rank on the left, suit on the right, legible at 14 % of the card height |
-| **Suit symbols** | drawn for KARO, softer and rounder than usual, filled on the cards, as a gold outline on empty foundations |
-| **Number cards** | classic layout, lower half turned, plenty of white space |
-| **Aces** | a large symbol in a double gold diamond frame. The ace of spades carries a ray wreath as the deck's signature |
-| **Court cards** | mirrored figures in a gold frame on cream with a dot grid |
+| **Paper** | pure white, no frames, plenty of white space |
+| **Back** | elongated diamonds in diagonal bands: petrol, with cream and orange and cream and sky blue between, a narrow white border |
+| **Index** | rank above suit, top left and turned bottom right, legible in a strip of a third of the card height |
+| **Suit symbols** | classic, slightly softened, filled on the cards, as a gold outline on empty foundations |
+| **Number cards** | classic layout, lower half turned |
+| **Aces** | a single symbol on white. The ace of spades carries the court card patterns as the deck's signature: sawtooth ring, dot row, wavy line |
+| **Court cards** | large figures across the whole card, tilted 28° diagonally: one head top right, the mirrored one bottom left |
 
 ### Shape system of the court cards
 
+Every figure wears a gown shaped as a long hexagon with the same patterned bands:
+
+| Band | Design |
+|---|---|
+| Edge | stripes in cream and the accent colour along the edges |
+| Collar | black band with white sawtooth |
+| Dot row | dots in the accent colour with a white core (a cord band for the jack) |
+| Lenses | black lenses with a white wavy line and dots at the sides |
+| Centre | black diamond with a light diamond |
+
 | Element | King | Queen | Jack |
 |---|---|---|---|
-| Head | stepped crown, beard | arched crown with pearls, long hair | beret with feather |
-| Attribute | sceptre | flower | key |
+| Gown | wide and angular | narrow at the shoulders | slender |
+| Head | stepped crown, beard | hood in the gown colour, small crown to the side | tall cap with dot band |
+| Attribute | sceptre | flower | sword |
 
-| Suit | Gown | Pattern |
+| Suit | Gown | Accent |
 |---|---|---|
-| Spades | indigo | chevrons |
-| Hearts | rust | half circles |
-| Clubs | petrol | dots |
-| Diamonds | ochre | diamonds |
+| Spades | periwinkle | navy |
+| Hearts | rust | vermilion |
+| Clubs | petrol | ochre |
+| Diamonds | ochre | orange |
 
-All figures have **closed eyes**: calm and meditative, the signature of the deck.
+The faces are fine line drawings: closed eyes, a long nose, small red lips. Calm and meditative, the signature of the deck.
 
 ## Layouts
 

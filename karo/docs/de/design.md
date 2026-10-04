@@ -4,11 +4,11 @@
 
 ## Leitidee
 
-Ein **hochwertiges Kartenspiel, das auf einer Leinenmatte liegt.** Vorbild ist die Stimmung klassischer Designer-Kartendecks: Schiefer, Goldprägung, Harlekin-Rauten, Art déco. Alles ist flach und grafisch, aber mit Papiergefühl. Das Deck ist eigens für KARO gezeichnet.
+Ein **hochwertiges Kartenspiel, das auf einer Leinenmatte liegt.** Vorbild sind klassische Designer-Kartendecks: reinweißes Papier, feine Didot-Indizes, große, diagonal liegende Bildkarten mit Musterbändern, Harlekin-Rauten auf der Rückseite. Alles ist flach und grafisch. Das Deck ist eigens für KARO gezeichnet.
 
 | Grundsatz | Bedeutung |
 |---|---|
-| **Lesbarkeit zuerst** | Jede Karte hat eine Kopfzeile mit großem Wert und Farbsymbol. In den Spalten sieht man oft nur diesen Streifen |
+| **Lesbarkeit zuerst** | Der Index oben links ist groß genug, um auch im schmalen Streifen der Spalten lesbar zu sein |
 | **Greifbarkeit** | Weiche Schatten, Drehung beim Aufdecken, Karten fliegen über die anderen |
 | **Ruhe** | Kurze, weiche Bewegungen. Die Siegesfeier ist eine langsame Hommage, kein Feuerwerk |
 | **Verlässlichkeit** | Ein Tipp genügt. Was versehentlich passiert, macht Zurück rückgängig |
@@ -20,13 +20,13 @@ Ein **hochwertiges Kartenspiel, das auf einer Leinenmatte liegt.** Vorbild ist d
 | Rolle | Hex |
 |---|---|
 | Matte | `#26343a` → `#172025`, Leinenstruktur, Goldlinie am Rand |
-| Prägung, Rahmen | `#c9a961` |
-| Papier | `#fbf8f2` |
+| Prägung der Matte | `#c9a961` |
+| Papier | `#fdfcf9` |
 | Creme | `#f4ecdc` |
-| Rückseite | Petrol `#1f5a50`, Orange `#e08a3c`, Himmelblau `#3e9ad3`, Creme |
-| Rote Farben | Zinnober `#c63b2c` |
-| Schwarze Farben | Tinte `#1c1d2a` |
-| Bildkarten | Rost `#b5532a`, Indigo `#454c96`, Ocker `#d9a441`, Petrol |
+| Rückseite | Petrol `#1e5c52`, Orange `#e39a4a`, Himmelblau `#4aa0d8`, Creme `#f2e8d6` |
+| Rote Farben | Zinnober `#c8382b` |
+| Schwarze Farben | Tinte `#1b1c26` |
+| Bildkarten | Taubenblau `#6f78b8` mit Marine `#2b3070`, Rost `#c0652f` mit Zinnober, Petrol `#2f6b5c` mit Ocker, Ocker `#d9a441` mit Orange |
 
 Die Oberfläche um die Matte nutzt die Design-Tokens der Sammlung aus `shared/tokens.css`.
 
@@ -35,34 +35,46 @@ Die Oberfläche um die Matte nutzt die Design-Tokens der Sammlung aus `shared/to
 | Rolle | Schrift |
 |---|---|
 | Schriftzug KARO, Punkte | Didot, Bodoni 72, Ersatz Georgia (aus der Hülle) |
-| Werte auf den Karten | Didot fett. Auf Deutsch B, D, K, auf Englisch J, Q, K |
+| Index auf den Karten | Didot regulär mit hauchdünner Kontur, Wert über der Farbe, oben links und gedreht unten rechts. Auf Deutsch B, D, K, auf Englisch J, Q, K |
 
 ## Das Deck
 
 | Teil | Gestaltung |
 |---|---|
-| **Rückseite** | Rauten im Harlekin-Muster: Petrol im Schachbrett, dazwischen Bahnen aus Creme, Orange und Blau, mit cremefarbenem Rand |
-| **Kopfzeile** | links groß der Wert, rechts das Farbsymbol, lesbar schon bei 14 % der Kartenhöhe |
-| **Farbsymbole** | eigene Zeichnung, weicher und runder als üblich, gefüllt auf den Karten, als Goldkontur auf leeren Ablagen |
-| **Zahlkarten** | klassische Anordnung, untere Hälfte gedreht, viel Weißraum |
-| **Asse** | großes Symbol im doppelten Rautenrahmen aus Gold. Das Pik-Ass trägt als Signatur einen Strahlenkranz |
-| **Bildkarten** | gespiegelte Figuren in einem Goldrahmen auf Creme mit Punktraster |
+| **Papier** | reinweiß, ohne Rahmen, viel Weißraum |
+| **Rückseite** | längliche Rauten in diagonalen Bahnen: Petrol, dazwischen Creme mit Orange und Creme mit Himmelblau, schmaler weißer Rand |
+| **Index** | Wert über der Farbe, oben links und gedreht unten rechts, lesbar im Streifen von einem Drittel der Kartenhöhe |
+| **Farbsymbole** | klassisch, leicht weich gezeichnet, gefüllt auf den Karten, als Goldkontur auf leeren Ablagen |
+| **Zahlkarten** | klassische Anordnung, untere Hälfte gedreht |
+| **Asse** | ein einzelnes Symbol auf weißem Grund. Das Pik-Ass trägt als Signatur die Muster der Bildkarten: Sägezahnkranz, Punktreihe, Wellenlinie |
+| **Bildkarten** | große Figuren über die ganze Karte, um 28° diagonal gelegt: ein Kopf oben rechts, der gespiegelte unten links |
 
 ### Formensystem der Bildkarten
 
+Jede Figur trägt ein Gewand als langes Sechseck mit denselben Musterbändern:
+
+| Band | Gestaltung |
+|---|---|
+| Rand | Streifen in Creme und der Akzentfarbe entlang der Kanten |
+| Kragen | schwarzes Band mit weißen Sägezähnen |
+| Punktreihe | Punkte in der Akzentfarbe mit weißem Kern (beim Buben ein Kordelband) |
+| Linsen | schwarze Linsen mit weißer Wellenlinie und Punkten an den Seiten |
+| Mitte | schwarze Raute mit heller Raute |
+
 | Element | König | Dame | Bube |
 |---|---|---|---|
-| Kopf | Krone mit Stufen, Bart | Bogenkrone mit Perlen, langes Haar | Barett mit Feder |
-| Attribut | Zepter | Blüte | Schlüssel |
+| Gewand | breit und kantig | schmal an den Schultern | schlank |
+| Kopf | Krone mit Stufen, Bart | Haube in der Gewandfarbe, kleine Krone seitlich | hohe Kappe mit Punktband |
+| Attribut | Zepter | Blüte | Schwert |
 
-| Farbe | Gewand | Muster |
+| Farbe | Gewand | Akzent |
 |---|---|---|
-| Pik | Indigo | Winkel |
-| Herz | Rost | Halbkreise |
-| Kreuz | Petrol | Punkte |
-| Karo | Ocker | Rauten |
+| Pik | Taubenblau | Marine |
+| Herz | Rost | Zinnober |
+| Kreuz | Petrol | Ocker |
+| Karo | Ocker | Orange |
 
-Alle Figuren haben **geschlossene Augen**: ruhig und meditativ, das Erkennungszeichen des Decks.
+Die Gesichter sind feine Linienzeichnungen: geschlossene Augen, lange Nase, kleiner roter Mund. Ruhig und meditativ, das Erkennungszeichen des Decks.
 
 ## Layouts
 

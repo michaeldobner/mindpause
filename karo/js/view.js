@@ -135,10 +135,10 @@ export class TableView {
     const { H, wide, tabY, bottom } = this.g;
     const { down, up } = this.game.tableau[col];
     let dn = H * (wide ? 0.1 : 0.12);
-    let un = H * (wide ? 0.25 : 0.3);
+    let un = H * (wide ? 0.3 : 0.34);
     const room = bottom - tabY - H;
     if (up.length > 1 && down.length * dn + (up.length - 1) * un > room) {
-      un = Math.max(H * 0.17, (room - down.length * dn) / (up.length - 1));
+      un = Math.max(H * 0.2, (room - down.length * dn) / (up.length - 1));
       if (down.length * dn + (up.length - 1) * un > room) {
         dn = Math.max(H * 0.04, (room - (up.length - 1) * un) / Math.max(1, down.length));
       }
