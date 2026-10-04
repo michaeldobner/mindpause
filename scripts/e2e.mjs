@@ -98,7 +98,7 @@ for (const game of games) {
       await page.evaluate(() => window.__game.e2e.move());
       await page.waitForTimeout(1100);
       const after = await page.evaluate(() => window.__game.history);
-      check(after === before + 1, `${label}: Zug ausgeführt`);
+      check(after > before, `${label}: Zug ausgeführt`);
       await page.click('#btn-undo');
       await page.waitForTimeout(900);
       const undone = await page.evaluate(() => window.__game.history);

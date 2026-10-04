@@ -16,10 +16,11 @@ Classic board games, reimagined with tactile design and handcrafted sound. Free,
 
 | | Game | Description | Version |
 |---|---|---|---|
-| <img src="spring/icons/icon.svg" width="56" alt=""> | **[SPRING](spring/README.md)** · [play](https://michaeldobner.github.io/mindpause/spring/) | Peg solitaire on the classic cross-shaped board. Seven figures from easy to masterful, hints, a living rim, tilt | 2.1.0 |
+| <img src="spring/icons/icon.svg" width="56" alt=""> | **[SPRING](spring/README.md)** · [play](https://michaeldobner.github.io/mindpause/spring/) | Peg solitaire on the classic cross-shaped board. Seven figures from easy to masterful, hints, a living rim, tilt | 2.1.1 |
+| <img src="queen/icons/icon.svg" width="56" alt=""> | **[QUEEN](queen/README.md)** · [play](https://michaeldobner.github.io/mindpause/queen/) | German checkers against the computer at three levels or for two players on one device. Golden crown, trays for captured pieces | 1.0.0 |
 | <img src="karo/icons/icon.svg" width="56" alt=""> | **[KARO](karo/README.md)** · [play](https://michaeldobner.github.io/mindpause/karo/) | Classic solitaire as on Windows. Draw one or three, points or Vegas, levels that can always be solved, hints | 1.0.0 |
 
-More games are on the way, see the [roadmap](#roadmap).
+More games and play across two devices are on the way, see the [roadmap](#roadmap).
 
 ## What every game shares
 
@@ -31,6 +32,7 @@ All games are built on one common **shell** in [`shared/`](shared/README.md). Ch
 | **Interface** | Header, control bar, picker as sheet, drawer or sidebar, settings, result card with stars, toasts, first launch hint |
 | **Layouts** | iPhone portrait and landscape, iPad with sidebar, light and dark mode, safe areas |
 | **Sound engine** | Ceramic on wood in four layers, three sound styles, respects the silent switch |
+| **Living rim** | Physics for marbles and pieces in a rim or in trays: tap, swipe, tilt |
 | **Languages** | German on German devices, English everywhere else |
 | **Offline** | Every game installs as its own app on the home screen and works without internet |
 
@@ -45,9 +47,10 @@ mindpause/
 ├─ shared/                 the shell, see shared/README.md
 │  ├─ tokens.css           design tokens
 │  ├─ shell.css            layout and building blocks
-│  ├─ js/                  shell, languages, storage, sound engine
+│  ├─ js/                  shell, languages, storage, sound engine, physics, tilt
 │  └─ tests/               tests of the shell
 ├─ spring/                 SPRING, see spring/README.md
+├─ queen/                  QUEEN, see queen/README.md
 ├─ karo/                   KARO, see karo/README.md
 ├─ scripts/
 │  ├─ release.mjs          sets the version of a game or of the shell
@@ -61,7 +64,7 @@ mindpause/
 Requirements: Node.js 20 or newer and a modern browser. There are no dependencies and no build step.
 
 ```bash
-npm start       # local server: http://localhost:3000/ (home), /spring/ (SPRING)
+npm start       # local server: http://localhost:3000/ (home), /spring/, /queen/
 npm test        # logic tests of every game and the shell
 npm run e2e     # browser test of every game on iPhone, iPhone SE and iPad
 ```
@@ -85,7 +88,7 @@ Every reference carries its version (`?v=` for game files, `?shell=` for shell f
 
 ## Adding a game
 
-1. Create a folder with the game's id, for example `dame/`.
+1. Create a folder with the game's id, for example `mill/`.
 2. Use the same structure as `spring/`: `index.html`, `js/main.js`, `js/strings.js`, `css/<id>.css`, `sw.js`, `manifest.webmanifest`, `icons/`, `tests/`, `README.md`, `README.de.md`, `CHANGELOG.md`, `CHANGELOG.de.md`, `docs/de`, `docs/en`.
 3. In `main.js` call `createShell()` from the shell, see [shell documentation](shared/README.md#connecting-a-game).
 4. Provide `window.__game` with `history` and `e2e.move()` for the browser test.
@@ -98,9 +101,10 @@ Every reference carries its version (`?v=` for game files, `?shell=` for shell f
 |---|---|---|
 | SPRING | Peg solitaire, 7 figures, hints, tilt | Done |
 | Collection | Shell, home page, tests across all games | Done |
+| QUEEN | German checkers, three computer levels, two players on one device | Done |
 | KARO | Klondike solitaire, draw one or three, Windows and Vegas scoring, solvable levels | Done |
-| Next game | Checkers (Dame) against the computer and for two players on one device | Planned |
-| Later | Playing against each other on two devices | Idea |
+| QUEEN 1.1 | Playing each other on two devices, stage 1: move by link | Planned |
+| Later | Live with a room code, more games | Idea |
 
 ## Writing style
 

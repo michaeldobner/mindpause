@@ -2,11 +2,11 @@
 
 [Deutsch](README.de.md) · [Collection](../README.md) · [Changelog](CHANGELOG.md)
 
-The shell is everything every MIND PAUSE game shares. A game only describes what makes it unique: rules, board, levels and its own sounds. Interface, design, sound engine, languages, storage and offline support come from here.
+The shell is everything every MIND PAUSE game shares. A game only describes what makes it unique: rules, board, levels and its own sounds. Interface, design, sound engine, rim physics, tilt, languages, storage and offline support come from here.
 
 **Rule of thumb:** if a change should affect every game, it belongs here. If it only concerns one game, it belongs in that game's folder.
 
-Current version: **1.0.0**
+Current version: **1.1.0**
 
 ## Contents
 
@@ -17,7 +17,9 @@ Current version: **1.0.0**
 | `js/shell.js` | `createShell()`: builds the interface and returns the functions to control it |
 | `js/i18n.js` | `createI18n()`: language detection and texts of the shell, extended by each game |
 | `js/storage.js` | `createStorage(prefix)`: saving on the device, one prefix per game |
-| `js/sound-engine.js` | `SoundEngine`: ceramic on wood, mastering, sound styles, iOS unlock |
+| `js/sound-engine.js` | `SoundEngine`: ceramic on wood, mastering, sound styles, iOS unlock, rim sounds |
+| `js/gutter.js` | `Gutter`: physics for pieces in a round rim (SPRING) or a straight tray (QUEEN) |
+| `js/tilt.js` | `Tilt`: motion sensor with the iOS permission request, provides gravity in screen space |
 | `tests/` | Tests of the shell |
 
 ## Design tokens
@@ -59,16 +61,16 @@ Sheets close on swipe down, tap outside, the cross or Escape. Touch targets are 
 A game calls `createShell()` in its `main.js`:
 
 ```js
-import { createShell } from '../../shared/js/shell.js?shell=1.0.0';
-import { createI18n } from '../../shared/js/i18n.js?shell=1.0.0';
-import { createStorage } from '../../shared/js/storage.js?shell=1.0.0';
+import { createShell } from '../../shared/js/shell.js?shell=1.1.0';
+import { createI18n } from '../../shared/js/i18n.js?shell=1.1.0';
+import { createStorage } from '../../shared/js/storage.js?shell=1.1.0';
 
-const storage = createStorage('dame:');
-const i18n = createI18n(DAME_STRINGS);          // texts of the game, de and en
-const sound = new DameSound({ enabled: storage.load('sound', true) });
+const storage = createStorage('queen:');
+const i18n = createI18n(QUEEN_STRINGS);         // texts of the game, de and en
+const sound = new QueenSound({ enabled: storage.load('sound', true) });
 
 const shell = createShell({
-  title: 'DAME',
+  title: 'QUEEN',
   version: '1.0.0',
   i18n,
   storage,
@@ -76,7 +78,7 @@ const shell = createShell({
   buttons: ['undo', 'hint', 'restart', 'levels', 'settings'],
   levels: { buttonKey: 'modes', titleKey: 'chooseMode', nextKey: 'nextLevel' },
   settings: [{ id: 'flip', nameKey: 'flip', textKey: 'flipText' }],
-  noteKey: 'tip',
+  noteKey: 'trayHint',
   coachKey: 'coach',
   boardLabelKey: 'boardLabel',
   actions: { undo, hint, restart, again, back, next, selectLevel, setting },
@@ -130,9 +132,56 @@ Texts of the shell: undo, hint, new, more, close, difficulty, game over, play ag
 | `invalid()` | Two muted wooden knocks |
 | `win(perfect)` | Rising triad, with a bell tone when `perfect` |
 | `preview()` | Short preview when choosing a sound style |
+| `rim()` | A piece rolls into the rim or the tray |
+| `clack(strength)` | Pieces bump into each other in the rim, at most eight clicks per second |
 | `transient`, `wood`, `ceramic` | Building blocks for a game's own sounds |
 
-A game extends the class with its own sounds, for example SPRING with `land`, `gutter` and `clack`. Sound design in detail: [SPRING sound design](../spring/docs/en/sound.md).
+A game extends the class with its own sounds, for example SPRING with `lift`, `land` and `gutter`, QUEEN with `lift`, `place`, `hop`, `crown` and `lose`. Sound design in detail: [SPRING sound design](../spring/docs/en/sound.md).
+
+### Rim and trays
+
+`Gutter` describes every piece only by its **angle** on a circle and its angular velocity. Friction, collisions, tilt and finger input are the same for every game.
+
+```js
+import { Gutter } from '../../shared/js/gutter.js?shell=1.1.0';
+
+// Round rim as in SPRING
+const rim = new Gutter({ radius: 446, marbleRadius: 37, onCollide: (i) => sound.clack(i) });
+
+// Straight tray as in QUEEN: an arc section on a very large circle
+const R = 10000;
+const tray = new Gutter({
+  radius: R,
+  marbleRadius: 34,
+  arc: { center: Math.PI / 2, half: 440 / R },  // centre and half length as angles
+  speedScale: 446 / R,                          // motion feels the same as in SPRING
+  onCollide: (i) => sound.clack(i),
+});
+```
+
+| Method | Purpose |
+|---|---|
+| `add(id, angle, v)`, `remove(id)`, `has(id)`, `size` | Manage pieces |
+| `freeAngle(wish)` | Nearest free spot, in a tray only between the walls |
+| `pack(ids)` | Lay pieces side by side, in a tray around the centre |
+| `angleOf(id)`, `position(angle)` | Angle of a piece, point on the circle |
+| `push(angle, v)`, `nudge(angle)` | Swipe and tap |
+| `gravity`, `rotation` | Tilt in screen space, rotation of the board on screen |
+| `step(dt)` | One time step, returns `true` while anything moves |
+
+With `arc` the rim gets walls at both ends: pieces bounce off, and there is no passage from one end to the other. `speedScale` converts maximum speed, rest threshold, tilt and impact strength for a different radius.
+
+### Tilt
+
+```js
+import { Tilt } from '../../shared/js/tilt.js?shell=1.1.0';
+
+const tilt = new Tilt((x, y) => view.setGravity(x, y), storage.load('tilt', false));
+const result = await tilt.enable();   // 'ok', 'off', 'denied' or 'unsupported'
+tilt.disable();
+```
+
+On iOS `enable()` must be called from a touch (`onGesture` or the `setting` action). `wanted` is the wish shown in the switch, `enabled` the connected sensor. If tilt is turned off during the permission request, turning off wins.
 
 ### Test hook
 

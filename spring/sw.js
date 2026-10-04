@@ -3,8 +3,8 @@
 // Jede Version lädt nur ihre eigenen Dateien: Dateien von SPRING tragen ?v=<Version>,
 // Dateien der Hülle ?shell=<Version der Hülle> (siehe scripts/release.mjs).
 // So können sich alte und neue Dateien nie mischen.
-const VERSION = '2.1.0';
-const SHELL = '1.0.0';
+const VERSION = '2.1.1';
+const SHELL = '1.1.0';
 const CACHE = `spring-v${VERSION}-shell${SHELL}`;
 
 const FILES = [
@@ -16,11 +16,11 @@ const FILES = [
   './icons/icon-512.png',
   './icons/apple-touch-icon.png',
   `./css/spring.css?v=${VERSION}`,
-  ...['main', 'strings', 'figures', 'game', 'view', 'gutter', 'sound', 'tilt', 'solver', 'solver-worker']
+  ...['main', 'strings', 'figures', 'game', 'view', 'sound', 'solver', 'solver-worker']
     .map((name) => `./js/${name}.js?v=${VERSION}`),
   `../shared/tokens.css?shell=${SHELL}`,
   `../shared/shell.css?shell=${SHELL}`,
-  ...['shell', 'i18n', 'storage', 'sound-engine'].map((name) => `../shared/js/${name}.js?shell=${SHELL}`),
+  ...['shell', 'i18n', 'storage', 'sound-engine', 'gutter', 'tilt'].map((name) => `../shared/js/${name}.js?shell=${SHELL}`),
 ];
 
 self.addEventListener('install', (event) => {

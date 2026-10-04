@@ -16,10 +16,11 @@ Klassische Brettspiele, neu gedacht, mit fast greifbarem Design und handgemachte
 
 | | Spiel | Beschreibung | Version |
 |---|---|---|---|
-| <img src="spring/icons/icon.svg" width="56" alt=""> | **[SPRING](spring/README.de.md)** · [spielen](https://michaeldobner.github.io/mindpause/spring/) | Solohalma auf dem klassischen Kreuzbrett. Sieben Figuren von leicht bis meisterhaft, Tipps, lebendiger Rand, Neigen | 2.1.0 |
+| <img src="spring/icons/icon.svg" width="56" alt=""> | **[SPRING](spring/README.de.md)** · [spielen](https://michaeldobner.github.io/mindpause/spring/) | Solohalma auf dem klassischen Kreuzbrett. Sieben Figuren von leicht bis meisterhaft, Tipps, lebendiger Rand, Neigen | 2.1.1 |
+| <img src="queen/icons/icon.svg" width="56" alt=""> | **[QUEEN](queen/README.de.md)** · [spielen](https://michaeldobner.github.io/mindpause/queen/) | Deutsche Dame gegen den Computer in drei Stufen oder zu zweit an einem Gerät. Goldene Krone, Schalen für geschlagene Steine | 1.0.0 |
 | <img src="karo/icons/icon.svg" width="56" alt=""> | **[KARO](karo/README.de.md)** · [spielen](https://michaeldobner.github.io/mindpause/karo/) | Die klassische Patience wie bei Windows. 1 oder 3 Karten, Punkte oder Vegas, sicher lösbare Stufen, Tipps | 1.0.0 |
 
-Weitere Spiele sind in Arbeit, siehe [Roadmap](#roadmap).
+Weitere Spiele und das Spiel auf zwei Geräten sind in Arbeit, siehe [Roadmap](#roadmap).
 
 ## Was alle Spiele teilen
 
@@ -31,6 +32,7 @@ Alle Spiele bauen auf einer gemeinsamen **Hülle** in [`shared/`](shared/README.
 | **Oberfläche** | Kopfzeile, Steuerleiste, Auswahl als Blatt, Schublade oder Seitenleiste, Einstellungen, Ergebniskarte mit Sternen, Hinweise, Erststart-Hinweis |
 | **Layouts** | iPhone hoch und quer, iPad mit Seitenleiste, Hell- und Dunkelmodus, sichere Ränder |
 | **Klang-Engine** | Keramik auf Holz in vier Schichten, drei Klangfarben, respektiert den Lautlos-Schalter |
+| **Lebendiger Rand** | Physik für Murmeln und Steine im Rand oder in Schalen: antippen, wischen, neigen |
 | **Sprachen** | Deutsch auf deutsch eingestellten Geräten, sonst Englisch |
 | **Offline** | Jedes Spiel lässt sich als eigene App auf den Home-Bildschirm legen und läuft ohne Internet |
 
@@ -45,9 +47,10 @@ mindpause/
 ├─ shared/                 die Hülle, siehe shared/README.de.md
 │  ├─ tokens.css           Design-Tokens
 │  ├─ shell.css            Layout und Bausteine
-│  ├─ js/                  Hülle, Sprachen, Speichern, Klang-Engine
+│  ├─ js/                  Hülle, Sprachen, Speichern, Klang-Engine, Physik, Neigen
 │  └─ tests/               Tests der Hülle
 ├─ spring/                 SPRING, siehe spring/README.de.md
+├─ queen/                  QUEEN, siehe queen/README.de.md
 ├─ karo/                   KARO, siehe karo/README.de.md
 ├─ scripts/
 │  ├─ release.mjs          setzt die Version eines Spiels oder der Hülle
@@ -61,7 +64,7 @@ mindpause/
 Voraussetzungen: Node.js ab Version 20 und ein moderner Browser. Es gibt keine Abhängigkeiten und keinen Build-Schritt.
 
 ```bash
-npm start       # lokaler Server: http://localhost:3000/ (Startseite), /spring/ (SPRING)
+npm start       # lokaler Server: http://localhost:3000/ (Startseite), /spring/, /queen/
 npm test        # Logik-Tests aller Spiele und der Hülle
 npm run e2e     # Browser-Test aller Spiele auf iPhone, iPhone SE und iPad
 ```
@@ -85,7 +88,7 @@ Jeder Verweis trägt seine Version (`?v=` für Dateien eines Spiels, `?shell=` f
 
 ## Ein Spiel hinzufügen
 
-1. Ordner mit der Kennung des Spiels anlegen, zum Beispiel `dame/`.
+1. Ordner mit der Kennung des Spiels anlegen, zum Beispiel `muehle/`.
 2. Denselben Aufbau wie `spring/` verwenden: `index.html`, `js/main.js`, `js/strings.js`, `css/<kennung>.css`, `sw.js`, `manifest.webmanifest`, `icons/`, `tests/`, `README.md`, `README.de.md`, `CHANGELOG.md`, `CHANGELOG.de.md`, `docs/de`, `docs/en`.
 3. In `main.js` `createShell()` der Hülle aufrufen, siehe [Doku der Hülle](shared/README.de.md#ein-spiel-anbinden).
 4. `window.__game` mit `history` und `e2e.move()` für den Browser-Test bereitstellen.
@@ -98,9 +101,10 @@ Jeder Verweis trägt seine Version (`?v=` für Dateien eines Spiels, `?shell=` f
 |---|---|---|
 | SPRING | Solohalma, 7 Figuren, Tipps, Neigen | Fertig |
 | Sammlung | Hülle, Startseite, Tests über alle Spiele | Fertig |
+| QUEEN | Deutsche Dame, drei Computerstufen, zu zweit an einem Gerät | Fertig |
 | KARO | Klondike-Patience, 1 oder 3 Karten, Punkte nach Windows und Vegas, sicher lösbare Stufen | Fertig |
-| Nächstes Spiel | Dame gegen den Computer und zu zweit an einem Gerät | Geplant |
-| Später | Gegeneinander auf zwei Geräten | Idee |
+| QUEEN 1.1 | Gegeneinander auf zwei Geräten, Stufe 1: Zug per Link | Geplant |
+| Später | Live mit Raumcode, weitere Spiele | Idee |
 
 ## Schreibstil
 

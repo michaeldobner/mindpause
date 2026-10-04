@@ -1,18 +1,18 @@
 // SPRING: Solohalma auf dem englischen Kreuzbrett.
 // Die Oberfläche kommt aus der Hülle (shared/js/shell.js), hier steht nur, was SPRING eigen ist.
 
-import { createShell } from '../../shared/js/shell.js?shell=1.0.0';
-import { createI18n } from '../../shared/js/i18n.js?shell=1.0.0';
-import { createStorage } from '../../shared/js/storage.js?shell=1.0.0';
-import { DEFAULT_STYLE } from '../../shared/js/sound-engine.js?shell=1.0.0';
-import { FIGURES, GOAL, DEFAULT_FIGURE, figureById, nextFigure } from './figures.js?v=2.1.0';
-import { Game } from './game.js?v=2.1.0';
-import { BoardView } from './view.js?v=2.1.0';
-import { SpringSound } from './sound.js?v=2.1.0';
-import { Tilt } from './tilt.js?v=2.1.0';
-import { SPRING_STRINGS } from './strings.js?v=2.1.0';
+import { createShell } from '../../shared/js/shell.js?shell=1.1.0';
+import { createI18n } from '../../shared/js/i18n.js?shell=1.1.0';
+import { createStorage } from '../../shared/js/storage.js?shell=1.1.0';
+import { DEFAULT_STYLE } from '../../shared/js/sound-engine.js?shell=1.1.0';
+import { FIGURES, GOAL, DEFAULT_FIGURE, figureById, nextFigure } from './figures.js?v=2.1.1';
+import { Game } from './game.js?v=2.1.1';
+import { BoardView } from './view.js?v=2.1.1';
+import { SpringSound } from './sound.js?v=2.1.1';
+import { Tilt } from '../../shared/js/tilt.js?shell=1.1.0';
+import { SPRING_STRINGS } from './strings.js?v=2.1.1';
 
-export const VERSION = '2.1.0';
+export const VERSION = '2.1.1';
 
 const storage = createStorage('spring:');
 const { load, save } = storage;
@@ -225,7 +225,7 @@ function advanceHint(record) {
 }
 
 function askSolver() {
-  if (!worker) worker = new Worker(new URL('./solver-worker.js?v=2.1.0', import.meta.url), { type: 'module' });
+  if (!worker) worker = new Worker(new URL('./solver-worker.js?v=2.1.1', import.meta.url), { type: 'module' });
   const id = ++hintRequest;
   return new Promise((resolve) => {
     const onMessage = (e) => {

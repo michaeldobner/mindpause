@@ -2,12 +2,28 @@
   {
     "id": "spring",
     "title": "SPRING",
-    "subtitle": { "de": "Solohalma", "en": "Peg Solitaire" },
+    "subtitle": {
+      "de": "Solohalma",
+      "en": "Peg Solitaire"
+    },
     "description": {
       "de": "Das klassische Murmelspiel auf dem Kreuzbrett. Sieben Figuren von leicht bis meisterhaft.",
       "en": "The classic marble game on the cross-shaped board. Seven figures from easy to masterful."
     },
     "icon": "spring/icons/icon.svg"
+  },
+  {
+    "id": "queen",
+    "title": "QUEEN",
+    "subtitle": {
+      "de": "Dame",
+      "en": "Checkers"
+    },
+    "description": {
+      "de": "Deutsche Dame gegen den Computer in drei Stufen oder zu zweit an einem Gerät. Wer die Grundreihe erreicht, wird gekrönt.",
+      "en": "German checkers against the computer on three levels or for two players on one device. Reach the far row and be crowned."
+    },
+    "icon": "queen/icons/icon.svg"
   },
   {
     "id": "karo",

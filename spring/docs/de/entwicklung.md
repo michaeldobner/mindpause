@@ -20,8 +20,8 @@ Danach SPRING unter `http://localhost:3000/spring/` öffnen. Die Sprache folgt d
 |---|---|
 | `spring/tests/game.test.js` | Startstellung, erste Züge, keine Diagonalen, Sprung und Zurück, Speichern und Laden, vollständige Lösung, Bewertung |
 | `spring/tests/figures.test.js` | Alle Figuren auf dem 33er-Brett, **jede Figur lösbar bis Meisterhaft**, Sortierung, Navigation, Erkennen unlösbarer Stellungen |
-| `spring/tests/gutter.test.js` | 31 Murmeln passen in den Rand, Bewegung kommt zur Ruhe, Stöße geben Schwung weiter, Neigung sammelt Murmeln unten, freie Plätze, Finger schiebt |
-| `spring/tests/tilt.test.js` | Schwerkraft aus Gerätewinkeln in Hoch- und Querformat, Schalter für Neigen auch während der Erlaubnis-Abfrage |
+| `shared/tests/gutter.test.js` | 31 Murmeln passen in den Rand, Bewegung kommt zur Ruhe, Stöße geben Schwung weiter, Neigung sammelt Murmeln unten, freie Plätze, Finger schiebt |
+| `shared/tests/tilt.test.js` | Schwerkraft aus Gerätewinkeln in Hoch- und Querformat, Schalter für Neigen auch während der Erlaubnis-Abfrage |
 | `shared/tests/i18n.test.js` | Unter anderem: Texte von SPRING haben in beiden Sprachen dieselben Schlüssel und keine Gedankenstriche |
 | `tests/release.test.js` | Unter anderem: Jeder Verweis von SPRING trägt die richtige Version, der Service Worker kennt jedes Modul, der Ordner ist vollständig |
 

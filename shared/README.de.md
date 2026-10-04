@@ -2,11 +2,11 @@
 
 [English](README.md) · [Sammlung](../README.de.md) · [Changelog](CHANGELOG.de.md)
 
-Die Hülle ist alles, was alle Spiele von MIND PAUSE teilen. Ein Spiel beschreibt nur, was es einzigartig macht: Regeln, Brett, Level und eigene Klänge. Oberfläche, Design, Klang-Engine, Sprachen, Speichern und Offline-Betrieb kommen von hier.
+Die Hülle ist alles, was alle Spiele von MIND PAUSE teilen. Ein Spiel beschreibt nur, was es einzigartig macht: Regeln, Brett, Level und eigene Klänge. Oberfläche, Design, Klang-Engine, Physik des Rands, Neigen, Sprachen, Speichern und Offline-Betrieb kommen von hier.
 
 **Faustregel:** Soll eine Änderung in allen Spielen wirken, gehört sie hierher. Betrifft sie nur ein Spiel, gehört sie in dessen Ordner.
 
-Aktuelle Version: **1.0.0**
+Aktuelle Version: **1.1.0**
 
 ## Inhalt
 
@@ -17,7 +17,9 @@ Aktuelle Version: **1.0.0**
 | `js/shell.js` | `createShell()`: baut die Oberfläche und gibt die Funktionen zur Steuerung zurück |
 | `js/i18n.js` | `createI18n()`: Spracherkennung und Texte der Hülle, von jedem Spiel ergänzt |
 | `js/storage.js` | `createStorage(präfix)`: Speichern auf dem Gerät, ein Präfix pro Spiel |
-| `js/sound-engine.js` | `SoundEngine`: Keramik auf Holz, Mastering, Klangfarben, Ton-Freigabe auf iOS |
+| `js/sound-engine.js` | `SoundEngine`: Keramik auf Holz, Mastering, Klangfarben, Ton-Freigabe auf iOS, Klänge des Rands |
+| `js/gutter.js` | `Gutter`: Physik für Teile in einem runden Rand (SPRING) oder einer geraden Schale (QUEEN) |
+| `js/tilt.js` | `Tilt`: Bewegungssensor mit Erlaubnis-Abfrage auf iOS, liefert die Schwerkraft auf dem Bildschirm |
 | `tests/` | Tests der Hülle |
 
 ## Design-Tokens
@@ -59,16 +61,16 @@ Blätter schließen per Wischen nach unten, Tipp daneben, Kreuz oder Escape. Tip
 Ein Spiel ruft in seiner `main.js` `createShell()` auf:
 
 ```js
-import { createShell } from '../../shared/js/shell.js?shell=1.0.0';
-import { createI18n } from '../../shared/js/i18n.js?shell=1.0.0';
-import { createStorage } from '../../shared/js/storage.js?shell=1.0.0';
+import { createShell } from '../../shared/js/shell.js?shell=1.1.0';
+import { createI18n } from '../../shared/js/i18n.js?shell=1.1.0';
+import { createStorage } from '../../shared/js/storage.js?shell=1.1.0';
 
-const storage = createStorage('dame:');
-const i18n = createI18n(DAME_STRINGS);          // Texte des Spiels, de und en
-const sound = new DameSound({ enabled: storage.load('sound', true) });
+const storage = createStorage('queen:');
+const i18n = createI18n(QUEEN_STRINGS);         // Texte des Spiels, de und en
+const sound = new QueenSound({ enabled: storage.load('sound', true) });
 
 const shell = createShell({
-  title: 'DAME',
+  title: 'QUEEN',
   version: '1.0.0',
   i18n,
   storage,
@@ -76,7 +78,7 @@ const shell = createShell({
   buttons: ['undo', 'hint', 'restart', 'levels', 'settings'],
   levels: { buttonKey: 'modes', titleKey: 'chooseMode', nextKey: 'nextLevel' },
   settings: [{ id: 'flip', nameKey: 'flip', textKey: 'flipText' }],
-  noteKey: 'tip',
+  noteKey: 'trayHint',
   coachKey: 'coach',
   boardLabelKey: 'boardLabel',
   actions: { undo, hint, restart, again, back, next, selectLevel, setting },
@@ -130,9 +132,56 @@ Texte der Hülle: Zurück, Tipp, Neu, Mehr, Schließen, Schwierigkeit, Spiel bee
 | `invalid()` | Zwei gedämpfte Holzklopfer |
 | `win(perfect)` | Aufsteigender Dreiklang, bei `perfect` mit Glockenton |
 | `preview()` | Kurze Vorschau bei der Wahl der Klangfarbe |
+| `rim()` | Ein Teil rollt in den Rand oder die Schale |
+| `clack(stärke)` | Teile stoßen im Rand aneinander, höchstens acht Klicks pro Sekunde |
 | `transient`, `wood`, `ceramic` | Bausteine für eigene Klänge eines Spiels |
 
-Ein Spiel erweitert die Klasse um eigene Klänge, SPRING zum Beispiel um `land`, `gutter` und `clack`. Klangdesign im Detail: [Klangdesign von SPRING](../spring/docs/de/klang.md).
+Ein Spiel erweitert die Klasse um eigene Klänge, SPRING zum Beispiel um `lift`, `land` und `gutter`, QUEEN um `lift`, `place`, `hop`, `crown` und `lose`. Klangdesign im Detail: [Klangdesign von SPRING](../spring/docs/de/klang.md).
+
+### Rand und Schalen
+
+`Gutter` beschreibt jedes Teil nur durch seinen **Winkel** auf einem Kreis und seine Winkelgeschwindigkeit. Reibung, Stöße, Neigung und Fingerbewegungen sind für alle Spiele gleich.
+
+```js
+import { Gutter } from '../../shared/js/gutter.js?shell=1.1.0';
+
+// Runder Rand wie bei SPRING
+const rim = new Gutter({ radius: 446, marbleRadius: 37, onCollide: (i) => sound.clack(i) });
+
+// Gerade Schale wie bei QUEEN: Bogenstück auf einem sehr großen Kreis
+const R = 10000;
+const tray = new Gutter({
+  radius: R,
+  marbleRadius: 34,
+  arc: { center: Math.PI / 2, half: 440 / R },  // Mitte und halbe Länge als Winkel
+  speedScale: 446 / R,                          // Bewegung fühlt sich an wie bei SPRING
+  onCollide: (i) => sound.clack(i),
+});
+```
+
+| Methode | Aufgabe |
+|---|---|
+| `add(id, winkel, v)`, `remove(id)`, `has(id)`, `size` | Teile verwalten |
+| `freeAngle(wunsch)` | Nächste freie Stelle, in einer Schale nur zwischen den Wänden |
+| `pack(ids)` | Teile dicht nebeneinander legen, in einer Schale um die Mitte |
+| `angleOf(id)`, `position(winkel)` | Winkel eines Teils, Punkt auf dem Kreis |
+| `push(winkel, v)`, `nudge(winkel)` | Wischen und Antippen |
+| `gravity`, `rotation` | Neigung in Bildschirmrichtung, Drehung des Bretts auf dem Bildschirm |
+| `step(dt)` | Ein Zeitschritt, gibt `true` zurück, solange sich etwas bewegt |
+
+Mit `arc` bekommt der Rand Wände an beiden Enden: Teile prallen ab, es gibt keinen Übergang von einem Ende zum anderen. `speedScale` rechnet Höchstgeschwindigkeit, Ruhegrenze, Neigung und Stoßstärke auf einen anderen Radius um.
+
+### Neigen
+
+```js
+import { Tilt } from '../../shared/js/tilt.js?shell=1.1.0';
+
+const tilt = new Tilt((x, y) => view.setGravity(x, y), storage.load('tilt', false));
+const result = await tilt.enable();   // 'ok', 'off', 'denied' oder 'unsupported'
+tilt.disable();
+```
+
+`enable()` muss auf iOS aus einer Berührung heraus aufgerufen werden (`onGesture` oder die Aktion `setting`). `wanted` ist der Wunsch im Schalter, `enabled` der verbundene Sensor. Wird während der Erlaubnis-Abfrage ausgeschaltet, gewinnt das Ausschalten.
 
 ### Test-Anschluss
 

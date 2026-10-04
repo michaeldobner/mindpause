@@ -2,6 +2,12 @@
 
 All notable changes to SPRING. [Deutsch](CHANGELOG.de.md)
 
+## 2.1.1 (2026-10-04)
+
+### Technical
+* Rim physics, tilt and the rim sounds now come from shell 1.1.0 and are shared with QUEEN. Nothing changes for players.
+* The header no longer wraps on narrow iPhones.
+
 ## 2.1.0 (2026-10-04)
 
 SPRING is now part of the **MIND PAUSE** collection.

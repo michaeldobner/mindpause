@@ -1,0 +1,409 @@
+// QUEEN: Deutsche Dame gegen den Computer oder zu zweit an einem Gerät.
+// Die Oberfläche kommt aus der Hülle (shared/js/shell.js), hier steht nur, was QUEEN eigen ist.
+
+import { createShell } from '../../shared/js/shell.js?shell=1.1.0';
+import { createI18n } from '../../shared/js/i18n.js?shell=1.1.0';
+import { createStorage } from '../../shared/js/storage.js?shell=1.1.0';
+import { DEFAULT_STYLE } from '../../shared/js/sound-engine.js?shell=1.1.0';
+import { Tilt } from '../../shared/js/tilt.js?shell=1.1.0';
+import { BLUE, BLACK } from './rules.js?v=1.0.0';
+import { Game } from './game.js?v=1.0.0';
+import { QueenView } from './view.js?v=1.0.0';
+import { QueenSound } from './sound.js?v=1.0.0';
+import { QUEEN_STRINGS } from './strings.js?v=1.0.0';
+
+export const VERSION = '1.0.0';
+
+const MODES = [
+  { id: 'easy', computer: true, difficulty: 1 },
+  { id: 'medium', computer: true, difficulty: 3 },
+  { id: 'hard', computer: true, difficulty: 5 },
+  { id: 'duo', computer: false, difficulty: 0 },
+];
+const HUMAN = BLUE; // gegen den Computer spielt man Blau, von unten
+
+const storage = createStorage('queen:');
+const { load, save } = storage;
+const i18n = createI18n(QUEEN_STRINGS);
+const { t, lang } = i18n;
+
+// ---------- Zustand ----------
+
+const sound = new QueenSound({ enabled: load('sound', true), style: load('soundStyle', DEFAULT_STYLE) });
+let stats = load('stats', {});
+let mode = MODES.find((m) => m.id === load('mode', 'medium')) || MODES[1];
+const game = new Game();
+let flipWanted = load('flip', false);
+let previousGame = null; // Neu startet sofort, Zurück holt das alte Spiel zurück
+let aiRequest = 0;
+let thinking = false;
+let counted = false;
+let tilt = null;
+
+const saved = load('game', null);
+if (saved && saved.mode === mode.id && game.restore(saved.state) && !game.isOver) counted = false;
+else game.reset();
+
+function persist() {
+  save('game', { mode: mode.id, state: game.serialize() });
+}
+
+const statsFor = (id) => stats[id] || { games: 0, wins: 0, losses: 0, draws: 0 };
+const starsFor = (wins) => (wins >= 10 ? 3 : wins >= 3 ? 2 : wins >= 1 ? 1 : 0);
+const progress = () => {
+  const { blue, black } = game.counts;
+  return (24 - blue - black) / 22;
+};
+
+// ---------- Hülle ----------
+
+const shell = createShell({
+  title: 'QUEEN',
+  version: VERSION,
+  i18n,
+  storage,
+  sound,
+  buttons: ['undo', 'hint', 'restart', 'levels', 'settings'],
+  levels: { buttonKey: 'modes', titleKey: 'chooseMode', nextKey: 'nextLevel' },
+  settings: [
+    { id: 'flip', nameKey: 'flip', textKey: 'flipText' },
+    { id: 'tilt', nameKey: 'tilt', textKey: 'tiltText' },
+  ],
+  noteKey: 'trayHint',
+  coachKey: 'coach',
+  boardLabelKey: 'boardLabel',
+  actions: {
+    undo,
+    hint,
+    restart: newGame,
+    again: newGame,
+    back: undo,
+    next: () => {
+      const i = MODES.findIndex((m) => m.id === mode.id);
+      if (MODES[i + 1] && MODES[i + 1].computer) switchMode(MODES[i + 1].id);
+    },
+    selectLevel: switchMode,
+    setting: (id) => (id === 'tilt' ? toggleTilt() : toggleFlip()),
+  },
+  onGesture: reconnectTilt,
+});
+
+// ---------- Brett ----------
+
+const view = new QueenView(shell.board, {
+  canMove: () => !game.isOver && !thinking && (!mode.computer || game.turn === HUMAN),
+  move: (m, fromPos) => humanMove(m, fromPos),
+  lift: () => sound.lift(),
+  invalid: () => sound.invalid(),
+  land: () => sound.place(progress()),
+  hop: (record, k) => sound.hop(k),
+  crown: () => sound.crown(),
+  rim: () => sound.rim(),
+  clack: (i) => sound.clack(i),
+});
+view.setGame(game);
+view.setFlip(boardFlipped());
+
+tilt = new Tilt((x, y) => view.setGravity(x, y), load('tilt', false));
+shell.setSetting('tilt', tilt.wanted);
+shell.setSetting('flip', flipWanted);
+
+// ---------- Anzeige ----------
+
+function boardFlipped() {
+  return mode.id === 'duo' && flipWanted && game.turn === BLACK;
+}
+
+function updateHud() {
+  const { blue, black } = game.counts;
+  const label = game.isOver ? t('over') : thinking ? t('thinkingTurn') : t(`turn.${game.turn === BLUE ? 'blue' : 'black'}`);
+  shell.setCounter(`${blue}:${black}`, label);
+  shell.setDisabled('undo', game.history.length === 0 && !(previousGame && previousGame.mode === mode.id));
+  shell.setDisabled('hint', game.isOver || (mode.computer && game.turn !== HUMAN));
+  shell.setLevelLabel(t(`modeLabel.${mode.id}`));
+  shell.renderLevels(MODES.map((m) => {
+    const s = statsFor(m.id);
+    return {
+      id: m.id,
+      name: t(`mode.${m.id}`),
+      meta: m.computer ? (s.wins ? t('wins', { n: s.wins }) : t('vsComputer')) : t('onOneDevice'),
+      stars: m.computer ? starsFor(s.wins) : null,
+      difficulty: m.difficulty || null,
+      preview: modePreview(m),
+      current: m.id === mode.id,
+    };
+  }));
+}
+
+// Kleine Vorschau: ein Ausschnitt des Bretts, bei „Zu zweit“ je ein Stein auf beiden Seiten
+function modePreview(m) {
+  let squares = '';
+  for (let r = 0; r < 4; r++) {
+    for (let c = 0; c < 4; c++) {
+      squares += `<rect x="${7 + c * 14}" y="${7 + r * 14}" width="14" height="14" class="${(r + c) % 2 ? 'd' : 'l'}"/>`;
+    }
+  }
+  const disc = (x, y, cls) => `<circle cx="${x}" cy="${y}" r="5" class="${cls}"/>`;
+  const stones = m.computer
+    ? disc(28, 14, 'k') + disc(14, 28, 'k') + disc(42, 42, 'b') + disc(56, 56, 'b') + (m.id === 'hard' ? disc(42, 14, 'k') : '')
+    : disc(14, 14, 'k') + disc(28, 28, 'k') + disc(42, 42, 'b') + disc(56, 56, 'b');
+  const crown = m.id === 'hard' || m.id === 'duo'
+    ? '<path d="M 50 49 L 49 43 L 53 46 L 56 41 L 59 46 L 63 43 L 62 49 Z" class="g"/>'
+    : '';
+  return `<svg viewBox="0 0 70 70" aria-hidden="true"><rect x="2" y="2" width="66" height="66" rx="10" class="plate"/>${squares}${stones}${crown}</svg>`;
+}
+
+// ---------- Züge ----------
+
+async function humanMove(m, fromPos) {
+  previousGame = null;
+  const record = game.apply(m);
+  updateHud();
+  persist();
+  await view.run(() => view.playNow(record, fromPos));
+  afterMove();
+}
+
+function afterMove() {
+  updateHud();
+  persist();
+  if (checkEnd()) return;
+  if (mode.id === 'duo') {
+    view.setFlip(boardFlipped());
+    return;
+  }
+  if (game.turn !== HUMAN) computerMove();
+}
+
+async function computerMove() {
+  thinking = true;
+  updateHud();
+  const request = ++aiRequest;
+  const started = performance.now();
+  const move = await askAI(mode.id);
+  // Kurze, natürliche Pause, auch wenn die Rechnung schnell war
+  const rest = 450 - (performance.now() - started);
+  if (rest > 0) await new Promise((r) => setTimeout(r, rest));
+  if (request !== aiRequest) return; // inzwischen Zurück, Neu oder Moduswechsel
+  thinking = false;
+  const m = move && game.match(move);
+  if (!m) {
+    updateHud();
+    return;
+  }
+  const record = game.apply(m);
+  persist();
+  await view.play(record);
+  afterMove();
+}
+
+// ---------- Computer im Hintergrund ----------
+
+let worker = null;
+function askAI(level) {
+  if (!worker) worker = new Worker(new URL('./ai-worker.js?v=1.0.0', import.meta.url), { type: 'module' });
+  const id = Math.random();
+  return new Promise((resolve) => {
+    const onMessage = (e) => {
+      if (e.data.id !== id) return;
+      worker.removeEventListener('message', onMessage);
+      resolve(e.data.move);
+    };
+    worker.addEventListener('message', onMessage);
+    worker.postMessage({ id, board: game.board, side: game.turn, level });
+  });
+}
+
+async function hint() {
+  if (view.busy || game.isOver || thinking) return;
+  if (mode.computer && game.turn !== HUMAN) return;
+  shell.setBusy('hint', true);
+  const slow = setTimeout(() => shell.toast(t('thinking')), 350);
+  const plies = game.history.length;
+  const move = await askAI('hard');
+  clearTimeout(slow);
+  shell.setBusy('hint', false);
+  if (plies !== game.history.length) return;
+  const m = move && game.match(move);
+  if (!m) return shell.toast(t('noHint'));
+  shell.hideToast();
+  view.showHint(m);
+}
+
+// ---------- Spielende ----------
+
+function checkEnd() {
+  const result = game.result;
+  if (!result) return false;
+  const s = statsFor(mode.id);
+  let title;
+  let text;
+  let highlight = false;
+  if (result.draw) {
+    [title] = t('draw');
+    text = t(result.draw === 'repetition' ? 'drawRepetition' : 'drawQuiet');
+  } else if (mode.computer) {
+    const won = result.winner === HUMAN;
+    [title, text] = t(won ? 'won' : 'lost');
+    highlight = won;
+  } else {
+    [title, text] = t(result.winner === BLUE ? 'blueWins' : 'blackWins');
+    highlight = true;
+  }
+  if (!counted) {
+    counted = true;
+    s.games += 1;
+    if (result.draw) s.draws += 1;
+    else if (mode.computer && result.winner === HUMAN) s.wins += 1;
+    else if (mode.computer) s.losses += 1;
+    stats = { ...stats, [mode.id]: s };
+    save('stats', stats);
+  }
+  if (highlight) sound.win(true);
+  else if (!result.draw) sound.lose();
+  const i = MODES.findIndex((m) => m.id === mode.id);
+  const won = mode.computer && result.winner === HUMAN;
+  shell.showResult({
+    title,
+    text,
+    stars: mode.computer ? starsFor(s.wins) : null,
+    stats: mode.computer ? t('wins', { n: s.wins }) : '',
+    highlight,
+    showNext: won && MODES[i + 1] && MODES[i + 1].computer,
+  });
+  updateHud();
+  return true;
+}
+
+// ---------- Neu, Zurück, Modus ----------
+
+function stopComputer() {
+  aiRequest++;
+  thinking = false;
+}
+
+async function newGame() {
+  shell.hideResult();
+  stopComputer();
+  if (game.history.length > 0 && !game.isOver) {
+    previousGame = { mode: mode.id, history: game.history.slice(), state: JSON.parse(JSON.stringify(game.serialize())) };
+    shell.toast(t('restartUndo'));
+  } else {
+    previousGame = null;
+  }
+  game.reset();
+  counted = false;
+  persist();
+  view.setFlip(boardFlipped());
+  updateHud();
+  await view.sync(game);
+}
+
+async function undo() {
+  shell.hideResult();
+  // Direkt nach Neu: Zurück holt das vorherige Spiel zurück
+  if (game.history.length === 0 && previousGame && previousGame.mode === mode.id) {
+    game.restore(previousGame.state);
+    game.history = previousGame.history;
+    previousGame = null;
+    shell.hideToast();
+    persist();
+    view.setFlip(boardFlipped());
+    updateHud();
+    await view.sync(game);
+    return;
+  }
+  if (game.history.length === 0) return;
+  const wasThinking = thinking;
+  stopComputer();
+  // Gegen den Computer: bis zum letzten eigenen Zug zurück
+  game.undo();
+  if (mode.computer && !wasThinking && game.turn !== HUMAN && game.history.length > 0) game.undo();
+  counted = false;
+  persist();
+  view.setFlip(boardFlipped());
+  updateHud();
+  sound.place(progress(), { soft: true });
+  await view.sync(game);
+  if (mode.computer && game.turn !== HUMAN) computerMove();
+}
+
+// Beim Wechsel beginnt immer ein neues Spiel
+async function switchMode(id) {
+  const next = MODES.find((m) => m.id === id);
+  if (!next || next.id === mode.id) return;
+  shell.hideResult();
+  stopComputer();
+  mode = next;
+  save('mode', mode.id);
+  game.reset();
+  counted = false;
+  previousGame = null;
+  persist();
+  view.setFlip(boardFlipped());
+  updateHud();
+  await view.sync(game);
+  sound.rim();
+}
+
+// ---------- Einstellungen ----------
+
+function toggleFlip() {
+  flipWanted = !flipWanted;
+  save('flip', flipWanted);
+  shell.setSetting('flip', flipWanted);
+  view.setFlip(boardFlipped());
+}
+
+async function toggleTilt() {
+  if (tilt.wanted) {
+    tilt.disable();
+    save('tilt', false);
+    shell.setSetting('tilt', false);
+    return;
+  }
+  save('tilt', true);
+  const pending = tilt.enable();
+  shell.setSetting('tilt', true);
+  const result = await pending;
+  if (result === 'denied') shell.toast(t('tiltDenied'));
+  if (result === 'unsupported') shell.toast(t('tiltUnsupported'));
+  save('tilt', tilt.wanted);
+  shell.setSetting('tilt', tilt.wanted);
+}
+
+// Neigen war eingeschaltet: Sensor nach einem Neustart wieder verbinden (iOS verlangt eine Berührung)
+function reconnectTilt() {
+  if (!tilt || !tilt.wanted || tilt.enabled || tilt.pending) return;
+  tilt.enable().then(() => {
+    save('tilt', tilt.wanted);
+    shell.setSetting('tilt', tilt.wanted);
+  });
+}
+
+// ---------- Start ----------
+
+updateHud();
+setTimeout(() => shell.showCoach(), 900);
+if (mode.computer && game.turn !== HUMAN && !game.isOver) computerMove();
+
+// Für automatische Tests im Browser (scripts/e2e.mjs). Jedes Spiel stellt history und e2e.move bereit.
+window.__game = {
+  id: 'queen',
+  view,
+  sound,
+  shell,
+  game,
+  get history() { return game.history.length; },
+  get mode() { return mode.id; },
+  switchMode,
+  refresh: updateHud,
+  e2e: {
+    // Einen eigenen Zug spielen (den ersten erlaubten) und auf die Antwort des Computers warten
+    async move() {
+      const m = game.moves[0];
+      if (!m || !view.events.canMove()) return;
+      await humanMove(m);
+    },
+  },
+};

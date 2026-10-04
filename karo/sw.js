@@ -4,7 +4,7 @@
 // Dateien der Hülle ?shell=<Version der Hülle> (siehe scripts/release.mjs).
 // So können sich alte und neue Dateien nie mischen.
 const VERSION = '1.0.0';
-const SHELL = '1.0.0';
+const SHELL = '1.1.0';
 const CACHE = `karo-v${VERSION}-shell${SHELL}`;
 
 const FILES = [
@@ -20,7 +20,7 @@ const FILES = [
     .map((name) => `./js/${name}.js?v=${VERSION}`),
   `../shared/tokens.css?shell=${SHELL}`,
   `../shared/shell.css?shell=${SHELL}`,
-  ...['shell', 'i18n', 'storage', 'sound-engine'].map((name) => `../shared/js/${name}.js?shell=${SHELL}`),
+  ...['shell', 'i18n', 'storage', 'sound-engine', 'gutter', 'tilt'].map((name) => `../shared/js/${name}.js?shell=${SHELL}`),
 ];
 
 self.addEventListener('install', (event) => {

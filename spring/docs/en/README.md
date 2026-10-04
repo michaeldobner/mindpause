@@ -26,7 +26,7 @@ This documentation describes SPRING completely: how to play, how it looks and so
 | Hosting | GitHub Pages, playable offline |
 | Collection | Part of [MIND PAUSE](../../../README.md), interface from the [shell](../../../shared/README.md) |
 | Address | https://michaeldobner.github.io/mindpause/spring/ |
-| Version | 2.1.0 |
+| Version | 2.1.1 |
 
 <p>
 <img src="../images/iphone-game-en.jpg" width="230" alt="Game on iPhone">&nbsp;

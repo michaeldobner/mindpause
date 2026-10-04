@@ -17,13 +17,13 @@ spring/index.html
      ├─ ../shared/js/shell.js     shell interface (createShell)
      ├─ ../shared/js/i18n.js      shell languages (createI18n)
      ├─ ../shared/js/storage.js   storage (createStorage)
+     ├─ ../shared/js/tilt.js      motion sensor
      ├─ js/strings.js             SPRING texts in German and English
      ├─ js/figures.js             the 7 figures as data
      ├─ js/game.js                game logic (no rendering)
      ├─ js/view.js                SVG board, animations, input
-     │   └─ js/gutter.js          physics of the marbles in the rim
+     │   └─ ../shared/js/gutter.js  physics of the marbles in the rim
      ├─ js/sound.js               SPRING sounds (extends the shell's sound engine)
-     ├─ js/tilt.js                motion sensor
      └─ js/solver-worker.js       Web Worker for hints
          └─ js/solver.js          solver (no rendering)
 
@@ -31,7 +31,7 @@ spring/sw.js                      service worker for SPRING's offline support
 spring/manifest.webmanifest       metadata for installing as its own app
 ```
 
-Core principle: **data → logic → rendering**. `figures.js`, `game.js`, `gutter.js`, `solver.js` and the language modules never touch the document. They therefore also run in Node.js, where they are fully tested.
+Core principle: **data → logic → rendering**. `figures.js`, `game.js`, `solver.js`, the shell's physics and the language modules never touch the document. They therefore also run in Node.js, where they are fully tested.
 
 ### Connecting to the shell
 
@@ -125,7 +125,7 @@ A **move** is `{ from, over, to }` with three hole indices. In `history` the ids
 
 ### Rim physics
 
-`gutter.js` describes each marble in the rim only by its **angle** on a circle (radius 446) and its **angular velocity**. This keeps the maths small and the behaviour calm and predictable.
+`shared/js/gutter.js` (part of the shell since 1.1.0 and shared with QUEEN) describes each marble in the rim only by its **angle** on a circle (radius 446) and its **angular velocity**. This keeps the maths small and the behaviour calm and predictable.
 
 | Quantity | Value | Effect |
 |---|---|---|
@@ -152,11 +152,11 @@ The solver solves all 7 figures from their starting positions in well under a se
 
 ### `sound.js`: sounds
 
-`SpringSound` extends the shell's `SoundEngine` (`shared/js/sound-engine.js`) with SPRING's sounds: lift, land, rolling into the rim and bumps in the rim. See [Sound design](sound.md).
+`SpringSound` extends the shell's `SoundEngine` (`shared/js/sound-engine.js`) with SPRING's sounds: lift (`lift`), land (`land`) and rolling into the rim (`gutter`, using the engine's `rim`). Bumps in the rim (`clack`) come from the sound engine itself since shell 1.1.0. See [Sound design](sound.md).
 
-### `tilt.js`: motion sensor
+### `shared/js/tilt.js`: motion sensor
 
-Reads `deviceorientation` (angles `beta` and `gamma`), derives gravity in device coordinates and rotates it to match the screen orientation:
+Part of the shell since 1.1.0. Reads `deviceorientation` (angles `beta` and `gamma`), derives gravity in device coordinates and rotates it to match the screen orientation:
 
 ```
 device: gx = cos(β) · sin(γ),   gy = −sin(β)

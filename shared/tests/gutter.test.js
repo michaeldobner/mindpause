@@ -73,3 +73,32 @@ test('Finger schiebt nur Murmeln vor sich her', () => {
   g.push(1.0 - 0.01, 3);
   assert.ok(g.items.get(1).v > 0);
 });
+
+test('Schale: Steine bleiben zwischen den Wänden und kommen zur Ruhe', () => {
+  let hits = 0;
+  const g = make({ arc: { center: Math.PI / 2, half: Math.PI / 2 - 0.08 }, onCollide: () => hits++ });
+  g.pack([...Array(12).keys()]);
+  g.items.get(0).v = -8;
+  g.items.get(11).v = 8;
+  assert.equal(run(g, 5), false);
+  for (const it of g.items.values()) assert.ok(Math.abs(g.local(it.a)) <= g.limit + 1e-9);
+  assert.ok(hits > 0);
+});
+
+test('Schale: 12 Steine passen hinein, freier Platz liegt in der Schale', () => {
+  const g = make({ arc: { center: -Math.PI / 2, half: Math.PI / 2 - 0.08 } });
+  g.pack([...Array(11).keys()]);
+  const a = g.freeAngle(-Math.PI / 2);
+  assert.ok(Math.abs(g.local(a)) <= g.limit + 1e-9);
+  g.add(99, a);
+  run(g, 2);
+  for (const it of g.items.values()) assert.ok(Math.abs(g.local(it.a)) <= g.limit + 1e-9);
+});
+
+test('Schale mit Neigung: Steine rutschen zur tiefsten Wand', () => {
+  const g = make({ arc: { center: 0, half: Math.PI / 2 - 0.08 } }); // rechte Schale
+  g.pack([1, 2, 3]);
+  g.gravity = { x: 0, y: 1 }; // nach unten
+  run(g, 6);
+  for (const it of g.items.values()) assert.ok(g.local(it.a) > 0.5, 'liegt unten in der Schale');
+});

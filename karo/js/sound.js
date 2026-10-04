@@ -2,7 +2,7 @@
 // Auf den Ablagen klingt zusätzlich der Keramikton der Sammlung, der mit dem Fortschritt steigt.
 // Baut auf der Klang-Engine der Hülle auf.
 
-import { SoundEngine, stepFrequency } from '../../shared/js/sound-engine.js?shell=1.0.0';
+import { SoundEngine, stepFrequency } from '../../shared/js/sound-engine.js?shell=1.1.0';
 
 export class KaroSound extends SoundEngine {
   // Gefiltertes Rauschen mit Hüllkurve: der Grundbaustein für Papier

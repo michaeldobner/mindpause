@@ -16,7 +16,7 @@ const ICONS = {
 };
 
 // Version der Hülle. Ändern nur über: node scripts/release.mjs shell <version>
-export const SHELL_VERSION = '1.0.0';
+export const SHELL_VERSION = '1.1.0';
 
 const SIDEBAR_QUERY = '(min-width: 1000px) and (orientation: landscape) and (min-height: 600px)';
 

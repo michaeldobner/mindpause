@@ -17,13 +17,13 @@ spring/index.html
      ├─ ../shared/js/shell.js     Oberfläche der Hülle (createShell)
      ├─ ../shared/js/i18n.js      Sprachen der Hülle (createI18n)
      ├─ ../shared/js/storage.js   Speichern (createStorage)
+     ├─ ../shared/js/tilt.js      Bewegungssensor
      ├─ js/strings.js             Texte von SPRING auf Deutsch und Englisch
      ├─ js/figures.js             Die 7 Figuren als Daten
      ├─ js/game.js                Spiellogik (ohne Darstellung)
      ├─ js/view.js                SVG-Brett, Animationen, Eingabe
-     │   └─ js/gutter.js          Physik der Murmeln im Rand
+     │   └─ ../shared/js/gutter.js  Physik der Murmeln im Rand
      ├─ js/sound.js               Klänge von SPRING (erweitert die Klang-Engine der Hülle)
-     ├─ js/tilt.js                Bewegungssensor
      └─ js/solver-worker.js       Web Worker für Tipps
          └─ js/solver.js          Löser (ohne Darstellung)
 
@@ -31,7 +31,7 @@ spring/sw.js                      Service Worker für den Offline-Betrieb von SP
 spring/manifest.webmanifest       Angaben für die Installation als eigene App
 ```
 
-Grundprinzip: **Daten → Logik → Darstellung**. `figures.js`, `game.js`, `gutter.js`, `solver.js` und die Sprachmodule greifen nicht auf das Dokument zu. Sie laufen deshalb auch in Node.js und sind dort vollständig getestet.
+Grundprinzip: **Daten → Logik → Darstellung**. `figures.js`, `game.js`, `solver.js`, die Physik der Hülle und die Sprachmodule greifen nicht auf das Dokument zu. Sie laufen deshalb auch in Node.js und sind dort vollständig getestet.
 
 ### Anbindung an die Hülle
 
@@ -125,7 +125,7 @@ Ein **Zug** ist `{ from, over, to }` mit drei Feldindizes. In `history` kommen d
 
 ### Physik im Rand
 
-`gutter.js` beschreibt jede Murmel im Rand nur durch ihren **Winkel** auf einem Kreis (Radius 446) und ihre **Winkelgeschwindigkeit**. Dadurch bleibt die Rechnung klein und das Verhalten ruhig und vorhersehbar.
+`shared/js/gutter.js` (seit Hülle 1.1.0 Teil der Hülle und mit QUEEN geteilt) beschreibt jede Murmel im Rand nur durch ihren **Winkel** auf einem Kreis (Radius 446) und ihre **Winkelgeschwindigkeit**. Dadurch bleibt die Rechnung klein und das Verhalten ruhig und vorhersehbar.
 
 | Größe | Wert | Wirkung |
 |---|---|---|
@@ -152,11 +152,11 @@ Alle 7 Figuren löst der Löser von der Startstellung aus in deutlich unter eine
 
 ### `sound.js`: Klänge
 
-`SpringSound` erweitert die `SoundEngine` der Hülle (`shared/js/sound-engine.js`) um die Klänge von SPRING: Anheben, Landen, Rollen in den Rand und Stöße im Rand. Siehe [Klangdesign](klang.md).
+`SpringSound` erweitert die `SoundEngine` der Hülle (`shared/js/sound-engine.js`) um die Klänge von SPRING: Anheben (`lift`), Landen (`land`) und Rollen in den Rand (`gutter`, nutzt `rim` der Engine). Die Stöße im Rand (`clack`) liefert seit Hülle 1.1.0 die Klang-Engine selbst. Siehe [Klangdesign](klang.md).
 
-### `tilt.js`: Bewegungssensor
+### `shared/js/tilt.js`: Bewegungssensor
 
-Liest `deviceorientation` (Winkel `beta` und `gamma`), rechnet daraus die Schwerkraft im Gerät und dreht sie passend zur Bildschirmausrichtung:
+Seit Hülle 1.1.0 Teil der Hülle. Liest `deviceorientation` (Winkel `beta` und `gamma`), rechnet daraus die Schwerkraft im Gerät und dreht sie passend zur Bildschirmausrichtung:
 
 ```
 Gerät:      gx = cos(β) · sin(γ),   gy = −sin(β)
