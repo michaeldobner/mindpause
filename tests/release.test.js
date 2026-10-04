@@ -39,6 +39,10 @@ for (const game of games) {
     for (const f of readdirSync('shared/js')) assert.ok(sw.includes(`'${f.replace('.js', '')}'`), `shared ${f} fehlt in ${dir}/sw.js`);
   });
 
+  test(`${game.title}: Symbol der Startseite trägt die Version`, () => {
+    assert.equal(game.icon, `${dir}/icons/icon.svg?v=${version}`);
+  });
+
   test(`${game.title}: Ordner ist vollständig`, () => {
     for (const f of ['index.html', 'sw.js', 'manifest.webmanifest', 'README.md', 'README.de.md', 'CHANGELOG.md', 'CHANGELOG.de.md', 'icons/apple-touch-icon.png']) {
       assert.ok(existsSync(`${dir}/${f}`), `${dir}/${f} fehlt`);
