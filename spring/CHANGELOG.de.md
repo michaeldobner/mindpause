@@ -2,6 +2,12 @@
 
 Alle wichtigen Änderungen an SPRING. [English](CHANGELOG.md)
 
+## 2.1.1 (2026-10-04)
+
+### Technik
+* Physik des Rands, Neigen und die Klänge des Rands kommen jetzt aus der Hülle 1.1.0 und werden mit QUEEN geteilt. Für Spielende ändert sich nichts.
+* Die Kopfzeile bricht auf schmalen iPhones nicht mehr um.
+
 ## 2.1.0 (2026-10-04)
 
 SPRING gehört jetzt zur Sammlung **MIND PAUSE**.

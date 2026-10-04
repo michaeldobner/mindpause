@@ -216,6 +216,29 @@ export class SoundEngine {
     this.ceramic(t + 0.001, 0.45 * p.ceramic * level, pitch, soft ? 0.7 : 1);
   }
 
+  // Teile im Rand stoßen aneinander. intensity von 0 bis 1, höchstens 8 Klicks pro Sekunde
+  clack(intensity) {
+    if (!this.ready() || intensity < 0.06) return;
+    const now = performance.now();
+    this.clickTimes = (this.clickTimes || []).filter((x) => now - x < 1000);
+    if (this.clickTimes.length >= 8 || now - (this.lastClick || 0) < 45) return;
+    this.clickTimes.push(now);
+    this.lastClick = now;
+    const t = this.ctx.currentTime;
+    const v = Math.min(1, intensity);
+    const step = 10 + Math.floor(Math.random() * 5);
+    this.transient(t, 0.3 * v, 4500);
+    this.ceramic(t, 0.5 * v * this.preset.ceramic, stepFrequency(step), 0.35, 2);
+  }
+
+  // Ein Teil landet im Rand
+  rim() {
+    if (!this.ready()) return;
+    const t = this.ctx.currentTime;
+    this.wood(t, 0.4 * this.preset.wood, 150, 0.08);
+    this.ceramic(t, 0.16 * this.preset.ceramic, stepFrequency(12) * this.vary(0.02), 0.5, 2);
+  }
+
   // Ungültiger Zug: zwei gedämpfte Holzklopfer
   invalid() {
     if (!this.ready()) return;

@@ -20,8 +20,8 @@ Then open SPRING at `http://localhost:3000/spring/`. The language follows the br
 |---|---|
 | `spring/tests/game.test.js` | Starting position, first moves, no diagonals, jump and undo, save and load, full solution, rating |
 | `spring/tests/figures.test.js` | Every figure uses the 33-hole board, **every figure solvable to Masterful**, ordering, navigation, detecting unsolvable positions |
-| `spring/tests/gutter.test.js` | 31 marbles fit into the rim, motion comes to rest, bumps pass on momentum, tilt gathers marbles at the bottom, free spots, finger pushes |
-| `spring/tests/tilt.test.js` | Gravity from device angles in portrait and landscape, tilt switch even while the permission prompt is open |
+| `shared/tests/gutter.test.js` | 31 marbles fit into the rim, motion comes to rest, bumps pass on momentum, tilt gathers marbles at the bottom, free spots, finger pushes |
+| `shared/tests/tilt.test.js` | Gravity from device angles in portrait and landscape, tilt switch even while the permission prompt is open |
 | `shared/tests/i18n.test.js` | Among others: SPRING's texts have the same keys in both languages and no dashes |
 | `tests/release.test.js` | Among others: every SPRING reference carries the right version, the service worker knows every module, the folder is complete |
 

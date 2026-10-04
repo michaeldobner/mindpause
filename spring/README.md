@@ -99,11 +99,9 @@ spring/
 │  ├─ figures.js           the 7 figures as data
 │  ├─ game.js              game logic
 │  ├─ view.js              board, animations, touch input
-│  ├─ gutter.js            rim physics
 │  ├─ sound.js             SPRING sounds, built on the shell's sound engine
 │  ├─ solver.js            solver for hints
-│  ├─ solver-worker.js     runs the solver in the background
-│  └─ tilt.js              motion sensor
+│  └─ solver-worker.js     runs the solver in the background
 ├─ icons/                  app icons
 ├─ sw.js                   offline support
 ├─ manifest.webmanifest    install as an app
@@ -113,4 +111,4 @@ spring/
 
 ## Version
 
-Current version: **2.1.0**. See the [changelog](CHANGELOG.md).
+Current version: **2.1.1**. See the [changelog](CHANGELOG.md).

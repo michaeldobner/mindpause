@@ -6,7 +6,7 @@
 
 Eine Keramikmurmel landet auf einem Holzbrett: warm, rund, mit einem kurzen hellen Klingen und einem Hauch Raum. Wie ein gutes Objekt im Wohnzimmer, nicht wie ein Spielautomat.
 
-Alle Klänge entstehen live im Browser mit der Web Audio API. Die Klang-Engine mit Mastering, Klangfarben und den Bausteinen Anschlag, Holz und Keramik gehört der Hülle (`shared/js/sound-engine.js`) und steht allen Spielen zur Verfügung. Die Klänge von SPRING (Anheben, Landen, Rand) stehen in `spring/js/sound.js`. Es gibt keine Audiodateien, dadurch ist SPRING klein, offline vollständig und jeder Klang lässt sich genau stimmen.
+Alle Klänge entstehen live im Browser mit der Web Audio API. Die Klang-Engine mit Mastering, Klangfarben und den Bausteinen Anschlag, Holz und Keramik gehört der Hülle (`shared/js/sound-engine.js`) und steht allen Spielen zur Verfügung. Die Klänge von SPRING (Anheben, Landen, Rand) stehen in `spring/js/sound.js`. Rollen und Stöße im Rand liefert seit Hülle 1.1.0 die Klang-Engine, damit QUEEN sie ebenso nutzt. Es gibt keine Audiodateien, dadurch ist SPRING klein, offline vollständig und jeder Klang lässt sich genau stimmen.
 
 ## Aufbau eines Sprungklangs
 
