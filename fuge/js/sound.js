@@ -3,7 +3,7 @@
 // Verschwindende Reihen klingen mit dem Keramikton der Sammlung, der mit der Serie steigt.
 // Baut auf der Klang-Engine der Hülle auf.
 
-import { SoundEngine, stepFrequency } from '../../shared/js/sound-engine.js?shell=1.2.0';
+import { SoundEngine, stepFrequency } from '../../shared/js/sound-engine.js?shell=1.3.0';
 
 export class FugeSound extends SoundEngine {
   // Höchstens ein Klang dieser Art alle ms Millisekunden, damit schnelle Eingaben nicht rattern

@@ -91,7 +91,7 @@ Die Kartengröße ergibt sich aus dem Platz. Wird eine Spalte zu lang, rücken i
 | Automatisch beenden | eine Karte alle 120 ms |
 | Siegesfeier | eine Karte alle 240 ms, Schwerkraft, Abprallen, verblassende Spuren |
 
-Bei „Bewegung reduzieren“ entfällt die Siegesfeier und Bewegungen sind sofort am Ziel.
+Bei „Bewegung reduzieren“ sind Bewegungen sofort am Ziel. Die Siegesfeier bleibt, aber ruhiger: eine Karte alle 420 ms, langsamer, ohne Spuren. Die Kartenbilder der Feier werden schon während des Spiels im Hintergrund vorbereitet. Fehlt beim Sieg noch eines, springt die Karte als schlichte Karte mit Wert und Farbe.
 
 ## Klang
 

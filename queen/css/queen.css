@@ -57,3 +57,32 @@
 .level-card .g {
   fill: #e3b448;
 }
+
+/* Vorschau im Stil Klassik: Ebenholz, Ahorn, Elfenbein und Gold */
+body[data-theme="classic"] .level-card .plate {
+  fill: #161412;
+}
+
+body[data-theme="classic"] .level-card .d {
+  fill: #241f1a;
+}
+
+body[data-theme="classic"] .level-card .l {
+  fill: #e6d0a5;
+}
+
+body[data-theme="classic"] .level-card .b {
+  fill: #f3e9d4;
+  stroke: #b8a37c;
+  stroke-width: 0.8;
+}
+
+body[data-theme="classic"] .level-card .k {
+  fill: #0d0b0a;
+  stroke: #8d8378;
+  stroke-width: 0.8;
+}
+
+body[data-theme="classic"] .level-card .g {
+  fill: #c9a24a;
+}

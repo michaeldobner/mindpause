@@ -2,6 +2,23 @@
 
 Alle wichtigen Änderungen an QUEEN. [English](CHANGELOG.md)
 
+## 1.1.0 (2026-10-04)
+
+### Neu
+* **Brettstil Klassik** (neuer Standard): schwarzes Holz mit Maserung, Felder aus Ahorn und Ebenholz, feine Goldlinie um das Brett, Koordinaten A bis H und 1 bis 8 in Gold, Schalen mit Rautengitter. Die Steine sind Elfenbein und Ebenholz, die Seiten heißen Weiß und Schwarz.
+* **Brettstil Mitternacht**: das bisherige blaue Brett mit Keramiksteinen, Seiten Blau und Schwarz.
+* Wahl des Stils unter Mehr > Brett. Der Wechsel blendet weich über, das Spiel läuft weiter.
+* **Neue Krone** als feine Goldgravur nach dem Vorbild einer Königinnenkrone: Kreuz, Reichsapfel, Bügel mit Perlen, Lilien, Reif mit Steinen und Hermelin. Bei der Krönung wächst sie leicht auf.
+* Neues App-Symbol im Stil Klassik.
+
+### Behoben
+* In der Modusauswahl standen manche Steine der Vorschau auf hellen Feldern.
+
+### Technik
+* Neues Modul `js/themes.js` mit den Brettstilen und der Kronengravur.
+* Braucht die Hülle 1.2.0 für die Auswahl in den Einstellungen.
+* Zwei neue Tests für die Brettstile, jetzt 20 Tests für QUEEN.
+
 ## 1.0.0 (2026-10-04)
 
 Erste Version.

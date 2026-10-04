@@ -5,9 +5,10 @@
 // Im Querformat dreht eine Transformation das Brett um 90°, die Schalen liegen dann links und
 // rechts. Beim Spiel zu zweit kann sich das Brett zusätzlich nach jedem Zug um 180° drehen.
 
-import { Gutter } from '../../shared/js/gutter.js?shell=1.2.0';
-import { BLUE, BLACK } from './rules.js?v=1.0.0';
-import { Game } from './game.js?v=1.0.0';
+import { Gutter } from '../../shared/js/gutter.js?shell=1.3.0';
+import { BLUE, BLACK } from './rules.js?v=1.1.0';
+import { Game } from './game.js?v=1.1.0';
+import { THEMES, DEFAULT_THEME, CROWN } from './themes.js?v=1.1.0';
 
 const NS = 'http://www.w3.org/2000/svg';
 const W = 1000;
@@ -28,7 +29,7 @@ const LIFT = 0.1;
 const TAP_SLOP = 10;
 
 export class QueenView {
-  constructor(svg, events = {}) {
+  constructor(svg, events = {}, theme = DEFAULT_THEME) {
     this.svg = svg;
     this.events = events;
     this.game = null;
@@ -53,6 +54,7 @@ export class QueenView {
     this.trays = { [BLUE]: tray(Math.PI / 2), [BLACK]: tray(-Math.PI / 2) };
 
     this.build();
+    this.setTheme(theme);
     this.bindInput();
     this.orient();
     window.addEventListener('resize', () => this.orient());
@@ -112,52 +114,28 @@ export class QueenView {
   // ---------- Aufbau ----------
 
   build() {
+    const frame = (inset) => `x="${BOARD_X - inset}" y="${BOARD_Y - inset}" width="${BOARD + 2 * inset}" height="${BOARD + 2 * inset}"`;
+    const trayBed = (side) => `x="44" y="${TRAY_Y[side] - 50}" width="${W - 88}" height="100" rx="50"`;
     this.svg.innerHTML = `
-      <defs>
-        <linearGradient id="q-plate" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stop-color="#2a2f7a"/>
-          <stop offset="1" stop-color="#14174a"/>
-        </linearGradient>
-        <linearGradient id="q-tray" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stop-color="#0b0d33"/>
-          <stop offset="0.6" stop-color="#121543"/>
-          <stop offset="1" stop-color="#1c2060"/>
-        </linearGradient>
-        <radialGradient id="q-dark" cx="50%" cy="40%" r="75%">
-          <stop offset="0" stop-color="#1b1f5a"/>
-          <stop offset="1" stop-color="#121547"/>
-        </radialGradient>
-        <radialGradient id="q-blue" cx="38%" cy="32%" r="75%">
-          <stop offset="0" stop-color="#86abff"/>
-          <stop offset="0.5" stop-color="#3f6ef0"/>
-          <stop offset="1" stop-color="#2142b4"/>
-        </radialGradient>
-        <radialGradient id="q-black" cx="38%" cy="32%" r="75%">
-          <stop offset="0" stop-color="#5e616e"/>
-          <stop offset="0.5" stop-color="#1d1e26"/>
-          <stop offset="1" stop-color="#07070a"/>
-        </radialGradient>
-        <radialGradient id="q-shadow" cx="50%" cy="50%" r="50%">
-          <stop offset="0" stop-color="#000" stop-opacity="0.5"/>
-          <stop offset="1" stop-color="#000" stop-opacity="0"/>
-        </radialGradient>
-        <linearGradient id="q-gold" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stop-color="#ffe7a0"/>
-          <stop offset="0.5" stop-color="#e3b448"/>
-          <stop offset="1" stop-color="#a87a1c"/>
-        </linearGradient>
-      </defs>
+      <defs class="theme-defs"></defs>
       <g class="world">
         <rect x="6" y="18" width="${W - 12}" height="${H - 12}" rx="70" fill="#000" opacity="0.16"/>
         <rect x="0" y="0" width="${W}" height="${H}" rx="70" fill="url(#q-plate)"/>
-        <rect class="tray-bed" x="44" y="${TRAY_Y[BLACK] - 50}" width="${W - 88}" height="100" rx="50" fill="url(#q-tray)"/>
-        <rect class="tray-bed" x="44" y="${TRAY_Y[BLUE] - 50}" width="${W - 88}" height="100" rx="50" fill="url(#q-tray)"/>
-        <rect x="${BOARD_X - 8}" y="${BOARD_Y - 8}" width="${BOARD + 16}" height="${BOARD + 16}" rx="18" fill="#232870" stroke="#2f3588" stroke-width="3"/>
+        <rect x="0" y="0" width="${W}" height="${H}" rx="70" fill="url(#q-grain)"/>
+        ${[BLACK, BLUE].map((side) => `
+        <rect class="tray-bed" ${trayBed(side)} fill="url(#q-tray)"/>
+        <rect ${trayBed(side)} fill="url(#q-lattice)"/>
+        <rect ${trayBed(side)} fill="none" stroke="url(#q-tray-edge)" stroke-width="2"/>`).join('')}
+        <rect ${frame(8)} rx="18" fill="url(#q-frame)" stroke="url(#q-frame-line)" stroke-width="3"/>
         <g class="squares"></g>
+        <rect ${frame(0)} fill="url(#q-sq-grain)" pointer-events="none"/>
+        <rect ${frame(4)} fill="none" stroke="url(#q-coord)" stroke-width="1.5"/>
+        <g class="coords" fill="url(#q-coord)" font-family="Didot, 'Bodoni 72', 'Bodoni MT', Georgia, serif" font-size="25" text-anchor="middle" dominant-baseline="central"></g>
         <g class="targets"></g>
         <g class="pieces"></g>
       </g>
     `;
+    this.defsEl = this.svg.querySelector('.theme-defs');
     this.world = this.svg.querySelector('.world');
     this.targetsEl = this.svg.querySelector('.targets');
     this.piecesEl = this.svg.querySelector('.pieces');
@@ -169,43 +147,74 @@ export class QueenView {
       const dark = (r + c) % 2 === 1;
       squares.appendChild(el('rect', {
         x: BOARD_X + c * CELL, y: BOARD_Y + r * CELL, width: CELL, height: CELL,
-        fill: dark ? 'url(#q-dark)' : '#2a3080',
+        fill: dark ? 'url(#q-dark)' : 'url(#q-light)',
         class: dark ? 'sq dark' : 'sq light',
       }));
     }
 
-    for (let id = 0; id < 24; id++) this.pieces.push(this.createPiece(Game.colorOf(id) === BLUE ? 'blue' : 'black'));
+    // Koordinaten in Gold: Buchstaben unter dem Brett, Zahlen links. Nur im Stil Klassik sichtbar.
+    const coords = this.svg.querySelector('.coords');
+    this.coordLabels = [];
+    const label = (text, x, y) => {
+      const t = el('text', { x, y });
+      t.textContent = text;
+      coords.appendChild(t);
+      this.coordLabels.push({ el: t, x, y });
+    };
+    for (let c = 0; c < 8; c++) label('ABCDEFGH'[c], BOARD_X + c * CELL + CELL / 2, BOARD_Y + BOARD + 26);
+    for (let r = 0; r < 8; r++) label(String(8 - r), BOARD_X - 22, BOARD_Y + r * CELL + CELL / 2);
+
+    for (let id = 0; id < 24; id++) this.pieces.push(this.createPiece(Game.colorOf(id) === BLUE ? 'p1' : 'p2'));
   }
 
-  createPiece(color) {
-    const group = el('g', { class: `piece ${color}` });
+  // Brettstil wechseln: nur die Definitionen der Verläufe und Muster werden ausgetauscht
+  setTheme(name) {
+    const theme = THEMES[name] || THEMES[DEFAULT_THEME];
+    this.theme = name;
+    this.defsEl.innerHTML = theme.defs.join('');
+    this.svg.dataset.theme = name;
+  }
+
+  createPiece(side) {
+    const group = el('g', { class: `piece ${side}` });
     const shadow = el('ellipse', { rx: PIECE_R * 1.08, ry: PIECE_R * 0.95, fill: 'url(#q-shadow)' });
-    const body = el('circle', { r: PIECE_R, fill: `url(#q-${color})` });
-    // Keramikscheibe: feiner innerer Rand und Lichtkante
-    const rim = el('circle', { r: PIECE_R * 0.74, fill: 'none', stroke: color === 'blue' ? '#9bb8ff' : '#6a6d7a', 'stroke-opacity': 0.45, 'stroke-width': 3 });
+    const body = el('circle', { r: PIECE_R, fill: `url(#q-${side})` });
+    // Heller Rand (nur Ebenholz), innerer Rand und Drechselring, Lichtkante
+    const edge = el('circle', { r: PIECE_R - 1.2, fill: 'none', stroke: `url(#q-${side}-edge)`, 'stroke-width': 2.4 });
+    const rim = el('circle', { r: PIECE_R * 0.74, fill: 'none', stroke: `url(#q-${side}-ring)`, 'stroke-width': 3 });
+    const ring2 = el('circle', { r: PIECE_R * 0.86, fill: 'none', stroke: `url(#q-${side}-ring2)`, 'stroke-width': 1.5 });
     const shine = el('path', {
       d: `M ${-PIECE_R * 0.62} ${-PIECE_R * 0.32} A ${PIECE_R * 0.72} ${PIECE_R * 0.72} 0 0 1 ${PIECE_R * 0.32} ${-PIECE_R * 0.62}`,
-      fill: 'none', stroke: '#fff', 'stroke-opacity': 0.55, 'stroke-width': 5, 'stroke-linecap': 'round',
+      fill: 'none', stroke: `url(#q-${side}-shine)`, 'stroke-width': 5, 'stroke-linecap': 'round',
     });
-    // Goldene Krone der Dame
-    const crown = el('g', { class: 'crown', opacity: 0 });
-    crown.append(
-      el('circle', { r: PIECE_R * 0.96, fill: 'none', stroke: 'url(#q-gold)', 'stroke-width': 4 }),
-      el('path', {
-        d: 'M -24 12 L -27 -12 L -13 0 L 0 -20 L 13 0 L 27 -12 L 24 12 Z',
-        fill: 'url(#q-gold)', stroke: '#8a6414', 'stroke-width': 1.5, 'stroke-linejoin': 'round',
-      }),
-      el('rect', { x: -24, y: 12, width: 48, height: 7, rx: 2, fill: 'url(#q-gold)', stroke: '#8a6414', 'stroke-width': 1.2 }),
-      el('circle', { cx: 0, cy: -22, r: 3.5, fill: '#fff4cf' }),
-      el('circle', { cx: -27, cy: -14, r: 3, fill: '#fff4cf' }),
-      el('circle', { cx: 27, cy: -14, r: 3, fill: '#fff4cf' }),
-    );
+    const crown = this.createCrown(side);
     // Innere Gruppe dreht gegen das Brett, damit Licht, Schatten und Krone immer gleich wirken
     const spin = el('g');
-    spin.append(shadow, body, rim, shine, crown);
+    spin.append(shadow, body, edge, ring2, rim, shine, crown);
     group.appendChild(spin);
     this.piecesEl.appendChild(group);
     return { group, spin, shadow, crown, x: CX, y: H / 2, lift: 0, scale: 1, king: false, flying: false, where: null };
+  }
+
+  // Krone der Dame als Goldgravur. Unter jeder Linie liegt eine feine Schattenlinie, das wirkt eingelegt.
+  createCrown(side) {
+    const gold = `url(#q-${side}-engrave)`;
+    const crown = el('g', { class: 'crown', opacity: 0 });
+    const layer = (stroke, dy, opacity) => {
+      const g = el('g', { transform: `translate(0 ${dy})`, opacity });
+      g.appendChild(el('circle', { r: PIECE_R * 0.9, fill: 'none', stroke, 'stroke-width': 1.6 }));
+      const art = el('g', { transform: 'translate(0 -1.5) scale(1.3)' });
+      for (const d of CROWN.lines) {
+        art.appendChild(el('path', { d, fill: 'none', stroke, 'stroke-width': 1.7, 'stroke-linejoin': 'round', 'stroke-linecap': 'round' }));
+      }
+      for (const d of CROWN.fills) art.appendChild(el('path', { d, fill: stroke }));
+      for (const [cx, cy, r] of CROWN.dots) art.appendChild(el('circle', { cx, cy, r, fill: stroke }));
+      for (const x of CROWN.tails) art.appendChild(el('path', { d: `M${x} 17.8 l1.3 2.4 l-1.3 1.6 l-1.3 -1.6 Z`, fill: stroke }));
+      g.appendChild(art);
+      return g;
+    };
+    crown.append(layer('#000', 0.9, side === 'p1' ? 0.18 : 0.5), layer(gold, 0, 1));
+    return crown;
   }
 
   place(p, x, y, lift = 0, scale = p.scale) {
@@ -248,6 +257,7 @@ export class QueenView {
     // Steine sollen trotz Drehung gleich beleuchtet sein und die Krone aufrecht stehen
     const upright = -90 * this.turns;
     this.pieces.forEach((p) => p.spin.setAttribute('transform', `rotate(${upright})`));
+    this.coordLabels.forEach((c) => c.el.setAttribute('transform', `rotate(${upright} ${c.x} ${c.y})`));
     // Neigung muss in den Brettraum zurückgedreht werden
     this.applyGravity();
   }
@@ -392,6 +402,7 @@ export class QueenView {
       p.king = true;
       await tween(520, (t) => {
         p.crown.setAttribute('opacity', Math.min(1, t * 1.6).toFixed(2));
+        p.crown.setAttribute('transform', `scale(${(0.82 + 0.18 * Math.sin((Math.PI / 2) * t)).toFixed(3)})`);
         this.place(p, p.x, p.y, Math.sin(Math.PI * t) * 0.8, 1);
       });
       this.setKing(p, true);

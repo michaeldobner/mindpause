@@ -78,7 +78,7 @@ Unter dem Präfix `fuge:` im lokalen Speicher:
 
 ## Hülle
 
-FUGE nutzt die Hülle 1.2.0 mit drei kleinen, abwärtskompatiblen Erweiterungen, die allen Spielen offenstehen: eigene Schaltflächen `{ id, icon, labelKey }`, `setButton()` für Pause und Weiter und `showResult({ showBack: false })`. Das SVG-Brett der Hülle wird ausgeblendet, der Kasten liegt als eigenes Element auf der Bühne.
+FUGE nutzt die Hülle 1.3.0 mit drei kleinen, abwärtskompatiblen Erweiterungen, die allen Spielen offenstehen: eigene Schaltflächen `{ id, icon, labelKey }`, `setButton()` für Pause und Weiter und `showResult({ showBack: false })`. Das SVG-Brett der Hülle wird ausgeblendet, der Kasten liegt als eigenes Element auf der Bühne.
 
 ## Entwicklung und Tests
 

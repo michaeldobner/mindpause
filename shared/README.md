@@ -6,7 +6,7 @@ The shell is everything every MIND PAUSE game shares. A game only describes what
 
 **Rule of thumb:** if a change should affect every game, it belongs here. If it only concerns one game, it belongs in that game's folder.
 
-Current version: **1.2.0**
+Current version: **1.3.0**
 
 ## Contents
 
@@ -49,7 +49,7 @@ All values live as CSS variables in `tokens.css`. Games never use fixed values f
 | Control bar | Up to five round buttons with labels, chosen by the game: `undo`, `hint`, `restart`, `levels`, `settings` or the game's own (for example Hold and Pause in FUGE) |
 | Picker | iPhone portrait: sheet from the bottom with cards to swipe. iPhone landscape: drawer from the left. iPad landscape: permanent sidebar |
 | Level card | Preview, name, meta line, up to three stars, five difficulty dots, current card outlined in blue |
-| Settings | Sound on or off, sound style (Warm, Clear, Soft), switches defined by the game, a note, version line |
+| Settings | Choices defined by the game (for example the board style), sound on or off, sound style (Warm, Clear, Soft), switches defined by the game, a note, version line |
 | Result card | Title, stars, text, statistics, "Play again", optional "Next …", "Undo last move" |
 | Toast | Short message at the bottom of the board |
 | First launch hint | Speech bubble below the level name, only once per game |
@@ -71,13 +71,16 @@ const sound = new QueenSound({ enabled: storage.load('sound', true) });
 
 const shell = createShell({
   title: 'QUEEN',
-  version: '1.0.0',
+  version: '1.1.0',
   i18n,
   storage,
   sound,
   buttons: ['undo', 'hint', 'restart', 'levels', 'settings'],
   levels: { buttonKey: 'modes', titleKey: 'chooseMode', nextKey: 'nextLevel' },
-  settings: [{ id: 'flip', nameKey: 'flip', textKey: 'flipText' }],
+  settings: [
+    { id: 'theme', nameKey: 'theme', options: [{ value: 'classic', labelKey: 'themes.classic' }, { value: 'midnight', labelKey: 'themes.midnight' }] },
+    { id: 'flip', nameKey: 'flip', textKey: 'flipText' },
+  ],
   noteKey: 'trayHint',
   coachKey: 'coach',
   boardLabelKey: 'boardLabel',
@@ -95,9 +98,9 @@ const shell = createShell({
 | `i18n`, `storage`, `sound` | Created with `createI18n`, `createStorage` and a subclass of `SoundEngine` |
 | `buttons` | Which buttons the control bar shows, in this order. An entry is a shell name or a custom button `{ id, icon, labelKey }`: `icon` is SVG content in a 24 × 24 box, a tap calls `actions[id]` |
 | `levels` | Optional picker: keys for the button label, the title and the "Next" button |
-| `settings` | Additional switches in the settings: `id` plus keys for name and description |
+| `settings` | Additional settings. A switch has `id`, `nameKey` and `textKey`. A choice has `id`, `nameKey` and `options` with `value` and `labelKey`, and appears as a segmented control at the top of the settings |
 | `noteKey`, `coachKey`, `boardLabelKey` | Optional texts: note in the settings, first launch hint, label of the board |
-| `actions` | Functions the shell calls: `undo`, `hint`, `restart`, `again`, `back`, `next`, `selectLevel(id)`, `setting(id, on)` |
+| `actions` | Functions the shell calls: `undo`, `hint`, `restart`, `again`, `back`, `next`, `selectLevel(id)`, `setting(id, value)`. For a switch `value` is the new state, for a choice the selected `value` |
 | `onGesture` | Called on every touch that iOS accepts as a user gesture (for permissions such as the motion sensor) |
 
 ### What the shell returns
@@ -113,7 +116,7 @@ const shell = createShell({
 | `showResult(opts)`, `hideResult()` | Result card. `opts`: `{ title, text, stars, stats, highlight, showNext, showBack }`. `showBack: false` hides “Undo last move”, for games without undo |
 | `toast(text)`, `hideToast()` | Short message |
 | `showCoach()` | First launch hint, shown only once |
-| `setSetting(id, on)` | Shows the state of a game switch |
+| `setSetting(id, value)` | Shows the state of a switch (`true` or `false`) or the selected value of a choice |
 | `openPanel(name)`, `closePanels()`, `isSidebar()` | Control the sheets |
 
 ### Texts

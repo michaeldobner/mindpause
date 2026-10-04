@@ -5,7 +5,7 @@
 //
 //   npm run e2e
 
-import { chromium, devices } from 'playwright';
+import { chromium, webkit, devices } from 'playwright';
 import http from 'node:http';
 import { readFileSync, existsSync, statSync, mkdirSync } from 'node:fs';
 import { extname, join, normalize } from 'node:path';
@@ -34,7 +34,12 @@ const server = http.createServer((req, res) => {
 const BASE = `http://localhost:${server.address().port}/mindpause/`;
 
 const games = JSON.parse(readFileSync('games.json', 'utf8'));
-const browser = await chromium.launch();
+// Browser-Engine: chromium (Standard) oder webkit, die Engine von Safari auf iPhone und iPad.
+//   E2E_ENGINE=webkit npm run e2e
+const ENGINE = process.env.E2E_ENGINE === 'webkit' ? 'webkit' : 'chromium';
+const browser = await (ENGINE === 'webkit' ? webkit : chromium).launch();
+const shot = (name) => join(OUT, ENGINE === 'webkit' ? `webkit-${name}` : name);
+console.log(`Engine: ${ENGINE}`);
 const failures = [];
 const check = (ok, what) => {
   if (!ok) failures.push(what);
@@ -51,6 +56,8 @@ const DEVICES = [
 async function open(device, locale, path) {
   const ctx = await browser.newContext({ ...device, locale, serviceWorkers: 'block' });
   await ctx.addInitScript(() => {
+    // Abgelehnte Versprechen ohne Behandlung als Fehler melden, auch in WebKit
+    window.addEventListener('unhandledrejection', (e) => console.error(`Unbehandelt: ${e.reason}`));
     for (const k of Object.keys(localStorage)) if (k.endsWith('coachSeen')) localStorage.removeItem(k);
   });
   const page = await ctx.newPage();
@@ -68,7 +75,7 @@ for (const [name, device, locale] of DEVICES.slice(0, 1)) {
   const cards = await page.locator('.game').count();
   check(cards === games.length, `Startseite (${name}): ${cards} von ${games.length} Spielen sichtbar`);
   check(errors.length === 0, `Startseite (${name}): keine Fehler ${errors.join(' | ')}`);
-  await page.screenshot({ path: join(OUT, `home-${name}.png`) });
+  await page.screenshot({ path: shot(`home-${name}.png`) });
   await ctx.close();
 }
 
@@ -108,11 +115,21 @@ for (const game of games) {
       }
       await page.click('#btn-settings');
       await page.waitForTimeout(500);
-      await page.screenshot({ path: join(OUT, `${game.id}-${name}-settings.png`) });
+      await page.screenshot({ path: shot(`${game.id}-${name}-settings.png`) });
       await page.click('#settings-close');
       await page.waitForTimeout(400);
     }
-    await page.screenshot({ path: join(OUT, `${game.id}-${name}.png`) });
+    await page.screenshot({ path: shot(`${game.id}-${name}.png`) });
+
+    // Zusätzliche Prüfungen eines Spiels (window.__game.e2e.checks), jede liefert true
+    if (name === 'iphone' || name === 'ipad') {
+      const extras = await page.evaluate(() => Object.keys(window.__game?.e2e?.checks || {}));
+      for (const extra of extras) {
+        const ok = await page.evaluate((n) => window.__game.e2e.checks[n](), extra);
+        check(ok === true, `${label}: ${extra}${ok === true ? '' : ` (${ok})`}`);
+        await page.screenshot({ path: shot(`${game.id}-${name}-${extra.toLowerCase()}.png`) });
+      }
+    }
     check(errors.length === 0, `${label}: keine Fehler ${errors.join(' | ')}`);
     await ctx.close();
   }

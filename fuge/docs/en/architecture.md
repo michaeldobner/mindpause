@@ -78,7 +78,7 @@ Under the prefix `fuge:` in local storage:
 
 ## Shell
 
-FUGE uses shell 1.2.0 with three small, backwards compatible additions available to every game: custom buttons `{ id, icon, labelKey }`, `setButton()` for Pause and Resume, and `showResult({ showBack: false })`. The shell's SVG board is hidden, the box sits on the stage as its own element.
+FUGE uses shell 1.3.0 with three small, backwards compatible additions available to every game: custom buttons `{ id, icon, labelKey }`, `setButton()` for Pause and Resume, and `showResult({ showBack: false })`. The shell's SVG board is hidden, the box sits on the stage as its own element.
 
 ## Development and tests
 

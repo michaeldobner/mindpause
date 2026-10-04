@@ -20,6 +20,7 @@ Then open QUEEN at `http://localhost:3000/queen/`. The language follows the brow
 |---|---|
 | `queen/tests/rules.test.js` | Starting position, moving forwards only, capturing backwards too, mandatory capture, complete multiple capture, no double jump, flying queen with free landing, crowning, no crowning when the capture continues, end of game without moves |
 | `queen/tests/game.test.js` | Move and undo restore everything, piece numbers, draw by standstill and repetition, save and resume, longest capture path on tap, computer takes a winning capture, symmetric evaluation, **Medium clearly beats Easy** |
+| `queen/tests/themes.test.js` | Every board style defines the same gradients and patterns, names and side colours in both languages |
 | `shared/tests/gutter.test.js` | Among others the trays: walls, rest, 12 pieces fit, tilt pushes to the wall |
 | `shared/tests/tilt.test.js` | Gravity from device angles, the tilt switch |
 | `shared/tests/i18n.test.js` | Among others: QUEEN texts have the same keys in both languages and no dashes |
@@ -33,7 +34,8 @@ The browser test `npm run e2e` opens QUEEN on iPhone, iPhone landscape, iPhone S
 2. Multiple capture, crowning, flying queen.
 3. Two players with and without "Turn the board".
 4. Portrait and landscape, tapping and swiping the trays, tilt.
-5. Light and dark mode.
+5. Both board styles, switching mid-game, crown on ivory, ebony and ceramic.
+6. Light and dark mode.
 
 ## Testing on an iPhone or iPad
 

@@ -6,7 +6,7 @@ Die Hülle ist alles, was alle Spiele von MIND PAUSE teilen. Ein Spiel beschreib
 
 **Faustregel:** Soll eine Änderung in allen Spielen wirken, gehört sie hierher. Betrifft sie nur ein Spiel, gehört sie in dessen Ordner.
 
-Aktuelle Version: **1.2.0**
+Aktuelle Version: **1.3.0**
 
 ## Inhalt
 
@@ -49,7 +49,7 @@ Alle Werte stehen als CSS-Variablen in `tokens.css`. Spiele nutzen für Farben u
 | Steuerleiste | Bis zu fünf runde Schaltflächen mit Beschriftung, vom Spiel gewählt: `undo`, `hint`, `restart`, `levels`, `settings` oder eigene des Spiels (zum Beispiel Halten und Pause bei FUGE) |
 | Auswahl | iPhone hoch: Blatt von unten mit Karten zum Wischen. iPhone quer: Schublade von links. iPad quer: feste Seitenleiste |
 | Levelkarte | Vorschau, Name, Zusatzzeile, bis zu drei Sterne, fünf Schwierigkeitspunkte, aktuelle Karte blau umrandet |
-| Einstellungen | Ton an oder aus, Klangfarbe (Warm, Klar, Weich), vom Spiel definierte Schalter, ein Hinweis, Versionszeile |
+| Einstellungen | Vom Spiel definierte Auswahl (zum Beispiel der Brettstil), Ton an oder aus, Klangfarbe (Warm, Klar, Weich), vom Spiel definierte Schalter, ein Hinweis, Versionszeile |
 | Ergebniskarte | Titel, Sterne, Text, Statistik, „Nochmal“, optional „Nächste …“, „Letzten Zug zurücknehmen“ |
 | Hinweisleiste | Kurze Meldung unten im Brett |
 | Erststart-Hinweis | Sprechblase unter dem Levelnamen, nur einmal pro Spiel |
@@ -71,13 +71,16 @@ const sound = new QueenSound({ enabled: storage.load('sound', true) });
 
 const shell = createShell({
   title: 'QUEEN',
-  version: '1.0.0',
+  version: '1.1.0',
   i18n,
   storage,
   sound,
   buttons: ['undo', 'hint', 'restart', 'levels', 'settings'],
   levels: { buttonKey: 'modes', titleKey: 'chooseMode', nextKey: 'nextLevel' },
-  settings: [{ id: 'flip', nameKey: 'flip', textKey: 'flipText' }],
+  settings: [
+    { id: 'theme', nameKey: 'theme', options: [{ value: 'classic', labelKey: 'themes.classic' }, { value: 'midnight', labelKey: 'themes.midnight' }] },
+    { id: 'flip', nameKey: 'flip', textKey: 'flipText' },
+  ],
   noteKey: 'trayHint',
   coachKey: 'coach',
   boardLabelKey: 'boardLabel',
@@ -95,9 +98,9 @@ const shell = createShell({
 | `i18n`, `storage`, `sound` | Erzeugt mit `createI18n`, `createStorage` und einer Unterklasse von `SoundEngine` |
 | `buttons` | Welche Schaltflächen die Steuerleiste zeigt, in dieser Reihenfolge. Ein Eintrag ist ein Name der Hülle oder eine eigene Schaltfläche `{ id, icon, labelKey }`: `icon` ist SVG-Inhalt im Feld 24 × 24, ein Tipp ruft `actions[id]` auf |
 | `levels` | Optionale Auswahl: Schlüssel für Beschriftung, Titel und die Schaltfläche „Nächste“ |
-| `settings` | Zusätzliche Schalter in den Einstellungen: `id` und Schlüssel für Name und Beschreibung |
+| `settings` | Zusätzliche Einstellungen. Ein Schalter hat `id`, `nameKey` und `textKey`. Eine Auswahl hat `id`, `nameKey` und `options` mit `value` und `labelKey`, sie erscheint als Segmentauswahl oben in den Einstellungen |
 | `noteKey`, `coachKey`, `boardLabelKey` | Optionale Texte: Hinweis in den Einstellungen, Erststart-Hinweis, Beschriftung des Bretts |
-| `actions` | Funktionen, die die Hülle aufruft: `undo`, `hint`, `restart`, `again`, `back`, `next`, `selectLevel(id)`, `setting(id, an)` |
+| `actions` | Funktionen, die die Hülle aufruft: `undo`, `hint`, `restart`, `again`, `back`, `next`, `selectLevel(id)`, `setting(id, wert)`. Bei einem Schalter ist `wert` der neue Zustand, bei einer Auswahl der gewählte `value` |
 | `onGesture` | Wird bei jeder Berührung aufgerufen, die iOS als Nutzergeste akzeptiert (für Erlaubnisse wie den Bewegungssensor) |
 
 ### Was die Hülle zurückgibt
@@ -113,7 +116,7 @@ const shell = createShell({
 | `showResult(opts)`, `hideResult()` | Ergebniskarte. `opts`: `{ title, text, stars, stats, highlight, showNext, showBack }`. `showBack: false` blendet „Letzten Zug zurücknehmen“ aus, für Spiele ohne Zurück |
 | `toast(text)`, `hideToast()` | Kurze Meldung |
 | `showCoach()` | Erststart-Hinweis, erscheint nur einmal |
-| `setSetting(id, an)` | Zeigt den Zustand eines Spielschalters |
+| `setSetting(id, wert)` | Zeigt den Zustand eines Schalters (`true` oder `false`) oder den gewählten Wert einer Auswahl |
 | `openPanel(name)`, `closePanels()`, `isSidebar()` | Steuerung der Blätter |
 
 ### Texte

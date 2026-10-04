@@ -19,5 +19,5 @@ Erste Version von FUGE, dem vierten Spiel der Sammlung MIND PAUSE.
 * Pause mit Bedienhilfe, Spiel wird beim Verlassen gespeichert und pausiert fortgesetzt.
 * Bestwerte und Sterne je Modus, Einstellungen für Geisterstein und Muster auf den Steinen, offline spielbar, Deutsch und Englisch.
 
-### Hülle 1.2.0
+### Hülle 1.3.0
 * FUGE nutzt die neuen eigenen Schaltflächen der Hülle (Halten, Pause) und blendet „Letzten Zug zurücknehmen“ auf der Ergebniskarte aus.

@@ -19,5 +19,5 @@ First version of FUGE, the fourth game of the MIND PAUSE collection.
 * Pause with controls help, the game is saved when you leave and resumes paused.
 * Best scores and stars per mode, settings for ghost piece and patterns on the pieces, works offline, German and English.
 
-### Shell 1.2.0
+### Shell 1.3.0
 * FUGE uses the shell's new custom buttons (Hold, Pause) and hides “Undo last move” on the result card.

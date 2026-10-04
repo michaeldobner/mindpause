@@ -2,7 +2,7 @@
 
 Alle wichtigen Änderungen an der Hülle von MIND PAUSE. [English](CHANGELOG.md)
 
-## 1.2.0 (2026-10-04)
+## 1.3.0 (2026-10-04)
 
 Bausteine für FUGE, die allen Spielen zur Verfügung stehen. Bestehende Spiele verhalten sich unverändert.
 
@@ -13,6 +13,11 @@ Bausteine für FUGE, die allen Spielen zur Verfügung stehen. Bestehende Spiele 
 
 ### Tests
 * Der Browser-Test prüft Zurück nur bei Spielen, die diese Schaltfläche zeigen.
+
+## 1.2.0 (2026-10-04)
+
+### Neu
+* Einstellungen können neben Schaltern jetzt auch eine Auswahl enthalten: `settings` mit `options` erscheint als Segmentauswahl oben in den Einstellungen, zum Beispiel für den Brettstil von QUEEN. `setSetting(id, wert)` und die Aktion `setting(id, wert)` liefern den gewählten Wert.
 
 ## 1.1.0 (2026-10-04)
 

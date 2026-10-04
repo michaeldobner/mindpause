@@ -17,8 +17,8 @@ Klassische Brettspiele, neu gedacht, mit fast greifbarem Design und handgemachte
 | | Spiel | Beschreibung | Version |
 |---|---|---|---|
 | <img src="spring/icons/icon.svg" width="56" alt=""> | **[SPRING](spring/README.de.md)** · [spielen](https://michaeldobner.github.io/mindpause/spring/) | Solohalma auf dem klassischen Kreuzbrett. Sieben Figuren von leicht bis meisterhaft, Tipps, lebendiger Rand, Neigen | 2.1.1 |
-| <img src="queen/icons/icon.svg" width="56" alt=""> | **[QUEEN](queen/README.de.md)** · [spielen](https://michaeldobner.github.io/mindpause/queen/) | Deutsche Dame gegen den Computer in drei Stufen oder zu zweit an einem Gerät. Goldene Krone, Schalen für geschlagene Steine | 1.0.0 |
-| <img src="karo/icons/icon.svg" width="56" alt=""> | **[KARO](karo/README.de.md)** · [spielen](https://michaeldobner.github.io/mindpause/karo/) | Die klassische Patience wie bei Windows. 1 oder 3 Karten, Punkte oder Vegas, sicher lösbare Stufen, Tipps | 1.0.0 |
+| <img src="queen/icons/icon.svg" width="56" alt=""> | **[QUEEN](queen/README.de.md)** · [spielen](https://michaeldobner.github.io/mindpause/queen/) | Deutsche Dame gegen den Computer in drei Stufen oder zu zweit an einem Gerät. Ebenholz, Ahorn und eine gravierte Goldkrone, Schalen für geschlagene Steine | 1.1.0 |
+| <img src="karo/icons/icon.svg" width="56" alt=""> | **[KARO](karo/README.de.md)** · [spielen](https://michaeldobner.github.io/mindpause/karo/) | Die klassische Patience wie bei Windows. 1 oder 3 Karten, Punkte oder Vegas, sicher lösbare Stufen, Tipps | 1.0.1 |
 | <img src="fuge/icons/icon.svg" width="56" alt=""> | **[FUGE](fuge/README.de.md)** · [spielen](https://michaeldobner.github.io/mindpause/fuge/) | Das klassische Spiel mit fallenden Steinen als lackierter Holzkasten. Klassisch, Sprint, 3 Minuten und Ruhe ohne Ende, Gesten statt Knöpfe | 1.0.0 |
 
 Weitere Spiele und das Spiel auf zwei Geräten sind in Arbeit, siehe [Roadmap](#roadmap).
@@ -69,6 +69,7 @@ Voraussetzungen: Node.js ab Version 20 und ein moderner Browser. Es gibt keine A
 npm start       # lokaler Server: http://localhost:3000/ (Startseite), /spring/, /queen/
 npm test        # Logik-Tests aller Spiele und der Hülle
 npm run e2e     # Browser-Test aller Spiele auf iPhone, iPhone SE und iPad
+E2E_ENGINE=webkit npm run e2e   # dasselbe mit WebKit, der Engine von Safari
 ```
 
 Der Browser-Test braucht einmalig Playwright: `npm install --no-save playwright && npx playwright install chromium`.
@@ -83,7 +84,7 @@ Bei jedem Push führt GitHub Actions beides aus. Der Browser-Test lädt Screensh
 
 ```bash
 node scripts/release.mjs spring 2.2.0   # neue Version von SPRING
-node scripts/release.mjs shell 1.1.0    # neue Version der Hülle, betrifft alle Spiele
+node scripts/release.mjs shell 1.3.0    # neue Version der Hülle, betrifft alle Spiele
 ```
 
 Jeder Verweis trägt seine Version (`?v=` für Dateien eines Spiels, `?shell=` für Dateien der Hülle). Ein Gerät mischt deshalb nach einem Update nie alte und neue Dateien. `tests/release.test.js` prüft das bei jedem Push.
@@ -105,8 +106,8 @@ Jeder Verweis trägt seine Version (`?v=` für Dateien eines Spiels, `?shell=` f
 | Sammlung | Hülle, Startseite, Tests über alle Spiele | Fertig |
 | QUEEN | Deutsche Dame, drei Computerstufen, zu zweit an einem Gerät | Fertig |
 | KARO | Klondike-Patience, 1 oder 3 Karten, Punkte nach Windows und Vegas, sicher lösbare Stufen | Fertig |
-| FUGE | Fallende Steine als Holzkasten, vier Modi, Gesten, Hülle 1.2.0 mit eigenen Schaltflächen | Fertig |
-| QUEEN 1.1 | Gegeneinander auf zwei Geräten, Stufe 1: Zug per Link | Geplant |
+| FUGE | Fallende Steine als Holzkasten, vier Modi, Gesten, Hülle 1.3.0 mit eigenen Schaltflächen | Fertig |
+| QUEEN 1.2 | Gegeneinander auf zwei Geräten, Stufe 1: Zug per Link | Geplant |
 | Später | Live mit Raumcode, weitere Spiele | Idee |
 
 ## Schreibstil
