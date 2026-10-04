@@ -17,9 +17,9 @@
 
 ## The board
 
-The game is played on a board of 8×8 squares, but only on the 32 dark squares. Each side starts with 12 pieces on the dark squares of its first three rows. **Blue** sits at the bottom and moves first, **Black** sits at the top. The two middle rows start empty.
+The game is played on a board of 8×8 squares, but only on the 32 dark squares. Each side starts with 12 pieces on the dark squares of its first three rows. **White** sits at the bottom and moves first, **Black** sits at the top. In the Midnight board style the bottom side is called **Blue**. The two middle rows start empty.
 
-Against the computer you always play Blue.
+Against the computer you always play the bottom side, White or Blue.
 
 ## Rules of German checkers
 
@@ -29,7 +29,7 @@ Against the computer you always play Blue.
 | Capturing | A piece jumps diagonally over an opposing piece to the empty square directly behind it. Pieces capture **forwards and backwards** |
 | Mandatory capture | If a side can capture, it **must** capture. If there are several captures, the choice is free. It does not have to be the longest one |
 | Multiple capture | If the piece can capture again after a jump, it must keep jumping until no capture is left. A piece may not be jumped twice. Captured pieces are removed only at the end of the move |
-| Queen | If a piece ends its move on the opponent's back row, it becomes a **queen** and wears a golden crown. If a piece reaches the back row in the middle of a multiple capture and can capture again, it continues as a plain piece and is not crowned |
+| Queen | If a piece ends its move on the opponent's back row, it becomes a **queen** and wears an engraved golden crown. If a piece reaches the back row in the middle of a multiple capture and can capture again, it continues as a plain piece and is not crowned |
 | Flying queen | A queen moves diagonally forwards and backwards across **any number of empty squares**. She captures an opposing piece from a distance and may land on any empty square behind it |
 
 QUEEN checks every rule itself. You cannot make an illegal move, and when you tap a piece the game shows all its legal targets.
@@ -104,7 +104,7 @@ QUEEN saves every move. If you close the app in the middle of a game, it continu
 
 ## The trays
 
-Captured pieces roll into a tray at the edge of the board: at the top and bottom in portrait, on the left and right in landscape. Each side collects its spoils on its own side, so Blue keeps the captured black pieces.
+Captured pieces roll into a tray at the edge of the board: at the top and bottom in portrait, on the left and right in landscape. Each side collects its spoils on its own side, so the bottom side keeps the captured black pieces.
 
 The pieces in the trays are alive, but they never get in the way of the game:
 
@@ -118,6 +118,7 @@ Under **More**:
 
 | Setting | Effect |
 |---|---|
+| Board | Classic (ebony, maple, ivory, gold) or Midnight (deep blue, ceramic). Switch at any time, even in the middle of a game |
 | Sound | Sounds on or off |
 | Sound style | Warm, Clear or Soft. Applies to every game in MIND PAUSE |
 | Turn the board | With two players the board turns towards the player to move after every move. An iPad can lie flat between two people |

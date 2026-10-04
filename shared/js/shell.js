@@ -16,7 +16,7 @@ const ICONS = {
 };
 
 // Version der Hülle. Ändern nur über: node scripts/release.mjs shell <version>
-export const SHELL_VERSION = '1.1.0';
+export const SHELL_VERSION = '1.2.0';
 
 const SIDEBAR_QUERY = '(min-width: 1000px) and (orientation: landscape) and (min-height: 600px)';
 
@@ -29,7 +29,7 @@ export function createShell(config) {
     sound,
     buttons = ['undo', 'hint', 'restart', 'levels', 'settings'],
     levels = null, // { buttonKey, titleKey, nextKey }
-    settings = [], // [{ id, nameKey, textKey }]
+    settings = [], // Schalter: [{ id, nameKey, textKey }], Auswahl: [{ id, nameKey, options: [{ value, labelKey }] }]
     noteKey = null,
     coachKey = null,
     boardLabelKey = null,
@@ -113,6 +113,13 @@ export function createShell(config) {
         <h2 id="settings-title" data-i18n="settingsTitle"></h2>
         <button id="settings-close" class="close-btn" type="button" data-i18n-label="close">${icon('close')}</button>
       </div>
+      ${settings.filter((s) => s.options).map((s) => `
+      <div class="setting column">
+        <p class="setting-name" data-i18n="${s.nameKey}"></p>
+        <div id="${s.id}-choice" class="segmented" style="grid-template-columns: repeat(${s.options.length}, 1fr)" role="radiogroup" data-i18n-label="${s.nameKey}">
+          ${s.options.map((o) => `<button type="button" role="radio" aria-checked="false" data-value="${o.value}" data-i18n="${o.labelKey}"></button>`).join('')}
+        </div>
+      </div>`).join('')}
       <div class="setting">
         <div>
           <p class="setting-name" data-i18n="sound"></p>
@@ -128,7 +135,7 @@ export function createShell(config) {
           <button type="button" role="radio" data-style="soft" data-i18n="styles.soft"></button>
         </div>
       </div>
-      ${settings.map((s) => `
+      ${settings.filter((s) => !s.options).map((s) => `
       <div class="setting">
         <div>
           <p class="setting-name" data-i18n="${s.nameKey}"></p>
@@ -280,10 +287,14 @@ export function createShell(config) {
   // ---------- Einstellungen ----------
 
   const settingState = {};
+  // on: true oder false bei Schaltern, der gewählte Wert bei einer Auswahl
   function setSetting(id, on) {
     settingState[id] = on;
     const el = $(`#${id}-toggle`);
     if (el) el.setAttribute('aria-checked', String(on));
+    document.querySelectorAll(`#${id}-choice [data-value]`).forEach((b) => {
+      b.setAttribute('aria-checked', String(b.dataset.value === on));
+    });
   }
 
   function renderSettings() {
@@ -344,7 +355,14 @@ export function createShell(config) {
     sound.preview();
   });
   for (const s of settings) {
-    $(`#${s.id}-toggle`).addEventListener('click', () => act('setting', s.id, !settingState[s.id]));
+    if (s.options) {
+      $(`#${s.id}-choice`).addEventListener('click', (e) => {
+        const b = e.target.closest('[data-value]');
+        if (b && b.dataset.value !== settingState[s.id]) act('setting', s.id, b.dataset.value);
+      });
+    } else {
+      $(`#${s.id}-toggle`).addEventListener('click', () => act('setting', s.id, !settingState[s.id]));
+    }
   }
 
   // Ton freischalten. iOS erlaubt das nur beim Loslassen des Fingers oder bei einem vollständigen

@@ -22,6 +22,7 @@ queen/index.html
      ├─ js/rules.js               Regeln der Deutschen Dame (ohne Darstellung)
      ├─ js/game.js                Spielstand, Zurück, Spielende, Remis (ohne Darstellung)
      ├─ js/view.js                SVG-Brett, Steine, Krone, Animationen, Eingabe
+     │   ├─ js/themes.js          Brettstile und Kronengravur
      │   └─ ../shared/js/gutter.js  Physik der Steine in den Schalen
      ├─ js/sound.js               Klänge von QUEEN (erweitert die Klang-Engine der Hülle)
      └─ js/ai-worker.js           Web Worker für Computerzüge und Tipps
@@ -42,7 +43,7 @@ Grundprinzip: **Regeln → Spielstand → Darstellung**. `rules.js`, `game.js` u
 | Titel | `QUEEN` |
 | Schaltflächen | Zurück, Tipp, Neu, Modi, Mehr |
 | Auswahl | Modi, mit Vorschau, Sternen und Schwierigkeit |
-| Zusätzliche Einstellungen | Brett drehen, Neigen |
+| Zusätzliche Einstellungen | Auswahl Brett (Klassik, Mitternacht), Schalter Brett drehen und Neigen |
 | Hinweis in den Einstellungen | „Wische über die Steine in den Schalen“ |
 | Aktionen | Zurück, Tipp, Neu, Nochmal, Nächste Stufe, Modus wählen, Einstellungen umschalten |
 
@@ -58,7 +59,7 @@ Das Brett ist eine Liste aus 64 Zahlen, Index = Zeile · 8 + Spalte. Gespielt wi
 | `1`, `2` | Blauer Stein, blaue Dame |
 | `-1`, `-2` | Schwarzer Stein, schwarze Dame |
 
-Blau (`BLUE = 1`) beginnt in den Zeilen 5 bis 7 und zieht nach oben, Schwarz (`BLACK = -1`) in den Zeilen 0 bis 2.
+Blau (`BLUE = 1`) beginnt in den Zeilen 5 bis 7 und zieht nach oben, Schwarz (`BLACK = -1`) in den Zeilen 0 bis 2. Im Code heißt die untere Seite immer `BLUE`, auch wenn sie im Stil Klassik als Weiß erscheint. Der angezeigte Name kommt aus dem Brettstil.
 
 Ein **Zug** ist `{ from, to, path, captured, crown }`:
 
@@ -136,7 +137,7 @@ Spielraum heißt: Gewählt wird zufällig unter allen Zügen, die höchstens so 
 
 **Brettraum.** Gezeichnet wird in festen Einheiten (1000 × 1280, Hochformat, Blau unten). `orient()` dreht die ganze Welt für das Querformat um 90° und beim Spiel zu zweit um weitere 180°. Eine innere Gruppe jedes Steins dreht zurück, damit Licht und Krone aufrecht bleiben.
 
-**Steine.** Es gibt immer 24 SVG-Steine, einer je Nummer. Jeder steht entweder auf dem Brett oder in einer Schale.
+**Steine.** Es gibt immer 24 SVG-Steine, einer je Nummer. Jeder steht entweder auf dem Brett oder in einer Schale. Die Krone liegt als Gravur auf jedem Stein bereit und wird bei der Krönung eingeblendet.
 
 | Methode | Aufgabe |
 |---|---|
@@ -146,6 +147,7 @@ Spielraum heißt: Gewählt wird zufällig unter allen Zügen, die höchstens so 
 | `toTray(id)` | Stein in die Schale der schlagenden Seite rollen |
 | `select(feld)`, `showHint(zug)` | Auswahl, Zielringe, Tippring |
 | `setFlip(an)` | Brett für das Spiel zu zweit drehen |
+| `setTheme(name)` | Brettstil wechseln: tauscht nur die Definitionen der Verläufe und Muster aus |
 | `setGravity(x, y)` | Neigung in den Brettraum zurückdrehen und an beide Schalen geben |
 
 **Schalen.** Jede Schale ist ein `Gutter` der Hülle mit einem Bogenstück (`arc`) auf einem sehr großen virtuellen Kreis (Radius 10 000). Auf diesem Kreis ist das Bogenstück praktisch gerade, die bewährte Physik von SPRING (Reibung, Stöße, Neigung) gilt unverändert. `arc` setzt Wände an beide Enden, `speedScale` rechnet die Geschwindigkeiten auf den großen Radius um.
@@ -164,6 +166,18 @@ Spielraum heißt: Gewählt wird zufällig unter allen Zügen, die höchstens so 
 
 **Ereignisse an `main.js`:** `canMove`, `move`, `lift`, `invalid`, `land`, `hop`, `crown`, `rim`, `clack`, `done`.
 
+### `themes.js`: Brettstile und Krone
+
+Alle Teile des Bretts verweisen auf Verläufe und Muster mit festen Namen, zum Beispiel `url(#q-plate)`, `url(#q-light)`, `url(#q-p1)` für die Steine der unteren Seite oder `url(#q-p1-engrave)` für deren Gravur. Ein Brettstil in `THEMES` ist nur eine Liste solcher Definitionen. Was ein Stil nicht braucht (Maserung, Rautengitter, Koordinaten im Stil Mitternacht), bekommt eine leere oder durchsichtige Definition. Dadurch braucht `view.js` keine Fallunterscheidung, und ein Wechsel ist augenblicklich.
+
+| Export | Inhalt |
+|---|---|
+| `THEMES` | `classic` und `midnight`, je mit `defs` und den Farbnamen der Seiten (`sides`) |
+| `THEME_IDS`, `DEFAULT_THEME` | Reihenfolge in der Auswahl, Standard `classic` |
+| `CROWN` | Linien, Flächen, Punkte und Hermelinschwänze der Krone für einen Stein mit Radius 44 |
+
+Maserung und Rautengitter entstehen als SVG-Muster aus Code, ohne Bilddateien.
+
 ### `main.js`: Ablauf
 
 | Funktion | Aufgabe |
@@ -176,6 +190,8 @@ Spielraum heißt: Gewählt wird zufällig unter allen Zügen, die höchstens so 
 | `newGame()` | Neues Spiel. Das alte bleibt für ein sofortiges Zurück erhalten |
 | `undo()` | Gegen den Computer bis zum letzten eigenen Zug zurück, rechnender Computer wird abgebrochen |
 | `switchMode(id)` | Modus wechseln, immer mit neuem Spiel |
+| `setTheme(id)` | Brettstil wechseln und speichern, Brett blendet weich über |
+| `sideName(seite)` | Farbname einer Seite im aktuellen Stil für Kopfzeile und Ergebniskarte |
 
 ### Speicherung
 
@@ -186,6 +202,7 @@ Alle Werte liegen über `createStorage('queen:')` im `localStorage` mit dem Prä
 | `queen:mode` | Zuletzt gewählter Modus |
 | `queen:game` | `{ mode, state }`, der laufende Spielstand, wird beim Start fortgesetzt |
 | `queen:stats` | Je Modus: `games`, `wins`, `losses`, `draws` |
+| `queen:theme` | Brettstil: `classic` oder `midnight` |
 | `queen:flip`, `queen:tilt` | Brett drehen, Neigen |
 | `queen:sound`, `queen:soundStyle` | Ton an oder aus, Klangfarbe |
 | `queen:coachSeen` | Erststart-Hinweis bereits gezeigt |

@@ -20,7 +20,7 @@ A game of the [MIND PAUSE](../README.md) collection.
 
 ## Why QUEEN
 
-QUEEN brings the classic game of checkers into the calm world of MIND PAUSE: a deep blue board, ceramic pieces in blue and black, a golden crown for every queen and two trays that captured pieces roll into. The computer opponent thinks like a chess program, the sounds are the same fine ceramic and wood sounds as in SPRING. No ads, no account, playable offline.
+QUEEN brings the classic game of checkers into the calm world of MIND PAUSE: black wood, squares of maple and ebony, pieces in ivory and ebony, fine gold lines and an engraved golden crown for every queen. Captured pieces roll into two trays. If you prefer colour, choose the deep blue Midnight board. The computer opponent thinks like a chess program, the sounds are the same fine wood and ceramic sounds as in SPRING. No ads, no account, playable offline.
 
 ## Highlights
 
@@ -29,7 +29,8 @@ QUEEN brings the classic game of checkers into the calm world of MIND PAUSE: a d
 | **German checkers** | 8×8, pieces also capture backwards, flying queens, mandatory capture, multiple captures |
 | **Three computer levels** | Easy, Medium, Hard. The computer thinks in the background, the interface stays smooth |
 | **Two players** | Two people on one device, optionally the board turns after every move |
-| **Golden crown** | Reach the far row and become a queen, with a crown and a bell tone |
+| **Engraved crown** | Reach the far row and become a queen: a queen's crown in fine gold engraving appears, with a bell tone |
+| **Two board styles** | Classic with ebony, maple and golden coordinates, or Midnight in deep blue |
 | **Two trays** | Captured pieces roll into the tray of the side that captured them. Tap, swipe, tilt |
 | **Hints** | On request the computer shows you the best move |
 | **Stars** | Up to three stars per level, based on the number of wins |
@@ -38,7 +39,7 @@ QUEEN brings the classic game of checkers into the calm world of MIND PAUSE: a d
 
 ## How to play
 
-1. Blue moves first. Pieces move one square diagonally forwards.
+1. White moves first (Blue in the Midnight style). Pieces move one square diagonally forwards.
 2. You capture by jumping over an opposing piece onto the empty square behind it, forwards or backwards. **Capturing is mandatory.**
 3. A piece that reaches the far row becomes a queen and moves across any number of empty squares.
 4. A player who cannot move loses.
@@ -88,6 +89,7 @@ queen/
 │  ├─ game.js              game state, undo, end of game, draws
 │  ├─ ai.js                computer opponent
 │  ├─ ai-worker.js         runs the computer in the background
+│  ├─ themes.js            Classic and Midnight board styles, crown engraving
 │  ├─ view.js              board, pieces, crown, trays, input
 │  └─ sound.js             QUEEN sounds
 ├─ icons/                  app icons
@@ -99,4 +101,4 @@ queen/
 
 ## Version
 
-Current version: **1.0.0**. See the [changelog](CHANGELOG.md).
+Current version: **1.1.0**. See the [changelog](CHANGELOG.md).

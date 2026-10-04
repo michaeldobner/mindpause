@@ -20,7 +20,7 @@ Ein Spiel der Sammlung [MIND PAUSE](../README.de.md).
 
 ## Warum QUEEN
 
-QUEEN bringt das klassische Damespiel in die ruhige Welt von MIND PAUSE: ein tiefblaues Brett, Keramiksteine in Blau und Schwarz, eine goldene Krone für jede Dame und zwei Schalen, in die geschlagene Steine rollen. Der Computergegner denkt wie ein Schachprogramm, die Klänge sind dieselben feinen Keramik- und Holzklänge wie bei SPRING. Keine Werbung, kein Konto, offline spielbar.
+QUEEN bringt das klassische Damespiel in die ruhige Welt von MIND PAUSE: schwarzes Holz, Felder aus Ahorn und Ebenholz, Steine in Elfenbein und Ebenholz, feine Goldlinien und eine gravierte Goldkrone für jede Dame. Geschlagene Steine rollen in zwei Schalen. Wer es lieber farbig mag, wählt das tiefblaue Brett Mitternacht. Der Computergegner denkt wie ein Schachprogramm, die Klänge sind dieselben feinen Holz- und Keramikklänge wie bei SPRING. Keine Werbung, kein Konto, offline spielbar.
 
 ## Highlights
 
@@ -29,7 +29,8 @@ QUEEN bringt das klassische Damespiel in die ruhige Welt von MIND PAUSE: ein tie
 | **Deutsche Dame** | 8×8, Steine schlagen auch rückwärts, fliegende Damen, Schlagpflicht, Mehrfachschlag |
 | **Drei Computerstufen** | Leicht, Mittel, Schwer. Der Computer rechnet im Hintergrund, die Oberfläche bleibt flüssig |
 | **Zu zweit** | Zwei Personen an einem Gerät, auf Wunsch dreht sich das Brett nach jedem Zug |
-| **Goldene Krone** | Wer die Grundreihe erreicht, wird mit einer Krone und einem Glockenton zur Dame |
+| **Gravierte Krone** | Wer die Grundreihe erreicht, wird zur Dame: Eine Königinnenkrone in feiner Goldgravur erscheint, dazu ein Glockenton |
+| **Zwei Brettstile** | Klassik mit Ebenholz, Ahorn und goldenen Koordinaten oder Mitternacht in Tiefblau |
 | **Zwei Schalen** | Geschlagene Steine rollen in die Schale ihrer Gegenseite. Antippen, wischen, neigen |
 | **Tipps** | Der Computer zeigt dir auf Wunsch den besten Zug |
 | **Sterne** | Bis zu drei Sterne pro Stufe, je nach Zahl der Siege |
@@ -38,7 +39,7 @@ QUEEN bringt das klassische Damespiel in die ruhige Welt von MIND PAUSE: ein tie
 
 ## So wird gespielt
 
-1. Blau beginnt. Steine ziehen ein Feld diagonal vorwärts.
+1. Weiß beginnt (im Stil Mitternacht Blau). Steine ziehen ein Feld diagonal vorwärts.
 2. Geschlagen wird, indem man über einen gegnerischen Stein auf das freie Feld dahinter springt, vorwärts wie rückwärts. **Schlagen ist Pflicht.**
 3. Wer die gegnerische Grundreihe erreicht, wird zur Dame und zieht über beliebig viele freie Felder.
 4. Wer nicht mehr ziehen kann, hat verloren.
@@ -88,6 +89,7 @@ queen/
 │  ├─ game.js              Spielstand, Zurück, Spielende, Remis
 │  ├─ ai.js                Computergegner
 │  ├─ ai-worker.js         rechnet den Computer im Hintergrund
+│  ├─ themes.js            Brettstile Klassik und Mitternacht, Kronengravur
 │  ├─ view.js              Brett, Steine, Krone, Schalen, Eingabe
 │  └─ sound.js             Klänge von QUEEN
 ├─ icons/                  App-Symbole
@@ -99,4 +101,4 @@ queen/
 
 ## Version
 
-Aktuelle Version: **1.0.0**. Siehe [Changelog](CHANGELOG.de.md).
+Aktuelle Version: **1.1.0**. Siehe [Changelog](CHANGELOG.de.md).

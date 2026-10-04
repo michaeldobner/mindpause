@@ -1,18 +1,19 @@
 // QUEEN: Deutsche Dame gegen den Computer oder zu zweit an einem Gerät.
 // Die Oberfläche kommt aus der Hülle (shared/js/shell.js), hier steht nur, was QUEEN eigen ist.
 
-import { createShell } from '../../shared/js/shell.js?shell=1.1.0';
-import { createI18n } from '../../shared/js/i18n.js?shell=1.1.0';
-import { createStorage } from '../../shared/js/storage.js?shell=1.1.0';
-import { DEFAULT_STYLE } from '../../shared/js/sound-engine.js?shell=1.1.0';
-import { Tilt } from '../../shared/js/tilt.js?shell=1.1.0';
-import { BLUE, BLACK } from './rules.js?v=1.0.0';
-import { Game } from './game.js?v=1.0.0';
-import { QueenView } from './view.js?v=1.0.0';
-import { QueenSound } from './sound.js?v=1.0.0';
-import { QUEEN_STRINGS } from './strings.js?v=1.0.0';
+import { createShell } from '../../shared/js/shell.js?shell=1.2.0';
+import { createI18n } from '../../shared/js/i18n.js?shell=1.2.0';
+import { createStorage } from '../../shared/js/storage.js?shell=1.2.0';
+import { DEFAULT_STYLE } from '../../shared/js/sound-engine.js?shell=1.2.0';
+import { Tilt } from '../../shared/js/tilt.js?shell=1.2.0';
+import { BLUE, BLACK } from './rules.js?v=1.1.0';
+import { Game } from './game.js?v=1.1.0';
+import { QueenView } from './view.js?v=1.1.0';
+import { QueenSound } from './sound.js?v=1.1.0';
+import { THEMES, THEME_IDS, DEFAULT_THEME } from './themes.js?v=1.1.0';
+import { QUEEN_STRINGS } from './strings.js?v=1.1.0';
 
-export const VERSION = '1.0.0';
+export const VERSION = '1.1.0';
 
 const MODES = [
   { id: 'easy', computer: true, difficulty: 1 },
@@ -34,6 +35,7 @@ let stats = load('stats', {});
 let mode = MODES.find((m) => m.id === load('mode', 'medium')) || MODES[1];
 const game = new Game();
 let flipWanted = load('flip', false);
+let theme = THEME_IDS.includes(load('theme', DEFAULT_THEME)) ? load('theme', DEFAULT_THEME) : DEFAULT_THEME;
 let previousGame = null; // Neu startet sofort, Zurück holt das alte Spiel zurück
 let aiRequest = 0;
 let thinking = false;
@@ -66,6 +68,7 @@ const shell = createShell({
   buttons: ['undo', 'hint', 'restart', 'levels', 'settings'],
   levels: { buttonKey: 'modes', titleKey: 'chooseMode', nextKey: 'nextLevel' },
   settings: [
+    { id: 'theme', nameKey: 'theme', options: THEME_IDS.map((id) => ({ value: id, labelKey: `themes.${id}` })) },
     { id: 'flip', nameKey: 'flip', textKey: 'flipText' },
     { id: 'tilt', nameKey: 'tilt', textKey: 'tiltText' },
   ],
@@ -83,7 +86,7 @@ const shell = createShell({
       if (MODES[i + 1] && MODES[i + 1].computer) switchMode(MODES[i + 1].id);
     },
     selectLevel: switchMode,
-    setting: (id) => (id === 'tilt' ? toggleTilt() : toggleFlip()),
+    setting: (id, value) => (id === 'theme' ? setTheme(value) : id === 'tilt' ? toggleTilt() : toggleFlip()),
   },
   onGesture: reconnectTilt,
 });
@@ -100,15 +103,22 @@ const view = new QueenView(shell.board, {
   crown: () => sound.crown(),
   rim: () => sound.rim(),
   clack: (i) => sound.clack(i),
-});
+}, theme);
 view.setGame(game);
 view.setFlip(boardFlipped());
 
 tilt = new Tilt((x, y) => view.setGravity(x, y), load('tilt', false));
 shell.setSetting('tilt', tilt.wanted);
 shell.setSetting('flip', flipWanted);
+shell.setSetting('theme', theme);
 
 // ---------- Anzeige ----------
+
+// Farbname einer Seite im aktuellen Brettstil: Blau oder Weiß unten, Schwarz oben
+function sideName(side) {
+  const { p1, p2 } = THEMES[theme].sides;
+  return t(`side.${side === BLUE ? p1 : p2}`);
+}
 
 function boardFlipped() {
   return mode.id === 'duo' && flipWanted && game.turn === BLACK;
@@ -116,7 +126,7 @@ function boardFlipped() {
 
 function updateHud() {
   const { blue, black } = game.counts;
-  const label = game.isOver ? t('over') : thinking ? t('thinkingTurn') : t(`turn.${game.turn === BLUE ? 'blue' : 'black'}`);
+  const label = game.isOver ? t('over') : t(thinking ? 'thinkingTurn' : 'turn', { side: sideName(game.turn) });
   shell.setCounter(`${blue}:${black}`, label);
   shell.setDisabled('undo', game.history.length === 0 && !(previousGame && previousGame.mode === mode.id));
   shell.setDisabled('hint', game.isOver || (mode.computer && game.turn !== HUMAN));
@@ -143,13 +153,13 @@ function modePreview(m) {
       squares += `<rect x="${7 + c * 14}" y="${7 + r * 14}" width="14" height="14" class="${(r + c) % 2 ? 'd' : 'l'}"/>`;
     }
   }
+  // Steine nur auf dunklen Feldern (Zeile plus Spalte ungerade)
   const disc = (x, y, cls) => `<circle cx="${x}" cy="${y}" r="5" class="${cls}"/>`;
+  const crownAt = (x, y) => `<path d="M ${x - 6} ${y + 3} L ${x - 7} ${y - 3} L ${x - 3} ${y} L ${x} ${y - 5} L ${x + 3} ${y} L ${x + 7} ${y - 3} L ${x + 6} ${y + 3} Z" class="g"/>`;
   const stones = m.computer
-    ? disc(28, 14, 'k') + disc(14, 28, 'k') + disc(42, 42, 'b') + disc(56, 56, 'b') + (m.id === 'hard' ? disc(42, 14, 'k') : '')
-    : disc(14, 14, 'k') + disc(28, 28, 'k') + disc(42, 42, 'b') + disc(56, 56, 'b');
-  const crown = m.id === 'hard' || m.id === 'duo'
-    ? '<path d="M 50 49 L 49 43 L 53 46 L 56 41 L 59 46 L 63 43 L 62 49 Z" class="g"/>'
-    : '';
+    ? disc(28, 14, 'k') + disc(14, 28, 'k') + disc(42, 56, 'b') + disc(56, 42, 'b') + (m.id === 'hard' ? disc(56, 14, 'k') : '')
+    : disc(28, 14, 'k') + disc(42, 28, 'k') + disc(14, 56, 'b') + disc(42, 56, 'b');
+  const crown = m.id === 'hard' ? crownAt(56, 42) : m.id === 'duo' ? crownAt(42, 56) : '';
   return `<svg viewBox="0 0 70 70" aria-hidden="true"><rect x="2" y="2" width="66" height="66" rx="10" class="plate"/>${squares}${stones}${crown}</svg>`;
 }
 
@@ -201,7 +211,7 @@ async function computerMove() {
 
 let worker = null;
 function askAI(level) {
-  if (!worker) worker = new Worker(new URL('./ai-worker.js?v=1.0.0', import.meta.url), { type: 'module' });
+  if (!worker) worker = new Worker(new URL('./ai-worker.js?v=1.1.0', import.meta.url), { type: 'module' });
   const id = Math.random();
   return new Promise((resolve) => {
     const onMessage = (e) => {
@@ -247,7 +257,9 @@ function checkEnd() {
     [title, text] = t(won ? 'won' : 'lost');
     highlight = won;
   } else {
-    [title, text] = t(result.winner === BLUE ? 'blueWins' : 'blackWins');
+    const [win, stuck] = t('sideWins');
+    title = win.replace('{side}', sideName(result.winner));
+    text = stuck.replace('{side}', sideName(-result.winner));
     highlight = true;
   }
   if (!counted) {
@@ -348,10 +360,28 @@ async function switchMode(id) {
 
 // ---------- Einstellungen ----------
 
+// Brettstil wechseln: das Brett blendet kurz aus und im neuen Stil wieder ein, das Spiel läuft weiter
+function setTheme(id) {
+  if (!THEME_IDS.includes(id) || id === theme) return;
+  theme = id;
+  save('theme', theme);
+  shell.setSetting('theme', theme);
+  document.body.dataset.theme = theme;
+  const board = shell.board;
+  board.style.transition = 'opacity 160ms ease';
+  board.style.opacity = '0';
+  setTimeout(() => {
+    view.setTheme(theme);
+    updateHud();
+    board.style.opacity = '1';
+  }, 170);
+}
+
 function toggleFlip() {
   flipWanted = !flipWanted;
   save('flip', flipWanted);
   shell.setSetting('flip', flipWanted);
+shell.setSetting('theme', theme);
   view.setFlip(boardFlipped());
 }
 
@@ -383,6 +413,7 @@ function reconnectTilt() {
 
 // ---------- Start ----------
 
+document.body.dataset.theme = theme;
 updateHud();
 setTimeout(() => shell.showCoach(), 900);
 if (mode.computer && game.turn !== HUMAN && !game.isOver) computerMove();
