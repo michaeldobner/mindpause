@@ -20,6 +20,6 @@
 | Technology | HTML, CSS, JavaScript modules, SVG, Canvas, Web Audio, no framework, no build step |
 | Collection | Part of [MIND PAUSE](../../../README.md), interface from the [shell](../../../shared/README.md) |
 | Address | https://michaeldobner.github.io/mindpause/karo/ |
-| Version | 1.0.2 |
+| Version | 1.0.4 |
 
 <img src="../images/ipad-de.jpg" width="700" alt="iPad in landscape">

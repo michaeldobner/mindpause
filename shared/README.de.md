@@ -197,6 +197,11 @@ Für den Browser-Test stellt jedes Spiel `window.__game` bereit, mindestens mit:
 * `history`: Zahl der bisherigen Züge
 * `e2e.move()`: spielt einen gültigen Zug (zum Beispiel den Tipp)
 
+Optional:
+
+* `e2e.checks`: eigene Prüfungen als `{ name: async () => true }`. Alles außer `true` gilt als Fehler und wird mit dem Rückgabewert gemeldet.
+* `e2e.looks()`: Stellen auf dem Bildschirm `{ label, x, y, w, h }`, die auf dem Bildschirmfoto hell aussehen müssen. So fallen Darstellungsfehler des Browsers auf, die im Code nicht zu sehen sind.
+
 ## Offline und Versionen
 
 * Jedes Spiel hat eigene `sw.js` und `manifest.webmanifest` und lässt sich als eigene App installieren.

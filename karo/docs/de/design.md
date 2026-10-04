@@ -9,7 +9,7 @@ Ein **hochwertiges Kartenspiel, das auf einer Leinenmatte liegt.** Vorbild sind 
 | Grundsatz | Bedeutung |
 |---|---|
 | **Lesbarkeit zuerst** | Der Index oben links ist groß genug, um auch im schmalen Streifen der Spalten lesbar zu sein |
-| **Greifbarkeit** | Weiche Schatten, Drehung beim Aufdecken, Karten fliegen über die anderen |
+| **Greifbarkeit** | Weiche Schatten, die Karte wendet sich beim Aufdecken, Karten fliegen über die anderen |
 | **Ruhe** | Kurze, weiche Bewegungen. Die Siegesfeier ist eine langsame Hommage, kein Feuerwerk |
 | **Verlässlichkeit** | Ein Tipp genügt. Was versehentlich passiert, macht Zurück rückgängig |
 
@@ -86,7 +86,7 @@ Die Kartengröße ergibt sich aus dem Platz. Wird eine Spalte zu lang, rücken i
 | Vorgang | Dauer |
 |---|---|
 | Karte bewegen | 0,3 s, fliegt über den anderen |
-| Aufdecken | 0,32 s, Drehung in 3D |
+| Aufdecken | 0,3 s, flach: Die Karte wird schmal, wechselt in der Mitte die Seite und wird wieder breit. Bewusst ohne 3D, weil Safari bei 3D-Drehung hin und wieder die falsche Seite zeigt |
 | Geben | Karte für Karte im Abstand von 32 ms |
 | Automatisch beenden | eine Karte alle 120 ms |
 | Siegesfeier | eine Karte alle 240 ms, Schwerkraft, Abprallen, verblassende Spuren |

@@ -197,6 +197,11 @@ For the browser test every game provides `window.__game` with at least:
 * `history`: number of moves made so far
 * `e2e.move()`: plays one valid move (for example the hint)
 
+Optional:
+
+* `e2e.checks`: checks of its own as `{ name: async () => true }`. Anything other than `true` counts as a failure and is reported with the returned value.
+* `e2e.looks()`: places on screen `{ label, x, y, w, h }` that must look light on the screenshot. This catches browser rendering errors that cannot be seen in the code.
+
 ## Offline and versions
 
 * Every game has its own `sw.js` and `manifest.webmanifest` and installs as its own app.

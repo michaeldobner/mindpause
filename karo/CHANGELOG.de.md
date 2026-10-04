@@ -2,6 +2,18 @@
 
 Alle wichtigen Änderungen an KARO. [English](CHANGELOG.md)
 
+## 1.0.4 (2026-10-05)
+
+### Behoben
+* **Offene Karten zeigten hin und wieder ihre Rückseite** (iPhone und iPad). Ursache war die 3D-Drehung beim Aufdecken: Safari blendet die verborgene Seite dabei nicht immer zuverlässig aus. Das Aufdecken ist jetzt eine flache Animation, und es ist immer nur eine Seite sichtbar.
+
+### Verbessert
+* Eine eigene Grafikebene bekommen nur noch Karten, die sich gerade bewegen. Das spart Grafikspeicher.
+* Beim Zurückkehren zur App und beim Drehen des Geräts wird der Tisch einmal neu gezeichnet.
+
+### Technik
+* Neue Sichtprüfung im Browser-Test: Auf dem Bildschirmfoto muss bei jeder offenen Zahlkarte helles Papier zu sehen sein, nicht das Rautenmuster.
+
 ## 1.0.3 (2026-10-04)
 
 ### Verbessert

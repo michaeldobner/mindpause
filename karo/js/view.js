@@ -7,7 +7,7 @@
 //
 // Bedienung: Tippen legt eine Karte an den besten Platz, Ziehen geht auch.
 
-import { suitOf } from './cards.js?v=1.0.3';
+import { suitOf } from './cards.js?v=1.0.4';
 
 const TAP_SLOP = 8; // Pixel, ab denen aus einem Tippen ein Ziehen wird
 const RATIO = 1.4;
@@ -44,11 +44,8 @@ export class TableView {
     });
 
     this.bindInput();
-    new ResizeObserver(() => {
-      if (!this.game) return;
-      this.layout();
-      this.render({ animate: false });
-    }).observe(this.el);
+    // Größe geändert oder Gerät gedreht: alles neu zeichnen
+    new ResizeObserver(() => this.refresh()).observe(this.el);
   }
 
   slot(kind, inner = '') {
@@ -194,9 +191,20 @@ export class TableView {
       const key = `${Math.round(p.x)},${Math.round(p.y)}`;
       const moved = el.dataset.pos !== key;
       el.dataset.pos = key;
-      el.classList.toggle('up', p.up);
+      const turned = el.classList.contains('up') !== p.up;
       el.classList.toggle('gone', this.hidden.has(c));
       el.classList.remove('flying');
+      if (deal && p.up) {
+        // Beim Geben erst aufdecken, wenn die Karte in ihrer Spalte liegt
+        const i = dealOrder.get(c) ?? 0;
+        clearTimeout(el.flipTimer);
+        el.flipTimer = setTimeout(() => this.turn(el, true, true), i * 32 + 260);
+      } else if (turned) {
+        clearTimeout(el.flipTimer);
+        this.turn(el, p.up, animate);
+      }
+      // Eigene Grafikebene nur, solange sich die Karte bewegt
+      if (animate && moved) el.classList.add('moving');
       if (deal) {
         const i = dealOrder.get(c);
         el.style.transitionDelay = i === undefined ? '0ms' : `${i * 32}ms`;
@@ -213,6 +221,7 @@ export class TableView {
       this.cards.forEach((el, c) => {
         if (pos[c]) el.style.zIndex = String(pos[c].z);
         el.style.transitionDelay = '0ms';
+        el.classList.remove('moving');
       });
     }, deal ? 1400 : 320);
     if (!animate) {
@@ -221,6 +230,31 @@ export class TableView {
     }
     this.slots.stock.classList.toggle('empty', this.game.stock.length === 0);
     this.slots.stock.classList.toggle('blocked', this.game.stock.length === 0 && !this.game.canRecycle);
+  }
+
+  // Seite wechseln. Mit Animation wird die Karte schmal, wechselt in der Mitte die Seite
+  // und wird wieder breit (siehe karo.css). Ohne Animation sofort.
+  turn(el, up, animate) {
+    el.classList.toggle('up', up);
+    el.classList.remove('flip');
+    if (!animate) return;
+    void el.offsetWidth;
+    el.classList.add('flip');
+    clearTimeout(el.flipEnd);
+    el.flipEnd = setTimeout(() => el.classList.remove('flip'), 340);
+  }
+
+  // Den ganzen Tisch ohne Animation neu zeichnen. Hilft, falls der Browser beim Zusammenfassen
+  // von Grafikebenen etwas falsch dargestellt hat (Rückkehr zur App, Drehen, neues Spiel).
+  refresh() {
+    if (!this.game) return;
+    this.cards.forEach((el) => {
+      clearTimeout(el.flipTimer);
+      el.classList.remove('flip', 'moving');
+      el.dataset.pos = '';
+    });
+    this.layout();
+    this.render({ animate: false });
   }
 
   // Reihenfolge beim Geben: zuerst liegen alle Karten im Stapel, dann reihenweise auf die Spalten
@@ -238,7 +272,8 @@ export class TableView {
     this.el.classList.add('no-anim');
     const g = this.g;
     this.cards.forEach((el) => {
-      el.classList.remove('up');
+      clearTimeout(el.flipTimer);
+      el.classList.remove('up', 'flip');
       el.style.transform = `translate(${g.stock.x}px, ${g.stock.y}px)`;
       el.dataset.pos = '';
     });
@@ -302,7 +337,9 @@ export class TableView {
   flyCard(c, x, y) {
     const el = this.cards[c];
     if (!el.classList.contains('flying')) {
+      clearTimeout(el.flipTimer);
       el.classList.add('flying', 'up');
+      el.classList.remove('flip');
       el.style.transitionDelay = '0ms';
     }
     el.style.zIndex = '3000';
