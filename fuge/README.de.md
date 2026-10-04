@@ -127,4 +127,4 @@ fuge/
 
 ## Version
 
-Aktuelle Version: **1.0.0**. Siehe [Changelog](CHANGELOG.de.md).
+Aktuelle Version: **1.0.1**. Siehe [Changelog](CHANGELOG.de.md).

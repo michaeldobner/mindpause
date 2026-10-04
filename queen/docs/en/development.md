@@ -19,7 +19,7 @@ Then open QUEEN at `http://localhost:3000/queen/`. The language follows the brow
 | File | Checks |
 |---|---|
 | `queen/tests/rules.test.js` | Starting position, moving forwards only, capturing backwards too, mandatory capture, complete multiple capture, no double jump, flying queen with free landing, crowning, no crowning when the capture continues, end of game without moves |
-| `queen/tests/game.test.js` | Move and undo restore everything, piece numbers, draw by standstill and repetition, save and resume, longest capture path on tap, computer takes a winning capture, symmetric evaluation, **Medium clearly beats Easy** |
+| `queen/tests/game.test.js` | Move and undo restore everything, piece numbers, draw by standstill and repetition, save and resume, longest capture path on tap, computer takes a winning capture, symmetric evaluation, resigning, **Easy clearly beats Beginner, Medium clearly beats Easy** |
 | `queen/tests/themes.test.js` | Every board style defines the same gradients and patterns, names and side colours in both languages |
 | `shared/tests/gutter.test.js` | Among others the trays: walls, rest, 12 pieces fit, tilt pushes to the wall |
 | `shared/tests/tilt.test.js` | Gravity from device angles, the tilt switch |
@@ -30,7 +30,8 @@ The browser test `npm run e2e` opens QUEEN on iPhone, iPhone landscape, iPhone S
 
 ### Also check by hand
 
-1. All four modes, hint, undo while the computer is thinking, New followed by an immediate Undo.
+1. All five modes, hint, undo while the computer is thinking, New followed by an immediate Undo, resigning and Undo on the result card.
+2. The computer's move is easy to follow, last move marker in both styles.
 2. Multiple capture, crowning, flying queen.
 3. Two players with and without "Turn the board".
 4. Portrait and landscape, tapping and swiping the trays, tilt.

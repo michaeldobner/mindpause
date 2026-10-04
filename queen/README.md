@@ -4,7 +4,7 @@
 
 **German checkers for iPhone and iPad.**
 
-Against the computer on three levels or for two players on one device. Reach the far row and be crowned.
+Against the computer on four levels or for two players on one device. Reach the far row and be crowned.
 
 [**▶ Play now**](https://michaeldobner.github.io/mindpause/queen/) · [Deutsch](README.de.md) · [Documentation](docs/en/README.md) · [Changelog](CHANGELOG.md)
 
@@ -27,7 +27,9 @@ QUEEN brings the classic game of checkers into the calm world of MIND PAUSE: bla
 | | |
 |---|---|
 | **German checkers** | 8×8, pieces also capture backwards, flying queens, mandatory capture, multiple captures |
-| **Three computer levels** | Easy, Medium, Hard. The computer thinks in the background, the interface stays smooth |
+| **Four computer levels** | Beginner, Easy, Medium, Hard, carefully balanced against each other. Low levels overlook things like a person instead of suddenly giving pieces away |
+| **Calm computer moves** | The piece lifts and moves slowly, the last move stays subtly marked |
+| **Resign** | A button of its own, with confirmation, and it can be undone |
 | **Two players** | Two people on one device, optionally the board turns after every move |
 | **Engraved crown** | Reach the far row and become a queen: a queen's crown in fine gold engraving appears, with a bell tone |
 | **Two board styles** | Classic with ebony, maple and golden coordinates, or Midnight in deep blue |
@@ -92,6 +94,8 @@ queen/
 │  ├─ themes.js            Classic and Midnight board styles, crown engraving
 │  ├─ view.js              board, pieces, crown, trays, input
 │  └─ sound.js             QUEEN sounds
+├─ tools/
+│  └─ icons.mjs            generates the app icons
 ├─ icons/                  app icons
 ├─ sw.js                   offline support
 ├─ manifest.webmanifest    install as an app
@@ -101,4 +105,4 @@ queen/
 
 ## Version
 
-Current version: **1.1.0**. See the [changelog](CHANGELOG.md).
+Current version: **1.2.0**. See the [changelog](CHANGELOG.md).

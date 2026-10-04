@@ -106,4 +106,4 @@ Dieselbe Klang-Engine wie alle Spiele der Sammlung (`js/sound.js`).
 
 ## App-Symbol
 
-Das Mühlebrett in Gold auf schwarzem Holz, oben eine geschlossene Mühle aus drei Elfenbeinsteinen mit leuchtender Linie, dazu zwei Ebenholzsteine. Erzeugt mit `node muehle/tools/icons.mjs`.
+Gleiche Bildsprache wie die übrigen Symbole der Sammlung: kräftige Farbe ohne Rahmen, hier Petrol (`#1f6b73` nach `#0a2a2f`), Spielmaterial von oben, Licht von oben links. Darauf das Mühlebrett in Goldlinien, oben eine geschlossene Mühle aus drei Elfenbeinsteinen mit leuchtender Linie, dazu zwei Ebenholzsteine. Erzeugt mit `node muehle/tools/icons.mjs`.

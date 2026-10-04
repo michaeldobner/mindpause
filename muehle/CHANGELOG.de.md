@@ -23,7 +23,8 @@ Erste Version.
 * Geschlossene Mühlen leuchten als Goldlinie auf, Steine zum Nehmen pulsieren
 * Jede Seite hat eine Schale mit ihrem Vorrat und den genommenen Steinen, antippen, wischen, neigen
 * Brett drehen beim Spiel zu zweit (Einstellung)
+* App-Symbol in Petrol in der einheitlichen Bildsprache der Sammlung
 
 ### Technik
-* Aufgebaut auf der Hülle von MIND PAUSE 1.3.0
+* Aufgebaut auf der Hülle von MIND PAUSE 1.4.0
 * 22 Tests für Regeln, Spielstand, Remis, Computer und Brettstile, dazu eine eigene Prüfung im Browser-Test

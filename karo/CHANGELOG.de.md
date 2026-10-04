@@ -2,6 +2,11 @@
 
 Alle wichtigen Änderungen an KARO. [English](CHANGELOG.md)
 
+## 1.0.2 (2026-10-04)
+
+### Gestaltung
+* **Neues App-Symbol** im gemeinsamen Stil der Sammlung: sattes Filzgrün ohne Rahmen, zwei Rückseiten im Fächer und vorne in der Mitte das Karo-Ass mit großem Karo.
+
 ## 1.0.1 (2026-10-04)
 
 ### Behoben

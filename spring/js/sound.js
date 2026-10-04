@@ -1,7 +1,7 @@
 // Klänge von SPRING: Murmeln heben sich, springen und rollen in den Rand.
 // Baut auf der Klang-Engine der Hülle auf, die auch die Klänge im Rand (rim, clack) liefert.
 
-import { SoundEngine, stepFrequency } from '../../shared/js/sound-engine.js?shell=1.3.0';
+import { SoundEngine, stepFrequency } from '../../shared/js/sound-engine.js?shell=1.4.0';
 
 export class SpringSound extends SoundEngine {
   // Murmel anheben: fast unhörbares, weiches Tippen

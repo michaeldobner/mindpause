@@ -9,7 +9,7 @@
 // der Gegenseite genommen hat. Pro Zug verliert der Vorrat einen Stein und gewinnt höchstens einen
 // genommenen, eine Schale hält deshalb nie mehr als neun Steine.
 
-import { Gutter } from '../../shared/js/gutter.js?shell=1.3.0';
+import { Gutter } from '../../shared/js/gutter.js?shell=1.4.0';
 import { WHITE, BLACK, GRID, ADJACENT, POINTS, millsAt } from './rules.js?v=1.0.0';
 import { Game } from './game.js?v=1.0.0';
 import { THEMES, DEFAULT_THEME, millWheel } from './themes.js?v=1.0.0';

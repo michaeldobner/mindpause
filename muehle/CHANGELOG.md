@@ -23,7 +23,8 @@ First version.
 * Closed mills light up as a line of gold, pieces you may take pulse
 * Each side has a tray with its supply and the pieces it has taken: tap, swipe, tilt
 * Turn the board for two players (setting)
+* App icon in petrol in the shared visual language of the collection
 
 ### Technical
-* Built on the MIND PAUSE shell 1.3.0
+* Built on the MIND PAUSE shell 1.4.0
 * 22 tests for rules, game state, draws, computer and board styles, plus a check of its own in the browser test

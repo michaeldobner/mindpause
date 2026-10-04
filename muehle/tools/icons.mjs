@@ -1,6 +1,7 @@
-// Erzeugt das App-Symbol von MÜHLE: das Mühlebrett als Goldeinlage auf schwarzem Holz, oben eine
-// geschlossene Mühle aus drei Elfenbeinsteinen mit leuchtender Linie, unten zwei Ebenholzsteine.
-// Gleiche Farben wie der Brettstil Klassik (js/themes.js).
+// Erzeugt das App-Symbol von MÜHLE: das Mühlebrett in Goldlinien von oben, oben eine geschlossene
+// Mühle aus drei Elfenbeinsteinen mit leuchtender Linie, dazu zwei Ebenholzsteine.
+// Gleiche Bildsprache wie die Symbole von SPRING und QUEEN: kräftige Farbe ohne Rahmen (Petrol),
+// Spielmaterial von oben, Licht von oben links, weicher Schatten. Steine wie im Spiel (js/themes.js).
 // Schreibt icons/icon.svg und mit Playwright die PNG-Dateien.
 //
 //   node muehle/tools/icons.mjs
@@ -9,7 +10,7 @@ import { writeFileSync } from 'node:fs';
 
 const dir = new URL('../icons/', import.meta.url);
 const STEP = 56;
-const O = 88; // äußere Linie
+const O = 256 - 3 * STEP; // äußere Linie, das Brett steht mittig
 const at = (x, y) => [O + x * STEP, O + y * STEP];
 
 let lines = '';
@@ -18,8 +19,8 @@ for (let r = 0; r < 3; r++) {
   const size = (6 - 2 * r) * STEP;
   lines += `M${a} ${a} h${size} v${size} h${-size} Z `;
 }
-const [m0] = at(3, 0);
-lines += `M${m0} ${O} V${at(3, 2)[1]} M${m0} ${at(3, 4)[1]} V${at(3, 6)[1]} M${O} ${m0} H${at(2, 3)[0]} M${at(4, 3)[0]} ${m0} H${at(6, 3)[0]}`;
+const [m] = at(3, 0);
+lines += `M${m} ${O} V${at(3, 2)[1]} M${m} ${at(3, 4)[1]} V${at(3, 6)[1]} M${O} ${m} H${at(2, 3)[0]} M${at(4, 3)[0]} ${m} H${at(6, 3)[0]}`;
 
 const points = [];
 for (let r = 0; r < 3; r++) {
@@ -27,37 +28,39 @@ for (let r = 0; r < 3; r++) {
   for (const [x, y] of [[0, 0], [1, 0], [2, 0], [2, 1], [2, 2], [1, 2], [0, 2], [0, 1]]) points.push(at(r + x * s, r + y * s));
 }
 
-const stone = ([x, y], side) => {
-  const r = 27;
-  return `<g transform="translate(${x} ${y})">
-    <ellipse cx="3" cy="6" rx="${r * 1.1}" ry="${r}" fill="url(#s)"/>
-    <circle r="${r}" fill="url(#${side})"/>
-    ${side === 'k' ? `<circle r="${r - 1}" fill="none" stroke="#e9dcc0" stroke-opacity="0.32" stroke-width="1.6"/>` : ''}
-    <circle r="${r * 0.86}" fill="none" stroke="${side === 'w' ? '#a8916a' : '#7a7068'}" stroke-opacity="0.35" stroke-width="1.2"/>
-    <circle r="${r * 0.74}" fill="none" stroke="${side === 'w' ? '#a8916a' : '#7a7068'}" stroke-opacity="0.55" stroke-width="2"/>
-    <path d="M ${-r * 0.62} ${-r * 0.32} A ${r * 0.72} ${r * 0.72} 0 0 1 ${r * 0.32} ${-r * 0.62}" fill="none" stroke="#fff" stroke-opacity="${side === 'w' ? 0.7 : 0.55}" stroke-width="3.4" stroke-linecap="round"/>
+// Ein Stein mit Radius 44 wie im Spiel, Mitte im Ursprung, verkleinert aufs Raster
+const stone = ([x, y], side) => `<g transform="translate(${x} ${y}) scale(0.68)">
+    <use href="#sh"/><circle r="44" fill="url(#${side})"/>
+    ${side === 'p2' ? '<circle r="43" fill="none" stroke="#e9dcc0" stroke-opacity="0.32" stroke-width="1.6"/>' : ''}
+    <circle r="37.8" fill="none" stroke="${side === 'p1' ? '#a8916a' : '#7a7068'}" stroke-opacity="0.45" stroke-width="1.5"/>
+    <circle r="32.5" fill="none" stroke="${side === 'p1' ? '#a8916a' : '#7a7068'}" stroke-opacity="0.6" stroke-width="2.4"/>
+    <circle r="8" fill="none" stroke="${side === 'p1' ? '#a8916a' : '#7a7068'}" stroke-opacity="0.35" stroke-width="1.5"/>
+    <use href="#hl"/>
   </g>`;
-};
+
+const [mx0, my] = at(0, 0);
+const [mx1] = at(6, 0);
 
 const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
   <defs>
-    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1d1a17"/><stop offset="1" stop-color="#0f0d0c"/></linearGradient>
-    <linearGradient id="f" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2a241e"/><stop offset="1" stop-color="#1d1915"/></linearGradient>
-    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#e3c06a"/><stop offset="1" stop-color="#b68a2e"/></linearGradient>
-    <linearGradient id="mill" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#fff1c4"/><stop offset="1" stop-color="#e8c25c"/></linearGradient>
-    <radialGradient id="w" cx="38%" cy="32%" r="75%"><stop offset="0" stop-color="#fffaf0"/><stop offset="0.55" stop-color="#efe4cb"/><stop offset="1" stop-color="#cdb88f"/></radialGradient>
-    <radialGradient id="k" cx="38%" cy="32%" r="75%"><stop offset="0" stop-color="#57514c"/><stop offset="0.45" stop-color="#1b1816"/><stop offset="1" stop-color="#050404"/></radialGradient>
-    <radialGradient id="s" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#000" stop-opacity="0.6"/><stop offset="1" stop-color="#000" stop-opacity="0"/></radialGradient>
+    <radialGradient id="bg" cx="50%" cy="40%" r="70%"><stop offset="0" stop-color="#1f6b73"/><stop offset="1" stop-color="#0a2a2f"/></radialGradient>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ecca74"/><stop offset="1" stop-color="#c0943a"/></linearGradient>
+    <linearGradient id="mill" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="512" y2="0"><stop offset="0" stop-color="#fff4cf"/><stop offset="1" stop-color="#f0cf6e"/></linearGradient>
+    <radialGradient id="p1" cx="38%" cy="32%" r="75%"><stop offset="0" stop-color="#fffaf0"/><stop offset="0.55" stop-color="#efe4cb"/><stop offset="1" stop-color="#cdb88f"/></radialGradient>
+    <radialGradient id="p2" cx="38%" cy="32%" r="75%"><stop offset="0" stop-color="#57514c"/><stop offset="0.45" stop-color="#1b1816"/><stop offset="1" stop-color="#050404"/></radialGradient>
+    <radialGradient id="s" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#000" stop-opacity="0.5"/><stop offset="1" stop-color="#000" stop-opacity="0"/></radialGradient>
+    <radialGradient id="w" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#fff" stop-opacity="0.9"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient>
+    <g id="sh"><ellipse cx="4" cy="9" rx="50" ry="44" fill="url(#s)"/></g>
+    <g id="hl"><ellipse cx="-14" cy="-17" rx="16" ry="10" fill="url(#w)" transform="rotate(-30)"/></g>
   </defs>
   <rect width="512" height="512" fill="url(#bg)"/>
-  <rect x="40" y="40" width="432" height="432" rx="14" fill="url(#f)" stroke="#c9a24a" stroke-width="3"/>
-  <path d="${lines}" fill="none" stroke="#000" stroke-opacity="0.55" stroke-width="7" transform="translate(1 2)"/>
-  <path d="${lines}" fill="none" stroke="url(#g)" stroke-width="5.5" stroke-linecap="square"/>
-  ${points.map(([x, y]) => `<circle cx="${x}" cy="${y}" r="9" fill="#0b0a09" stroke="#d9b45a" stroke-width="2.4"/>`).join('')}
-  <path d="M${at(0, 0)[0]} ${O} H${at(6, 0)[0]}" stroke="url(#mill)" stroke-width="24" stroke-linecap="round" opacity="0.25"/>
-  <path d="M${at(0, 0)[0]} ${O} H${at(6, 0)[0]}" stroke="url(#mill)" stroke-width="7" stroke-linecap="round"/>
-  ${stone(at(0, 0), 'w')}${stone(at(3, 0), 'w')}${stone(at(6, 0), 'w')}
-  ${stone(at(2, 4), 'k')}${stone(at(5, 3), 'k')}
+  <path d="${lines}" fill="none" stroke="#000" stroke-opacity="0.35" stroke-width="7" transform="translate(1.5 2.5)"/>
+  <path d="${lines}" fill="none" stroke="url(#g)" stroke-width="6" stroke-linecap="square"/>
+  ${points.map(([x, y]) => `<circle cx="${x}" cy="${y}" r="9.5" fill="#082024" stroke="url(#g)" stroke-width="3"/>`).join('')}
+  <path d="M${mx0} ${my} H${mx1}" stroke="url(#mill)" stroke-width="26" stroke-linecap="round" opacity="0.3"/>
+  <path d="M${mx0} ${my} H${mx1}" stroke="url(#mill)" stroke-width="8" stroke-linecap="round"/>
+  ${stone(at(0, 0), 'p1')}${stone(at(3, 0), 'p1')}${stone(at(6, 0), 'p1')}
+  ${stone(at(2, 4), 'p2')}${stone(at(5, 3), 'p2')}
 </svg>
 `;
 

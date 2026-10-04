@@ -92,7 +92,8 @@ Schlagfolgen entstehen durch Tiefensuche: Von jedem Landefeld aus wird weiterges
 | `findMove(von, nach)` | Zug zu einer Eingabe. Führen mehrere Schlagwege zum selben Feld, gilt der längste |
 | `movesFrom(feld)`, `match(zug)` | Züge eines Steins, Zug des Computers dem eigenen Zug zuordnen |
 | `apply(zug)`, `undo()` | Zug ausführen und zurücknehmen |
-| `counts`, `result`, `isOver` | Zustand. `result` ist `null`, `{ winner }` oder `{ draw: 'repetition' \| 'quiet' }` |
+| `resign(seite)` | Die Seite gibt auf, `null` nimmt das Aufgeben zurück. Wird mit dem Spielstand gespeichert |
+| `counts`, `result`, `isOver` | Zustand. `result` ist `null`, `{ winner }`, `{ winner, resigned: true }` oder `{ draw: 'repetition' \| 'quiet' }` |
 | `pieceAt(feld)` | `{ id, side, king }` oder `null` |
 | `serialize()`, `restore(daten)` | Spielstand speichern und laden |
 
@@ -107,7 +108,7 @@ Der Computer sucht mit **Negamax und Alpha-Beta-Schnitt**, wie ein klassisches S
 | Schrittweise Vertiefung | Erst ein Halbzug, dann zwei und so weiter, bis Tiefe oder Zeit erreicht sind. Bei Zeitablauf gilt das Ergebnis der letzten vollständigen Tiefe |
 | Merkliste (Transpositionstabelle) | Bekannte Stellungen werden nicht doppelt berechnet, der beste Zug daraus wird zuerst probiert |
 | Zugsortierung | Bester bekannter Zug, dann Schläge mit vielen Steinen, dann Krönungen |
-| Ruhesuche | Steht am Ende der Suchtiefe ein Pflichtschlag an, wird bis zu acht Halbzüge weitergerechnet. So übersieht der Computer keine Schlagfolge |
+| Ruhesuche | Steht am Ende der Suchtiefe ein Pflichtschlag an, wird der Schlagabtausch weitergerechnet, je nach Stufe bis zu acht Halbzüge (`quiet`). Auf Schwer übersieht der Computer so keine Schlagfolge, niedrige Stufen sehen bewusst weniger weit |
 | Zufall unter gleich guten Zügen | Partien verlaufen nicht immer gleich |
 
 **Bewertung** einer Stellung aus Sicht einer Seite:
@@ -120,16 +121,30 @@ Der Computer sucht mit **Negamax und Alpha-Beta-Schnitt**, wie ein klassisches S
 | Stein oder Dame in der Mitte (4×4 Felder) | plus 8 |
 | Dame | 320 |
 | Weniger als 10 Steine auf dem Brett | Alles mal 1,15, damit Abtausch bei Vorsprung lohnt |
+| Klarer Vorsprung im Endspiel (höchstens 9 Steine, mindestens 150 Punkte vorne) | Damen des Stärkeren bekommen Punkte für Nähe zu den letzten gegnerischen Steinen, für die lange Diagonale und dafür, dass der Gegner wenige Züge hat. So wird ein gewonnenes Endspiel zügig beendet |
 
 **Stufen** (`LEVELS`):
 
-| Stufe | Tiefe | Zeit | Spielraum | Fehler |
-|---|---|---|---|---|
-| Leicht | 2 | 200 ms | 90 Punkte | 22 % zufälliger Zug |
-| Mittel | 5 | 500 ms | 12 Punkte | keine |
-| Schwer | bis 14 | 900 ms | 0 | keine |
+| Stufe | Tiefe | Ruhesuche | Zeit | Spielraum | Unaufmerksam |
+|---|---|---|---|---|---|
+| Einsteiger | 1 | 0 | 150 ms | 60 Punkte | immer |
+| Leicht | 2 | 1 | 250 ms | 35 Punkte | 50 % der Züge |
+| Mittel | 4 | 6 | 500 ms | 10 Punkte | 20 % der Züge |
+| Schwer | bis 14 | 8 | 900 ms | 0 | nie |
 
-Spielraum heißt: Gewählt wird zufällig unter allen Zügen, die höchstens so viele Punkte schlechter sind als der beste. Geprüft in den Tests: Mittel gewinnt deutlich gegen Leicht. Bei der Entwicklung gewann Mittel 10:0 gegen Leicht und Schwer 4:0 gegen Mittel.
+* **Spielraum:** Gewählt wird zufällig unter allen Zügen, die höchstens so viele Punkte schlechter sind als der beste.
+* **Unaufmerksam:** Ein solcher Zug wird wie auf Einsteiger gewählt, also nur mit Blick auf den eigenen Zug. Das bildet einen Menschen nach, der mal genau hinschaut und mal nicht. Einen absichtlich verschenkten Stein gibt es nicht, Fehler entstehen nur durch Übersehen.
+
+**Abstimmung.** Gemessen mit vielen Partien der Stufen gegeneinander:
+
+| Partie | Ergebnis |
+|---|---|
+| Einsteiger gegen zufällige Züge | etwa ausgeglichen (21:19) |
+| Leicht gegen Einsteiger | 34:6 |
+| Mittel gegen Leicht | 35:5 |
+| Schwer gegen Mittel | 12:0 |
+
+Die Tests prüfen bei jedem Push, dass Leicht klar gegen Einsteiger und Mittel klar gegen Leicht gewinnt.
 
 `chooseMove(brett, seite, stufe, { random, now })` liefert den Zug. Zufall und Uhr lassen sich für Tests ersetzen. Der Web Worker nimmt `{ id, board, side, level }` entgegen und antwortet mit `{ id, move }`, die Oberfläche bleibt dabei flüssig. Tipps nutzen denselben Worker mit der Stufe Schwer.
 
@@ -143,7 +158,9 @@ Spielraum heißt: Gewählt wird zufällig unter allen Zügen, die höchstens so 
 |---|---|
 | `setGame(game)` | Stellung ohne Animation setzen (App-Start) |
 | `sync(game)` | Jeden Stein animiert an seinen Platz bringen: nach Neu, Zurück, Moduswechsel |
-| `play(record)` | Zug animieren: Weg Feld für Feld springen, geschlagene Steine in die Schale, Krönung |
+| `play(record)` | Zug des Computers animieren: Stein hebt sich an, zieht langsam Sprung für Sprung, übersprungene Steine verblassen, dann Schale und Krönung |
+| `playNow(record, vonPos, { slow })` | Derselbe Ablauf direkt, für eigene Züge schnell, mit `slow` langsam |
+| `markLast(zug)` | Start- und Zielfeld des letzten Zugs dezent aufhellen (`url(#q-last)`), `null` entfernt die Markierung |
 | `toTray(id)` | Stein in die Schale der schlagenden Seite rollen |
 | `select(feld)`, `showHint(zug)` | Auswahl, Zielringe, Tippring |
 | `setFlip(an)` | Brett für das Spiel zu zweit drehen |
@@ -184,12 +201,13 @@ Maserung und Rautengitter entstehen als SVG-Muster aus Code, ohne Bilddateien.
 |---|---|
 | `humanMove(zug)` | Zug ausführen, speichern, animieren, dann `afterMove()` |
 | `afterMove()` | Anzeige, Spielende prüfen, beim Spiel zu zweit Brett drehen, sonst `computerMove()` |
-| `computerMove()` | Worker fragen, mindestens 450 ms Pause, Zug ausführen. Eine Anfragenummer verwirft veraltete Antworten nach Zurück, Neu oder Moduswechsel |
+| `computerMove()` | Worker fragen, mindestens 700 ms Pause, Zug ausführen und langsam zeigen. Eine Anfragenummer verwirft veraltete Antworten nach Zurück, Neu oder Moduswechsel |
 | `hint()` | Besten Zug für die Seite am Zug zeigen |
 | `checkEnd()` | Ergebniskarte, Statistik, Sterne, Klang |
 | `newGame()` | Neues Spiel. Das alte bleibt für ein sofortiges Zurück erhalten |
 | `undo()` | Gegen den Computer bis zum letzten eigenen Zug zurück, rechnender Computer wird abgebrochen |
 | `switchMode(id)` | Modus wechseln, immer mit neuem Spiel |
+| `resign()` | Rückfrage über `shell.confirm()`, dann `game.resign(seite)` und Ergebniskarte. Zurück nimmt das Aufgeben und den Eintrag in der Statistik zurück |
 | `setTheme(id)` | Brettstil wechseln und speichern, Brett blendet weich über |
 | `sideName(seite)` | Farbname einer Seite im aktuellen Stil für Kopfzeile und Ergebniskarte |
 

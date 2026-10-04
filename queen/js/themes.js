@@ -51,6 +51,8 @@ export const THEMES = {
       linear('q-dark', [[0, '#2a241e'], [1, '#1d1915']], 1, 1),
       grain('q-sq-grain', '#7a5a2a', 0.16, 3),
       solid('q-coord', '#c9a24a'),
+      // Letzter Zug: Felder werden nur leicht heller
+      solid('q-last', '#f6e3b4', 0.13),
       // Elfenbein: gedrechseltes Holz, matt mit weichem Licht
       radial('q-p1', [[0, '#fffaf0'], [0.55, '#efe4cb'], [1, '#cdb88f']]),
       solid('q-p1-ring', '#a8916a', 0.55),
@@ -83,6 +85,7 @@ export const THEMES = {
       radial('q-dark', [[0, '#1b1f5a'], [1, '#121547']], '50%', '40%', '75%'),
       empty('q-sq-grain'),
       solid('q-coord', '#000', 0),
+      solid('q-last', '#c8d4ff', 0.12),
       radial('q-p1', [[0, '#86abff'], [0.5, '#3f6ef0'], [1, '#2142b4']]),
       solid('q-p1-ring', '#9bb8ff', 0.45),
       solid('q-p1-ring2', '#000', 0),

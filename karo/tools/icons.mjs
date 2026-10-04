@@ -1,4 +1,5 @@
-// Erzeugt das App-Symbol von KARO: drei aufgefächerte Karten auf der Schiefermatte.
+// Erzeugt das App-Symbol von KARO: drei aufgefächerte Karten auf grünem Filz, vorne in der Mitte das Karo-Ass.
+// Gleiche Bildsprache wie das Symbol von SPRING: kräftiger Grund ohne Rahmen, Motiv groß in der Mitte.
 // Schreibt icons/icon.svg und mit Playwright die PNG-Dateien.
 //
 //   node karo/tools/icons.mjs
@@ -10,19 +11,21 @@ const inner = (svg) => svg.replace(/^<svg[^>]*>/, '').replace(/<\/svg>$/, '');
 // Die Ids beider Karten getrennt halten, damit sich die Symbole nicht überschreiben
 const card = (c, prefix) => inner(cardSvg(c, 'en')).replaceAll('karo-', `${prefix}-`);
 
-const place = (content, angle) => `<g transform="rotate(${angle} 256 470)"><svg x="146" y="96" width="220" height="308" viewBox="0 0 250 350">${content}</svg></g>`;
+// Vorne das Karo-Ass, das Karo größer als im Spiel, damit es auch klein noch trägt
+const ace = `${card(39, 'c')}<use href="#c-suit-3" x="50" y="100" width="150" height="150" fill="#c8382b"/>`;
+
+const place = (content, angle, dy = 0) => `<g transform="rotate(${angle} 256 470)"><svg x="148" y="${104 + dy}" width="216" height="302" viewBox="0 0 250 350">${content}</svg></g>`;
 
 const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
   <defs>
-    <radialGradient id="bg" cx="50%" cy="30%" r="80%"><stop offset="0" stop-color="#31434a"/><stop offset="0.6" stop-color="#26343a"/><stop offset="1" stop-color="#172025"/></radialGradient>
-    <filter id="sh" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="6" stdDeviation="8" flood-color="#000" flood-opacity="0.35"/></filter>
+    <radialGradient id="bg" cx="50%" cy="40%" r="70%"><stop offset="0" stop-color="#22805c"/><stop offset="1" stop-color="#0b3624"/></radialGradient>
+    <filter id="sh" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="6" stdDeviation="8" flood-color="#021a10" flood-opacity="0.5"/></filter>
   </defs>
   <rect width="512" height="512" fill="url(#bg)"/>
-  <rect x="22" y="22" width="468" height="468" rx="20" fill="none" stroke="#c9a961" stroke-opacity="0.35" stroke-width="2"/>
   <g filter="url(#sh)">
-    ${place(card(null, 'a'), -15)}
-    ${place(card(null, 'b'), 0)}
-    ${place(card(24, 'c'), 15)}
+    ${place(card(null, 'a'), -13, 16)}
+    ${place(card(null, 'b'), 13, 16)}
+    ${place(ace, 0)}
   </g>
 </svg>
 `;

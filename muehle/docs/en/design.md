@@ -62,4 +62,4 @@ Lift: soft tap. Place and move: ceramic on wood, brighter as the game goes on. M
 
 ## App icon
 
-The morris board in gold on black wood, a closed mill of three ivory pieces at the top with a glowing line, two ebony pieces. Generated with `node muehle/tools/icons.mjs`.
+Same visual language as the other icons of the collection: a strong colour without a frame, here petrol (`#1f6b73` to `#0a2a2f`), game material seen from above, light from the top left. On it the morris board in gold lines, a closed mill of three ivory pieces at the top with a glowing line, two ebony pieces. Generated with `node muehle/tools/icons.mjs`.

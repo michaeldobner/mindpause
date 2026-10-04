@@ -41,6 +41,7 @@ QUEEN prüft alle Regeln selbst. Du kannst keinen ungültigen Zug machen, und da
 | Sieg | Die Gegenseite kann nicht mehr ziehen, weil sie keine Steine mehr hat oder alle blockiert sind |
 | Remis durch Wiederholung | Dieselbe Stellung mit derselben Seite am Zug entsteht zum dritten Mal |
 | Remis durch Stillstand | 30 Halbzüge in Folge, in denen nur Damen ziehen und nichts geschlagen wird |
+| Aufgeben | Eine Seite gibt auf, die andere gewinnt |
 
 Ein Halbzug ist der Zug einer Seite. 30 Halbzüge sind also 15 Züge je Seite.
 
@@ -48,8 +49,9 @@ Ein Halbzug ist der Zug einer Seite. 30 Halbzüge sind also 15 Züge je Seite.
 
 | Modus | Gegner | Spielweise |
 |---|---|---|
-| **Leicht** | Computer | Rechnet zwei Halbzüge voraus, wählt locker unter guten Zügen und macht ab und zu einen menschlichen Fehler. Gut zum Lernen |
-| **Mittel** | Computer | Rechnet fünf Halbzüge voraus und wählt fast immer einen der besten Züge. Ein ernsthafter Gegner |
+| **Einsteiger** | Computer | Schaut nur auf den eigenen Zug, nie auf deine Antwort. Lässt Steine ungeschützt stehen und fällt auf einfache Schlagfallen herein. Zum Lernen der Regeln |
+| **Leicht** | Computer | Schaut zwei Halbzüge voraus, übersieht aber oft, was nach einem Schlag folgt, und ist jeden zweiten Zug unaufmerksam. Für Gelegenheitsspiele |
+| **Mittel** | Computer | Rechnet vier Halbzüge voraus und Schlagabtausch meist zu Ende, ist aber ab und zu unaufmerksam. Ein ernsthafter Gegner |
 | **Schwer** | Computer | Rechnet so tief, wie es in knapp einer Sekunde geht, und spielt immer den besten gefundenen Zug |
 | **Zu zweit** | Mensch | Zwei Personen spielen abwechselnd an einem Gerät |
 
@@ -57,7 +59,11 @@ Den Modus wählst du jederzeit über die Schaltfläche **Modi** (auf dem iPad qu
 
 <img src="../images/iphone-modes-de.jpg" width="260" alt="Modus wählen">
 
-Während der Computer rechnet, steht oben „Schwarz denkt“. Er braucht mindestens eine knappe halbe Sekunde, damit sein Zug gut zu verfolgen ist.
+Die Stufen sind so abgestimmt, dass jede die nächstschwächere klar schlägt, in Testpartien in rund 85 bis 90 % der Spiele. Die Fehler der niedrigen Stufen sollen menschlich wirken: Der Computer übersieht Dinge, er verschenkt nicht plötzlich absichtlich einen Stein.
+
+### Der Zug des Computers
+
+Während der Computer rechnet, steht oben „Schwarz denkt“, mindestens 0,7 Sekunden lang. Dann hebt sich der Stein, der ziehen wird, sichtbar an und zieht ruhig ins Ziel, bei einem Mehrfachschlag Sprung für Sprung. Jeder übersprungene Stein verblasst sofort und rollt danach in die Schale. Start- und Zielfeld des letzten Zugs bleiben dezent aufgehellt, bis wieder gezogen wird. So lässt sich jeder Zug auch nach einem kurzen Wegschauen nachvollziehen.
 
 ## Sterne und Statistik
 
@@ -71,7 +77,7 @@ Sterne gibt es für Siege gegen den Computer, je Stufe getrennt:
 
 Zu jedem Modus zählt QUEEN Spiele, Siege, Niederlagen und Remis. Beim Spiel zu zweit gibt es keine Sterne, die Ergebniskarte nennt die Siegerfarbe.
 
-Gewinnst du gegen Leicht oder Mittel, bietet die Ergebniskarte **Nächste Stufe** an.
+Gewinnst du gegen Einsteiger, Leicht oder Mittel, bietet die Ergebniskarte **Nächste Stufe** an.
 
 <img src="../images/iphone-result-de.jpg" width="260" alt="Ergebniskarte nach einem Sieg">
 
@@ -95,12 +101,13 @@ Führen zwei verschiedene Schlagwege zum selben Endfeld, wählt QUEEN den Weg, d
 | **Zurück** | Nimmt den letzten eigenen Zug zurück, gegen den Computer samt seiner Antwort. Rechnet der Computer gerade, bricht Zurück die Rechnung ab |
 | **Tipp** | Der Computer rechnet auf der Stufe Schwer den besten Zug für die Seite am Zug und zeigt ihn mit einem goldenen Ring |
 | **Neu** | Beginnt sofort ein neues Spiel im selben Modus. Wer sich vertippt hat, holt mit Zurück das alte Spiel wieder |
+| **Aufgeben** | Beendet die Partie nach einer Rückfrage. Gegen den Computer zählt das als Niederlage, zu zweit gibt die Seite am Zug auf. Zurück auf der Ergebniskarte nimmt das Aufgeben zurück, samt Eintrag in der Statistik |
 | **Modi** | Öffnet die Auswahl der Modi |
 | **Mehr** | Öffnet die Einstellungen |
 
 ### Spielstand
 
-QUEEN speichert jeden Zug. Schließt du die App mitten im Spiel, geht es beim nächsten Öffnen an derselben Stelle weiter, im selben Modus. Zurück reicht danach bis zu dieser fortgesetzten Stellung. Beim allerersten Start ist der Modus Mittel gewählt.
+QUEEN speichert jeden Zug. Schließt du die App mitten im Spiel, geht es beim nächsten Öffnen an derselben Stelle weiter, im selben Modus. Zurück reicht danach bis zu dieser fortgesetzten Stellung. Beim allerersten Start ist der Modus Leicht gewählt.
 
 ## Die Schalen
 

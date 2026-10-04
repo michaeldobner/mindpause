@@ -7,25 +7,26 @@
 1. Add an entry to `LEVELS` in `queen/js/ai.js`:
 
 ```js
-expert: { depth: 20, time: 2000, noise: 0, blunder: 0 },
+expert: { depth: 20, quiet: 10, time: 2000, noise: 0 },
 ```
 
 | Value | Meaning |
 |---|---|
 | `depth` | Maximum search depth in plies |
 | `time` | Time budget in milliseconds |
+| `quiet` | How many plies a running exchange is calculated further at the end of the search |
 | `noise` | Margin in points: the move is chosen at random among moves at most that much worse than the best |
-| `blunder` | Share of moves chosen completely at random |
+| `careless` | Optional: share of careless moves that, as at Beginner, only look at the own move |
 
 2. Add the mode to `MODES` in `queen/js/main.js`, with `computer: true` and a difficulty from 1 to 5.
 3. Names under `mode` and `modeLabel` in `queen/js/strings.js` in both languages.
-4. Use the example from [Development](development.md#checking-playing-strength) to check that the new level clearly beats the next weaker one.
+4. Use the example from [Development](development.md#checking-playing-strength) to check that the new level clearly beats the next weaker one, but not always. 80 to 90 % wins have proven right.
 
 ## Better evaluation
 
 `evaluate()` in `queen/js/ai.js` is deliberately simple. Proven additions from checkers software:
 
-* **Mobility:** number of own moves minus number of opposing moves.
+* **Mobility:** number of own moves minus number of opposing moves. It is already used in endgames with a clear lead.
 * **Protected pieces:** pieces with an own piece behind them cannot be captured.
 * **Runaway to the crown:** a piece with a free path to the back row is almost a queen.
 * **Endgame knowledge:** three queens beat one, one queen against one is a draw.
@@ -84,6 +85,7 @@ The game logic is ready for this: a move is fully described by `{ from, path }` 
 |---|---|---|
 | 1.0 | German checkers, three computer levels, two players, crown, trays, hints, stars, bilingual | Done |
 | 1.1 | Classic and Midnight board styles, engraved queen's crown | Done |
-| 1.2 | Move by link for playing on two devices | Planned |
+| 1.2 | Four levels with Beginner, resign, calm computer moves, last move marker | Done |
+| 1.3 | Move by link for playing on two devices | Planned |
 | 1.x | Better evaluation, Master level, replaying a game | Planned |
 | 2.0 | Live with a room code | Idea |

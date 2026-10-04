@@ -2,6 +2,13 @@
 
 Alle wichtigen Änderungen an der Hülle von MIND PAUSE. [English](CHANGELOG.md)
 
+## 1.4.0 (2026-10-04)
+
+### Neu
+* Schaltfläche `resign` (Aufgeben, Symbol Fahne) für die Steuerleiste. Bis zu sechs Schaltflächen, bei sechs werden sie etwas kleiner und passen auch auf das iPhone SE und ins Querformat.
+* `confirm({ title, text, ok, cancel })`: Rückfrage als Karte auf dem Brett, liefert `true` oder `false`. Escape bricht ab.
+* Neue Texte „Aufgeben“ und „Abbrechen“ in beiden Sprachen.
+
 ## 1.3.0 (2026-10-04)
 
 Bausteine für FUGE, die allen Spielen zur Verfügung stehen. Bestehende Spiele verhalten sich unverändert.

@@ -19,7 +19,7 @@ Danach QUEEN unter `http://localhost:3000/queen/` öffnen. Die Sprache folgt der
 | Datei | Prüft |
 |---|---|
 | `queen/tests/rules.test.js` | Startstellung, Ziehen nur vorwärts, Schlagen auch rückwärts, Schlagpflicht, vollständiger Mehrfachschlag, kein doppeltes Überspringen, fliegende Dame mit freier Landung, Krönung, kein Krönen bei weiterem Schlag, Spielende ohne Züge |
-| `queen/tests/game.test.js` | Zug und Zurück stellen alles wieder her, Steinnummern, Remis durch Stillstand und Wiederholung, Speichern und Fortsetzen, längster Schlagweg beim Antippen, Computer nimmt gewinnbringenden Schlag, symmetrische Bewertung, **Mittel gewinnt deutlich gegen Leicht** |
+| `queen/tests/game.test.js` | Zug und Zurück stellen alles wieder her, Steinnummern, Remis durch Stillstand und Wiederholung, Speichern und Fortsetzen, längster Schlagweg beim Antippen, Computer nimmt gewinnbringenden Schlag, symmetrische Bewertung, Aufgeben, **Leicht gewinnt deutlich gegen Einsteiger, Mittel deutlich gegen Leicht** |
 | `queen/tests/themes.test.js` | Jeder Brettstil definiert dieselben Verläufe und Muster, Namen und Seitenfarben in beiden Sprachen |
 | `shared/tests/gutter.test.js` | Unter anderem die Schalen: Wände, Ruhe, 12 Steine passen hinein, Neigen schiebt zur Wand |
 | `shared/tests/tilt.test.js` | Schwerkraft aus Gerätewinkeln, Schalter für Neigen |
@@ -30,7 +30,8 @@ Der Browser-Test `npm run e2e` öffnet QUEEN auf iPhone, iPhone quer, iPhone SE 
 
 ### Zusätzlich von Hand prüfen
 
-1. Alle vier Modi, Tipp, Zurück während der Computer rechnet, Neu und sofort Zurück.
+1. Alle fünf Modi, Tipp, Zurück während der Computer rechnet, Neu und sofort Zurück, Aufgeben und Zurück auf der Ergebniskarte.
+2. Computerzug gut verfolgbar, Markierung des letzten Zugs in beiden Stilen.
 2. Mehrfachschlag, Krönung, fliegende Dame.
 3. Zu zweit mit und ohne „Brett drehen“.
 4. Hoch- und Querformat, Schalen antippen und wischen, Neigen.

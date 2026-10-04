@@ -19,15 +19,15 @@ Diese Dokumentation beschreibt QUEEN vollständig: wie man spielt, wie es aussie
 | | |
 |---|---|
 | Spiel | Deutsche Dame auf 8×8 Feldern, 12 Steine je Seite |
-| Modi | Computer Leicht, Mittel, Schwer sowie Zu zweit an einem Gerät |
-| Inhalt | Zwei Brettstile, gravierte Goldkrone, Tipps, Zurück, Sterne und Statistik je Modus, Brett drehen beim Spiel zu zweit |
+| Modi | Computer Einsteiger, Leicht, Mittel, Schwer sowie Zu zweit an einem Gerät |
+| Inhalt | Aufgeben, Markierung des letzten Zugs, zwei Brettstile, gravierte Goldkrone, Tipps, Zurück, Sterne und Statistik je Modus, Brett drehen beim Spiel zu zweit |
 | Plattform | Progressive Web App für iPhone und iPad, läuft in jedem modernen Browser |
 | Sprachen | Deutsch und Englisch, automatisch nach Gerätesprache |
 | Technik | HTML, CSS, JavaScript-Module, SVG, Web Audio, Web Worker, kein Framework, kein Build-Schritt |
 | Betrieb | GitHub Pages, offline spielbar |
 | Sammlung | Teil von [MIND PAUSE](../../../README.de.md), Oberfläche aus der [Hülle](../../../shared/README.de.md) |
 | Adresse | https://michaeldobner.github.io/mindpause/queen/ |
-| Version | 1.1.0 |
+| Version | 1.2.0 |
 
 <p>
 <img src="../images/iphone-game-de.jpg" width="230" alt="Spiel auf dem iPhone">&nbsp;

@@ -9,7 +9,7 @@
 // und nie während die Feier läuft. Bei „Bewegung reduzieren“ fallen die Karten ruhiger:
 // langsamer und ohne Spuren.
 
-import { cardSvg, suitColor, RANK_LABELS, COLORS } from './faces.js?v=1.0.1';
+import { cardSvg, suitColor, RANK_LABELS, COLORS } from './faces.js?v=1.0.2';
 
 const SUIT_CHARS = ['♠', '♥', '♣', '♦'];
 

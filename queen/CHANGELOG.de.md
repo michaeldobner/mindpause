@@ -2,6 +2,31 @@
 
 Alle wichtigen Änderungen an QUEEN. [English](CHANGELOG.md)
 
+## 1.2.0 (2026-10-04)
+
+### Neu
+* **Vier Computerstufen:** neue Stufe **Einsteiger**, die nur auf den eigenen Zug schaut und auf einfache Schlagfallen hereinfällt. **Leicht** ist deutlich leichter als bisher. Die niedrigen Stufen übersehen Dinge wie ein Mensch, statt plötzlich Steine zu verschenken. Jede Stufe schlägt die nächstschwächere in Testpartien in rund 85 bis 90 % der Spiele.
+* **Aufgeben** als eigene Schaltfläche mit Rückfrage. Gegen den Computer zählt es als Niederlage, zu zweit gibt die Seite am Zug auf. Zurück nimmt das Aufgeben samt Statistik zurück.
+* **Ruhige Computerzüge:** Denkpause mindestens 0,7 Sekunden, der Stein hebt sich sichtbar an und zieht langsam, bei Mehrfachschlag Sprung für Sprung. Übersprungene Steine verblassen sofort.
+* **Markierung des letzten Zugs:** Start- und Zielfeld bleiben dezent aufgehellt.
+
+### Verbessert
+* Der Computer beendet gewonnene Endspiele schneller: Seine Damen rücken an die letzten Steine heran, halten die lange Diagonale und engen den Gegner ein.
+* Beim allerersten Start ist jetzt Leicht gewählt.
+
+### Technik
+* Neue Werte `quiet` und `careless` für die Stufen in `js/ai.js`, Aufgeben in `Game` (wird gespeichert).
+* Braucht die Hülle 1.4.0 für die Schaltfläche Aufgeben und die Rückfrage.
+* Neue Tests für Aufgeben und die Abstufung, jetzt 22 Tests für QUEEN.
+
+## 1.1.1 (2026-10-04)
+
+### Gestaltung
+* **Neues App-Symbol** im gemeinsamen Stil der Sammlung: ein Ausschnitt des Bretts von oben auf Ochsenblut-Rot, in der Mitte eine Dame mit der gravierten Krone. Das schwarze Symbol ging auf der dunklen Startseite unter.
+
+### Technik
+* Neues Skript `tools/icons.mjs` erzeugt das Symbol und die PNG-Dateien.
+
 ## 1.1.0 (2026-10-04)
 
 ### Neu
