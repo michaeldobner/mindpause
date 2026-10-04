@@ -2,6 +2,14 @@
 
 All notable changes to QUEEN. [Deutsch](CHANGELOG.de.md)
 
+## 1.1.1 (2026-10-04)
+
+### Design
+* **New app icon** in the shared style of the collection: a section of the board from above on oxblood red, with a king carrying the engraved crown in the middle. The black icon got lost on the dark start page.
+
+### Technical
+* New script `tools/icons.mjs` generates the icon and the PNG files.
+
 ## 1.1.0 (2026-10-04)
 
 ### New

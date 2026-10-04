@@ -5,15 +5,15 @@ import { createShell } from '../../shared/js/shell.js?shell=1.3.0';
 import { createI18n } from '../../shared/js/i18n.js?shell=1.3.0';
 import { createStorage } from '../../shared/js/storage.js?shell=1.3.0';
 import { DEFAULT_STYLE } from '../../shared/js/sound-engine.js?shell=1.3.0';
-import { Game } from './game.js?v=1.0.1';
-import { TableView } from './view.js?v=1.0.1';
-import { KaroSound } from './sound.js?v=1.0.1';
-import { Celebration } from './celebrate.js?v=1.0.1';
-import { deckDefs } from './faces.js?v=1.0.1';
-import { LEVELS, levelById, seedFor } from './levels.js?v=1.0.1';
-import { KARO_STRINGS } from './strings.js?v=1.0.1';
+import { Game } from './game.js?v=1.0.2';
+import { TableView } from './view.js?v=1.0.2';
+import { KaroSound } from './sound.js?v=1.0.2';
+import { Celebration } from './celebrate.js?v=1.0.2';
+import { deckDefs } from './faces.js?v=1.0.2';
+import { LEVELS, levelById, seedFor } from './levels.js?v=1.0.2';
+import { KARO_STRINGS } from './strings.js?v=1.0.2';
 
-export const VERSION = '1.0.1';
+export const VERSION = '1.0.2';
 
 const storage = createStorage('karo:');
 const { load, save } = storage;
@@ -413,7 +413,7 @@ let worker = null;
 let request = 0;
 
 function ask({ fresh = false, budget = 60000 } = {}) {
-  if (!worker) worker = new Worker(new URL('./solver-worker.js?v=1.0.1', import.meta.url), { type: 'module' });
+  if (!worker) worker = new Worker(new URL('./solver-worker.js?v=1.0.2', import.meta.url), { type: 'module' });
   const id = ++request;
   return new Promise((resolve) => {
     const onMessage = (e) => {

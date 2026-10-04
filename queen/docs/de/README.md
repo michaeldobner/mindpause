@@ -27,7 +27,7 @@ Diese Dokumentation beschreibt QUEEN vollständig: wie man spielt, wie es aussie
 | Betrieb | GitHub Pages, offline spielbar |
 | Sammlung | Teil von [MIND PAUSE](../../../README.de.md), Oberfläche aus der [Hülle](../../../shared/README.de.md) |
 | Adresse | https://michaeldobner.github.io/mindpause/queen/ |
-| Version | 1.1.0 |
+| Version | 1.1.1 |
 
 <p>
 <img src="../images/iphone-game-de.jpg" width="230" alt="Spiel auf dem iPhone">&nbsp;

@@ -17,9 +17,9 @@ Klassische Brettspiele, neu gedacht, mit fast greifbarem Design und handgemachte
 | | Spiel | Beschreibung | Version |
 |---|---|---|---|
 | <img src="spring/icons/icon.svg" width="56" alt=""> | **[SPRING](spring/README.de.md)** · [spielen](https://michaeldobner.github.io/mindpause/spring/) | Solohalma auf dem klassischen Kreuzbrett. Sieben Figuren von leicht bis meisterhaft, Tipps, lebendiger Rand, Neigen | 2.1.1 |
-| <img src="queen/icons/icon.svg" width="56" alt=""> | **[QUEEN](queen/README.de.md)** · [spielen](https://michaeldobner.github.io/mindpause/queen/) | Deutsche Dame gegen den Computer in drei Stufen oder zu zweit an einem Gerät. Ebenholz, Ahorn und eine gravierte Goldkrone, Schalen für geschlagene Steine | 1.1.0 |
-| <img src="karo/icons/icon.svg" width="56" alt=""> | **[KARO](karo/README.de.md)** · [spielen](https://michaeldobner.github.io/mindpause/karo/) | Die klassische Patience wie bei Windows. 1 oder 3 Karten, Punkte oder Vegas, sicher lösbare Stufen, Tipps | 1.0.1 |
-| <img src="fuge/icons/icon.svg" width="56" alt=""> | **[FUGE](fuge/README.de.md)** · [spielen](https://michaeldobner.github.io/mindpause/fuge/) | Das klassische Spiel mit fallenden Steinen als lackierter Holzkasten. Klassisch, Sprint, 3 Minuten und Ruhe ohne Ende, Gesten statt Knöpfe | 1.0.0 |
+| <img src="queen/icons/icon.svg" width="56" alt=""> | **[QUEEN](queen/README.de.md)** · [spielen](https://michaeldobner.github.io/mindpause/queen/) | Deutsche Dame gegen den Computer in drei Stufen oder zu zweit an einem Gerät. Ebenholz, Ahorn und eine gravierte Goldkrone, Schalen für geschlagene Steine | 1.1.1 |
+| <img src="karo/icons/icon.svg" width="56" alt=""> | **[KARO](karo/README.de.md)** · [spielen](https://michaeldobner.github.io/mindpause/karo/) | Die klassische Patience wie bei Windows. 1 oder 3 Karten, Punkte oder Vegas, sicher lösbare Stufen, Tipps | 1.0.2 |
+| <img src="fuge/icons/icon.svg" width="56" alt=""> | **[FUGE](fuge/README.de.md)** · [spielen](https://michaeldobner.github.io/mindpause/fuge/) | Das klassische Spiel mit fallenden Steinen als lackierter Holzkasten. Klassisch, Sprint, 3 Minuten und Ruhe ohne Ende, Gesten statt Knöpfe | 1.0.1 |
 
 Weitere Spiele und das Spiel auf zwei Geräten sind in Arbeit, siehe [Roadmap](#roadmap).
 

@@ -2,6 +2,11 @@
 
 Alle wichtigen Änderungen an FUGE. [English](CHANGELOG.md)
 
+## 1.0.1 (2026-10-04)
+
+### Gestaltung
+* **Neues App-Symbol** im gemeinsamen Stil der Sammlung: Nussholz statt Indigo, damit es sich klar von SPRING abhebt, ohne Rahmen und Wanne, die Steine größer und mit kräftigerem Lackglanz.
+
 ## 1.0.0 (2026-10-04)
 
 Erste Version von FUGE, dem vierten Spiel der Sammlung MIND PAUSE.

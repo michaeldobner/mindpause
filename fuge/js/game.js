@@ -5,8 +5,8 @@
 // Brett: 10 Spalten, 22 Reihen. Die oberen 2 Reihen sind unsichtbar, dort erscheinen die Steine.
 // Eine Zelle ist 0 (leer) oder ein Code aus Nummer des Steins und Form: nummer × 8 + form + 1.
 
-import { TYPES, cellsOf, kicksFor, spawnX, createRandom, nextBag } from './pieces.js?v=1.0.0';
-import { modeById, gravity, scoreLock, LINES_PER_LEVEL, CALM_SECONDS_PER_ROW } from './modes.js?v=1.0.0';
+import { TYPES, cellsOf, kicksFor, spawnX, createRandom, nextBag } from './pieces.js?v=1.0.1';
+import { modeById, gravity, scoreLock, LINES_PER_LEVEL, CALM_SECONDS_PER_ROW } from './modes.js?v=1.0.1';
 
 export const WIDTH = 10;
 export const HEIGHT = 22;

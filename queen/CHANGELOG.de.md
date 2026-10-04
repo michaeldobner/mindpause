@@ -2,6 +2,14 @@
 
 Alle wichtigen Änderungen an QUEEN. [English](CHANGELOG.md)
 
+## 1.1.1 (2026-10-04)
+
+### Gestaltung
+* **Neues App-Symbol** im gemeinsamen Stil der Sammlung: ein Ausschnitt des Bretts von oben auf Ochsenblut-Rot, in der Mitte eine Dame mit der gravierten Krone. Das schwarze Symbol ging auf der dunklen Startseite unter.
+
+### Technik
+* Neues Skript `tools/icons.mjs` erzeugt das Symbol und die PNG-Dateien.
+
 ## 1.1.0 (2026-10-04)
 
 ### Neu

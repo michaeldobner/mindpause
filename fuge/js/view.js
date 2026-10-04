@@ -7,8 +7,8 @@
 // eine hauchfeine Naht, zu anderen Steinen eine sichtbare Fuge. Zellen werden als kleine Bilder
 // (Sprites) einmal je Form, Nachbarschaft und Größe gezeichnet und danach nur noch kopiert.
 
-import { cellsOf, sizeOf } from './pieces.js?v=1.0.0';
-import { WIDTH, HEIGHT, HIDDEN, typeOf } from './game.js?v=1.0.0';
+import { cellsOf, sizeOf } from './pieces.js?v=1.0.1';
+import { WIDTH, HEIGHT, HIDDEN, typeOf } from './game.js?v=1.0.1';
 
 const ROWS = HEIGHT - HIDDEN;
 

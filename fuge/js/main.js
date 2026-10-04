@@ -5,14 +5,14 @@ import { createShell } from '../../shared/js/shell.js?shell=1.3.0';
 import { createI18n } from '../../shared/js/i18n.js?shell=1.3.0';
 import { createStorage } from '../../shared/js/storage.js?shell=1.3.0';
 import { DEFAULT_STYLE } from '../../shared/js/sound-engine.js?shell=1.3.0';
-import { Game, HEIGHT, HIDDEN } from './game.js?v=1.0.0';
-import { MODES, modeById, starsFor } from './modes.js?v=1.0.0';
-import { FugeView, previewSvg } from './view.js?v=1.0.0';
-import { Input } from './input.js?v=1.0.0';
-import { FugeSound } from './sound.js?v=1.0.0';
-import { FUGE_STRINGS } from './strings.js?v=1.0.0';
+import { Game, HEIGHT, HIDDEN } from './game.js?v=1.0.1';
+import { MODES, modeById, starsFor } from './modes.js?v=1.0.1';
+import { FugeView, previewSvg } from './view.js?v=1.0.1';
+import { Input } from './input.js?v=1.0.1';
+import { FugeSound } from './sound.js?v=1.0.1';
+import { FUGE_STRINGS } from './strings.js?v=1.0.1';
 
-export const VERSION = '1.0.0';
+export const VERSION = '1.0.1';
 
 // Eigene Schaltflächen der Steuerleiste, im Stil der Symbole der Hülle (Feld 24 × 24)
 const ICON = {

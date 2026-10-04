@@ -6,14 +6,14 @@ import { createI18n } from '../../shared/js/i18n.js?shell=1.3.0';
 import { createStorage } from '../../shared/js/storage.js?shell=1.3.0';
 import { DEFAULT_STYLE } from '../../shared/js/sound-engine.js?shell=1.3.0';
 import { Tilt } from '../../shared/js/tilt.js?shell=1.3.0';
-import { BLUE, BLACK } from './rules.js?v=1.1.0';
-import { Game } from './game.js?v=1.1.0';
-import { QueenView } from './view.js?v=1.1.0';
-import { QueenSound } from './sound.js?v=1.1.0';
-import { THEMES, THEME_IDS, DEFAULT_THEME } from './themes.js?v=1.1.0';
-import { QUEEN_STRINGS } from './strings.js?v=1.1.0';
+import { BLUE, BLACK } from './rules.js?v=1.1.1';
+import { Game } from './game.js?v=1.1.1';
+import { QueenView } from './view.js?v=1.1.1';
+import { QueenSound } from './sound.js?v=1.1.1';
+import { THEMES, THEME_IDS, DEFAULT_THEME } from './themes.js?v=1.1.1';
+import { QUEEN_STRINGS } from './strings.js?v=1.1.1';
 
-export const VERSION = '1.1.0';
+export const VERSION = '1.1.1';
 
 const MODES = [
   { id: 'easy', computer: true, difficulty: 1 },
@@ -211,7 +211,7 @@ async function computerMove() {
 
 let worker = null;
 function askAI(level) {
-  if (!worker) worker = new Worker(new URL('./ai-worker.js?v=1.1.0', import.meta.url), { type: 'module' });
+  if (!worker) worker = new Worker(new URL('./ai-worker.js?v=1.1.1', import.meta.url), { type: 'module' });
   const id = Math.random();
   return new Promise((resolve) => {
     const onMessage = (e) => {

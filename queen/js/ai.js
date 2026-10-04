@@ -1,7 +1,7 @@
 // Computergegner für QUEEN: Minimax mit Alpha-Beta-Schnitt (Negamax), schrittweise vertieft,
 // mit Merkliste bekannter Stellungen und Ruhesuche bei Schlägen. Ohne Darstellung.
 
-import { legalMoves, applyMove, BLUE } from './rules.js?v=1.1.0';
+import { legalMoves, applyMove, BLUE } from './rules.js?v=1.1.1';
 
 export const LEVELS = {
   easy: { depth: 2, time: 200, noise: 90, blunder: 0.22 },

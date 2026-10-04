@@ -6,9 +6,9 @@
 // rechts. Beim Spiel zu zweit kann sich das Brett zusätzlich nach jedem Zug um 180° drehen.
 
 import { Gutter } from '../../shared/js/gutter.js?shell=1.3.0';
-import { BLUE, BLACK } from './rules.js?v=1.1.0';
-import { Game } from './game.js?v=1.1.0';
-import { THEMES, DEFAULT_THEME, CROWN } from './themes.js?v=1.1.0';
+import { BLUE, BLACK } from './rules.js?v=1.1.1';
+import { Game } from './game.js?v=1.1.1';
+import { THEMES, DEFAULT_THEME, CROWN } from './themes.js?v=1.1.1';
 
 const NS = 'http://www.w3.org/2000/svg';
 const W = 1000;
