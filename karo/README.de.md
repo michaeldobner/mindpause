@@ -79,7 +79,7 @@ Keine Abhängigkeiten, kein Build-Schritt. Alles, was KARO mit den anderen Spiel
 |---|---|
 | Sprache | HTML, CSS, JavaScript (ES-Module) |
 | Karten | SVG-Symbole, einmal angelegt, von jeder Karte mit `<use>` eingebunden |
-| Bewegung | 52 HTML-Elemente, nur per `transform` bewegt, 3D-Drehung beim Aufdecken |
+| Bewegung | 52 HTML-Elemente, nur per `transform` bewegt, beim Aufdecken flach gewendet, immer nur eine Seite sichtbar |
 | Siegesfeier | Canvas mit verblassenden Spuren |
 | Klang | Web Audio API, live erzeugt, keine Audiodateien |
 | Tipps | Löser mit Tiefensuche in einem Web Worker |
@@ -119,4 +119,4 @@ karo/
 
 ## Version
 
-Aktuelle Version: **1.0.2**. Siehe [Changelog](CHANGELOG.de.md).
+Aktuelle Version: **1.0.4**. Siehe [Changelog](CHANGELOG.de.md).

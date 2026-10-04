@@ -2,6 +2,18 @@
 
 All notable changes to KARO. [Deutsch](CHANGELOG.de.md)
 
+## 1.0.4 (2026-10-05)
+
+### Fixed
+* **Face-up cards now and then showed their back** (iPhone and iPad). The cause was the 3D turn when revealing a card: Safari does not always hide the hidden side reliably. Revealing is now a flat animation, and only one side is ever visible.
+
+### Improved
+* Only cards that are moving get their own graphics layer. This saves graphics memory.
+* The table is redrawn once when returning to the app and when the device is rotated.
+
+### Technical
+* New visual check in the browser test: on the screenshot, every face-up number card must show light paper, not the diamond pattern.
+
 ## 1.0.3 (2026-10-04)
 
 ### Improved

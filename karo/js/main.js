@@ -5,15 +5,15 @@ import { createShell } from '../../shared/js/shell.js?shell=1.5.0';
 import { createI18n } from '../../shared/js/i18n.js?shell=1.5.0';
 import { createStorage } from '../../shared/js/storage.js?shell=1.5.0';
 import { DEFAULT_STYLE } from '../../shared/js/sound-engine.js?shell=1.5.0';
-import { Game } from './game.js?v=1.0.3';
-import { TableView } from './view.js?v=1.0.3';
-import { KaroSound } from './sound.js?v=1.0.3';
-import { Celebration } from './celebrate.js?v=1.0.3';
-import { deckDefs } from './faces.js?v=1.0.3';
-import { LEVELS, levelById, seedFor } from './levels.js?v=1.0.3';
-import { KARO_STRINGS } from './strings.js?v=1.0.3';
+import { Game } from './game.js?v=1.0.4';
+import { TableView } from './view.js?v=1.0.4';
+import { KaroSound } from './sound.js?v=1.0.4';
+import { Celebration } from './celebrate.js?v=1.0.4';
+import { deckDefs } from './faces.js?v=1.0.4';
+import { LEVELS, levelById, seedFor } from './levels.js?v=1.0.4';
+import { KARO_STRINGS } from './strings.js?v=1.0.4';
 
-export const VERSION = '1.0.3';
+export const VERSION = '1.0.4';
 
 const storage = createStorage('karo:');
 const { load, save } = storage;
@@ -413,7 +413,7 @@ let worker = null;
 let request = 0;
 
 function ask({ fresh = false, budget = 60000 } = {}) {
-  if (!worker) worker = new Worker(new URL('./solver-worker.js?v=1.0.3', import.meta.url), { type: 'module' });
+  if (!worker) worker = new Worker(new URL('./solver-worker.js?v=1.0.4', import.meta.url), { type: 'module' });
   const id = ++request;
   return new Promise((resolve) => {
     const onMessage = (e) => {
@@ -463,6 +463,11 @@ setInterval(() => {
 document.addEventListener('visibilitychange', () => {
   lastTick = performance.now();
   if (document.hidden) persist();
+  // Zurück in der App: Tisch einmal neu zeichnen, damit sich ein Darstellungsfehler nie hält
+  else if (!autoRunning && !celebration?.running) view.refresh();
+});
+window.addEventListener('pageshow', () => {
+  if (!autoRunning && !celebration?.running) view.refresh();
 });
 
 // ---------- Start ----------
@@ -490,6 +495,22 @@ window.__game = {
       if (game.stock.length || game.canRecycle) return draw();
       const r = await ask();
       if (r?.move?.type === 'move') play(r.move.from, r.move.to);
+    },
+    // Stellen, die auf dem Bildschirmfoto hell aussehen müssen: bei jeder offenen Zahlkarte oben
+    // in einer Spalte das freie Papier links unter dem Index. Zeigt Safari dort die Rückseite,
+    // ist es dunkel und bunt.
+    looks() {
+      const box = view.el.getBoundingClientRect();
+      const { W, H } = view.g;
+      const out = [];
+      game.tableau.forEach((col, i) => {
+        const card = col.up[col.up.length - 1];
+        if (card === undefined || card % 13 === 0 || card % 13 > 9 || view.hidden.has(card)) return;
+        const m = /translate\(([-\d.]+)px, ([-\d.]+)px\)/.exec(view.cards[card].style.transform);
+        if (!m) return;
+        out.push({ label: `Spalte ${i + 1}`, x: box.left + Number(m[1]) + W * 0.07, y: box.top + Number(m[2]) + H * 0.4, w: W * 0.17, h: H * 0.2 });
+      });
+      return out;
     },
     // Zusätzliche Prüfungen für den Browser-Test: jede liefert true, wenn alles stimmt
     checks: {

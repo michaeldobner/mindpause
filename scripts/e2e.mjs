@@ -11,6 +11,7 @@ import { chromium, webkit, devices } from 'playwright';
 import http from 'node:http';
 import { readFileSync, existsSync, statSync, mkdirSync } from 'node:fs';
 import { extname, join, normalize } from 'node:path';
+import { decodePng } from './png.mjs';
 
 const ROOT = process.cwd();
 const OUT = join(ROOT, 'e2e-output');
@@ -138,7 +139,31 @@ for (const game of games) {
       await page.click('#settings-close');
       await page.waitForTimeout(400);
     }
-    await page.screenshot({ path: shot(`${game.id}-${name}.png`) });
+    const picture = await page.screenshot({ path: shot(`${game.id}-${name}.png`) });
+
+    // Sichtprüfung: Ein Spiel kann Stellen nennen, die auf dem Bildschirmfoto hell aussehen
+    // müssen (window.__game.e2e.looks). So fallen Darstellungsfehler des Browsers auf, die im
+    // Code nicht zu sehen sind, zum Beispiel eine offene Karte, die ihre Rückseite zeigt.
+    const looks = await page.evaluate(() => window.__game?.e2e?.looks?.() || []);
+    if (looks.length) {
+      const img = decodePng(picture);
+      const scale = img.width / page.viewportSize().width;
+      const wrong = looks.filter((r) => {
+        let sum = 0;
+        let dark = 0;
+        let n = 0;
+        for (let i = 0; i < 8; i++) {
+          for (let j = 0; j < 8; j++) {
+            const l = img.luminance(Math.round((r.x + (r.w * (i + 0.5)) / 8) * scale), Math.round((r.y + (r.h * (j + 0.5)) / 8) * scale));
+            sum += l;
+            if (l < 150) dark += 1;
+            n += 1;
+          }
+        }
+        return !(sum / n > 215 && dark / n < 0.05);
+      });
+      check(wrong.length === 0, `${label}: sieht richtig aus (${looks.length} Stellen)${wrong.length ? `, falsch: ${wrong.map((r) => r.label).join(', ')}` : ''}`);
+    }
 
     // Zusätzliche Prüfungen eines Spiels (window.__game.e2e.checks), jede liefert true
     if (name === 'iphone' || name === 'ipad') {

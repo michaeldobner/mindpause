@@ -9,7 +9,7 @@ A **fine deck of cards lying on a linen mat.** The model is classic designer pla
 | Principle | Meaning |
 |---|---|
 | **Legibility first** | The index in the top left is large enough to read even in the narrow strip visible in the columns |
-| **Tangibility** | Soft shadows, a 3D turn when revealing, cards fly over the others |
+| **Tangibility** | Soft shadows, the card turns over when revealed, cards fly over the others |
 | **Calm** | Short, soft motion. The celebration is a slow homage, not fireworks |
 | **Reliability** | One tap is enough. Undo reverts anything done by accident |
 
@@ -86,7 +86,7 @@ Card size follows the available space. When a column gets long, its cards move c
 | Action | Duration |
 |---|---|
 | Move a card | 0.3 s, flying over the others |
-| Reveal | 0.32 s, 3D turn |
+| Reveal | 0.3 s, flat: the card narrows, changes sides halfway and widens again. Deliberately without 3D, because Safari now and then shows the wrong side of a 3D turn |
 | Deal | card by card, 32 ms apart |
 | Automatic finish | one card every 120 ms |
 | Celebration | one card every 240 ms, gravity, bounces, fading trails |
