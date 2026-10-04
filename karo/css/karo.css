@@ -151,6 +151,10 @@
   box-shadow: 0 10px 26px rgba(0, 0, 0, 0.45);
 }
 
+.k-card.flying {
+  transition: none;
+}
+
 .k-card.gone {
   visibility: hidden;
 }

@@ -2,14 +2,25 @@
 // Ablagen, hüpfen über die Matte und ziehen eine Spur, die langsam verblasst.
 // Ein Tipp auf die Matte beendet die Feier.
 //
-// Die Feier wartet nie auf Bilder. Die Kartenbilder werden schon während des Spiels im
-// Hintergrund vorbereitet und einmal in kleine Bitmaps gezeichnet. Ist eine Karte beim Sieg noch
-// nicht fertig (oder kann der Browser das SVG nicht zeichnen), springt sie als schlichte Karte
-// mit Wert und Farbe. Bei „Bewegung reduzieren“ fallen die Karten ruhiger: langsamer, ohne Spuren.
+// Es fliegen die echten Karten des Tischs (onMove bewegt sie), deshalb wartet die Feier nie auf
+// Bilder. Nur die Spur dahinter wird auf eine Zeichenfläche gestempelt: mit Kartenbildern, die
+// während des Spiels in Ruhe im Hintergrund vorbereitet werden, sonst als schlichte Karte.
+// Safari braucht für jedes SVG-Bild spürbar Zeit, darum immer nur ein Bild mit Pausen dazwischen,
+// und nie während die Feier läuft. Bei „Bewegung reduzieren“ fallen die Karten ruhiger:
+// langsamer und ohne Spuren.
 
 import { cardSvg, suitColor, RANK_LABELS, COLORS } from './faces.js?v=1.0.1';
 
 const SUIT_CHARS = ['♠', '♥', '♣', '♦'];
+
+// Ein Fehler in einem Ereignis darf die Feier nie anhalten
+const safely = (fn) => {
+  try {
+    fn();
+  } catch (err) {
+    console.error(err);
+  }
+};
 const DISPLAY = "Didot, 'Bodoni 72', Georgia, serif";
 
 export class Celebration {
@@ -39,12 +50,17 @@ export class Celebration {
         this.preparing = false;
         return;
       }
+      // Während der Feier keine Rechenzeit wegnehmen
+      if (this.running) {
+        setTimeout(next, 500);
+        return;
+      }
       const c = card++;
       const size = this.size;
       const img = new Image();
       const done = () => {
         img.onload = img.onerror = null;
-        setTimeout(next, 0);
+        setTimeout(next, 150);
       };
       img.onload = () => {
         try {
@@ -104,9 +120,10 @@ export class Celebration {
     this.plain(ctx, card, x, y, w, h);
   }
 
-  // rectFor(suit) liefert die Lage einer Ablage, onLaunch(card) blendet die Karte dort aus.
+  // rectFor(suit) liefert die Lage einer Ablage, onMove(card, x, y) bewegt die echte Karte,
+  // onLand(card) blendet sie aus, sobald sie die Matte verlassen hat.
   // Liefert ein Versprechen, das endet, wenn alle Karten die Matte verlassen haben oder getippt wurde.
-  async run({ rectFor, onLaunch }) {
+  async run({ rectFor, onMove, onLand }) {
     const calm = Boolean(window.matchMedia?.('(prefers-reduced-motion: reduce)').matches);
     const interval = calm ? 420 : 240;
     const speed = calm ? 0.55 : 1;
@@ -120,7 +137,6 @@ export class Celebration {
     canvas.height = Math.round(th * dpr);
     const ctx = canvas.getContext('2d');
     ctx.scale(dpr, dpr);
-    this.prepare(rectFor(0).w);
 
     const order = [];
     for (let rank = 13; rank >= 1; rank--) for (let suit = 0; suit < 4; suit++) order.push(suit * 13 + rank - 1);
@@ -151,11 +167,6 @@ export class Celebration {
             vy: -(Math.random() * 4) * scale * speed,
           });
           this.launched += 1;
-          try {
-            onLaunch(card);
-          } catch (err) {
-            console.error(err);
-          }
           lastLaunch = now;
         }
         if (calm) {
@@ -176,8 +187,13 @@ export class Celebration {
             f.y = th - f.h;
             f.vy = -f.vy * (calm ? 0.6 : 0.78);
           }
-          this.draw(ctx, f.card, f.x, f.y, f.w, f.h);
-          if (f.x + f.w < 0 || f.x > tw) flying.splice(i, 1);
+          // Die echte Karte fliegt, dahinter bleibt ihr Abdruck als Spur
+          if (!calm) this.draw(ctx, f.card, f.x, f.y, f.w, f.h);
+          safely(() => onMove(f.card, f.x, f.y));
+          if (f.x + f.w < 0 || f.x > tw) {
+            flying.splice(i, 1);
+            safely(() => onLand(f.card));
+          }
         }
         if (next >= order.length && flying.length === 0) return resolve();
         requestAnimationFrame(frame);
@@ -186,6 +202,8 @@ export class Celebration {
     });
 
     this.running = false;
+    // Abgebrochen: Karten, die noch unterwegs sind, verschwinden
+    for (const f of flying) safely(() => onLand(f.card));
     canvas.removeEventListener('pointerdown', stopOnTap);
     canvas.classList.add('fade');
     setTimeout(() => canvas.remove(), 600);

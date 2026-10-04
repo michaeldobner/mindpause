@@ -56,6 +56,8 @@ const DEVICES = [
 async function open(device, locale, path) {
   const ctx = await browser.newContext({ ...device, locale, serviceWorkers: 'block' });
   await ctx.addInitScript(() => {
+    // Abgelehnte Versprechen ohne Behandlung als Fehler melden, auch in WebKit
+    window.addEventListener('unhandledrejection', (e) => console.error(`Unbehandelt: ${e.reason}`));
     for (const k of Object.keys(localStorage)) if (k.endsWith('coachSeen')) localStorage.removeItem(k);
   });
   const page = await ctx.newPage();
@@ -121,7 +123,7 @@ for (const game of games) {
       const extras = await page.evaluate(() => Object.keys(window.__game?.e2e?.checks || {}));
       for (const extra of extras) {
         const ok = await page.evaluate((n) => window.__game.e2e.checks[n](), extra);
-        check(ok === true, `${label}: ${extra}`);
+        check(ok === true, `${label}: ${extra}${ok === true ? '' : ` (${ok})`}`);
         await page.screenshot({ path: shot(`${game.id}-${name}-${extra.toLowerCase()}.png`) });
       }
     }

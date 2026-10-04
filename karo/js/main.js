@@ -229,7 +229,15 @@ async function win() {
   celebration = celebration || new Celebration(view.el, lang);
   const show = () => game === forGame && !document.querySelector('#result:not([hidden])') && showWin();
   const timer = setTimeout(show, 2600);
-  await celebration.run({ rectFor: (suit) => view.foundationRect(suit), onLaunch: (c) => view.hideCard(c) });
+  try {
+    await celebration.run({
+      rectFor: (suit) => view.foundationRect(suit),
+      onMove: (c, x, y) => view.flyCard(c, x, y),
+      onLand: (c) => view.hideCard(c),
+    });
+  } catch (err) {
+    console.error(err);
+  }
   clearTimeout(timer);
   show();
 }
@@ -495,9 +503,11 @@ window.__game = {
         view.render({ animate: false });
         play({ pile: 'tableau', col: 0, index: 0 }, { pile: 'foundation' });
         await new Promise((r) => setTimeout(r, 1500));
-        const ok = (celebration?.launched || 0) >= 3 && Boolean(document.querySelector('.table .celebration'));
+        const launched = celebration?.launched || 0;
+        const canvas = Boolean(document.querySelector('.table .celebration'));
         celebration?.stop();
-        return ok;
+        // Bei einem Fehler genau sagen, was fehlt
+        return launched >= 3 && canvas ? true : `gestartete Karten: ${launched}, Zeichenfläche: ${canvas}, Bilder fertig: ${celebration?.bitmaps.filter(Boolean).length}`;
       },
     },
   },
