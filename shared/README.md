@@ -6,7 +6,7 @@ The shell is everything every MIND PAUSE game shares. A game only describes what
 
 **Rule of thumb:** if a change should affect every game, it belongs here. If it only concerns one game, it belongs in that game's folder.
 
-Current version: **1.3.0**
+Current version: **1.4.0**
 
 ## Contents
 
@@ -46,7 +46,7 @@ All values live as CSS variables in `tokens.css`. Games never use fixed values f
 | Building block | Behaviour |
 |---|---|
 | Header | Title of the game, name of the current level with a chevron, counter on the right |
-| Control bar | Up to six round buttons with labels, chosen by the game: `undo`, `hint`, `restart`, `resign`, `levels`, `settings`. With six they get a little smaller so they fit on the iPhone SE too |
+| Control bar | Up to six round buttons with labels, chosen by the game: `undo`, `hint`, `restart`, `resign`, `levels`, `settings` or the game's own (for example Hold and Pause in FUGE). With six they get a little smaller so they fit on the iPhone SE too |
 | Picker | iPhone portrait: sheet from the bottom with cards to swipe. iPhone landscape: drawer from the left. iPad landscape: permanent sidebar |
 | Level card | Preview, name, meta line, up to three stars, five difficulty dots, current card outlined in blue |
 | Settings | Choices defined by the game (for example the board style), sound on or off, sound style (Warm, Clear, Soft), switches defined by the game, a note, version line |
@@ -62,9 +62,9 @@ Sheets close on swipe down, tap outside, the cross or Escape. Touch targets are 
 A game calls `createShell()` in its `main.js`:
 
 ```js
-import { createShell } from '../../shared/js/shell.js?shell=1.3.0';
-import { createI18n } from '../../shared/js/i18n.js?shell=1.3.0';
-import { createStorage } from '../../shared/js/storage.js?shell=1.3.0';
+import { createShell } from '../../shared/js/shell.js?shell=1.4.0';
+import { createI18n } from '../../shared/js/i18n.js?shell=1.4.0';
+import { createStorage } from '../../shared/js/storage.js?shell=1.4.0';
 
 const storage = createStorage('queen:');
 const i18n = createI18n(QUEEN_STRINGS);         // texts of the game, de and en
@@ -97,7 +97,7 @@ const shell = createShell({
 | `title` | Title in capitals, appears in the header, browser tab and version line |
 | `version` | Version of the game |
 | `i18n`, `storage`, `sound` | Created with `createI18n`, `createStorage` and a subclass of `SoundEngine` |
-| `buttons` | Which buttons the control bar shows, in this order |
+| `buttons` | Which buttons the control bar shows, in this order. An entry is a shell name or a custom button `{ id, icon, labelKey }`: `icon` is SVG content in a 24 × 24 box, a tap calls `actions[id]` |
 | `levels` | Optional picker: keys for the button label, the title and the "Next" button |
 | `settings` | Additional settings. A switch has `id`, `nameKey` and `textKey`. A choice has `id`, `nameKey` and `options` with `value` and `labelKey`, and appears as a segmented control at the top of the settings |
 | `noteKey`, `coachKey`, `boardLabelKey` | Optional texts: note in the settings, first launch hint, label of the board |
@@ -113,7 +113,8 @@ const shell = createShell({
 | `setLevelLabel(text)` | Name of the current level, also sets the browser tab |
 | `renderLevels(items)` | Fills the picker. `items`: `{ id, name, meta, stars, difficulty, preview, current }` |
 | `setDisabled(name, bool)`, `setBusy(name, bool)` | State of a button, for example while the hint is computing |
-| `showResult(opts)`, `hideResult()` | Result card. `opts`: `{ title, text, stars, stats, highlight, showNext }` |
+| `setButton(id, { icon, labelKey })` | Change a button's icon and label, for example Pause and Resume |
+| `showResult(opts)`, `hideResult()` | Result card. `opts`: `{ title, text, stars, stats, highlight, showNext, showBack }`. `showBack: false` hides “Undo last move”, for games without undo |
 | `confirm({ title, text, ok, cancel })` | Confirmation. Returns a promise with `true` (ok) or `false` (cancel). `cancel` is optional, default "Cancel" |
 | `toast(text)`, `hideToast()` | Short message |
 | `showCoach()` | First launch hint, shown only once |
@@ -148,7 +149,7 @@ A game extends the class with its own sounds, for example SPRING with `lift`, `l
 `Gutter` describes every piece only by its **angle** on a circle and its angular velocity. Friction, collisions, tilt and finger input are the same for every game.
 
 ```js
-import { Gutter } from '../../shared/js/gutter.js?shell=1.3.0';
+import { Gutter } from '../../shared/js/gutter.js?shell=1.4.0';
 
 // Round rim as in SPRING
 const rim = new Gutter({ radius: 446, marbleRadius: 37, onCollide: (i) => sound.clack(i) });
@@ -179,7 +180,7 @@ With `arc` the rim gets walls at both ends: pieces bounce off, and there is no p
 ### Tilt
 
 ```js
-import { Tilt } from '../../shared/js/tilt.js?shell=1.3.0';
+import { Tilt } from '../../shared/js/tilt.js?shell=1.4.0';
 
 const tilt = new Tilt((x, y) => view.setGravity(x, y), storage.load('tilt', false));
 const result = await tilt.enable();   // 'ok', 'off', 'denied' or 'unsupported'

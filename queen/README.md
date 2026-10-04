@@ -94,6 +94,8 @@ queen/
 │  ├─ themes.js            Classic and Midnight board styles, crown engraving
 │  ├─ view.js              board, pieces, crown, trays, input
 │  └─ sound.js             QUEEN sounds
+├─ tools/
+│  └─ icons.mjs            generates the app icons
 ├─ icons/                  app icons
 ├─ sw.js                   offline support
 ├─ manifest.webmanifest    install as an app

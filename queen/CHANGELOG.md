@@ -16,8 +16,16 @@ All notable changes to QUEEN. [Deutsch](CHANGELOG.de.md)
 
 ### Technical
 * New `quiet` and `careless` values for the levels in `js/ai.js`, resigning in `Game` (saved with the game).
-* Requires shell 1.3.0 for the Resign button and the confirmation.
+* Requires shell 1.4.0 for the Resign button and the confirmation.
 * New tests for resigning and the level ladder, now 22 tests for QUEEN.
+
+## 1.1.1 (2026-10-04)
+
+### Design
+* **New app icon** in the shared style of the collection: a section of the board from above on oxblood red, with a king carrying the engraved crown in the middle. The black icon got lost on the dark start page.
+
+### Technical
+* New script `tools/icons.mjs` generates the icon and the PNG files.
 
 ## 1.1.0 (2026-10-04)
 

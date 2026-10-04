@@ -2,6 +2,20 @@
 
 All notable changes to KARO. [Deutsch](CHANGELOG.de.md)
 
+## 1.0.2 (2026-10-04)
+
+### Design
+* **New app icon** in the shared style of the collection: rich felt green without a frame, two card backs fanned out and the ace of diamonds with a large diamond in front.
+
+## 1.0.1 (2026-10-04)
+
+### Fixed
+* **Win celebration on iPhone:** cards now reliably bounce off the foundations after a win. Until now the celebration waited for Safari to finish all 52 card images and sometimes never started. The images are now prepared in the background during play. If one is still missing at the win, that card bounces as a plain card with rank and suit.
+* **Reduce motion:** the win celebration is no longer skipped. The cards fall more calmly instead: slower and without trails.
+
+### Technical
+* The browser test checks the win celebration and also runs in WebKit, the engine of Safari on iPhone and iPad.
+
 ## 1.0.0 (2026-10-04)
 
 First version of KARO, the second game of the MIND PAUSE collection.

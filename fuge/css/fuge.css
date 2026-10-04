@@ -1,0 +1,139 @@
+/* FUGE · Kasten, Wanne und Karte für Start und Pause
+ * Nur was FUGE eigen ist. Alles andere kommt aus shared/tokens.css und shared/shell.css.
+ * Der Kasten wird auf Canvas gezeichnet (js/view.js) und sieht in Hell und Dunkel gleich aus.
+ */
+
+/* Das SVG-Brett der Hülle braucht FUGE nicht, der Kasten ersetzt es */
+.stage > .board {
+  display: none;
+}
+
+/* Die ganze Bühne ist Fläche für Gesten */
+.stage {
+  touch-action: none;
+}
+
+.fuge {
+  position: absolute;
+  inset: 4px 0;
+  touch-action: none;
+}
+
+.fuge canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: block;
+}
+
+/* ---------- Karte für Start und Pause, liegt über der Wanne ---------- */
+
+.fuge-overlay {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: calc(var(--c, 24px) * 0.5);
+  color: #ece2cc;
+  text-align: center;
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity 0.3s ease, transform 0.3s var(--ease);
+  pointer-events: none;
+}
+
+.fuge-overlay.show {
+  opacity: 1;
+  transform: none;
+}
+
+.fo-card {
+  width: 100%;
+}
+
+.fo-kicker {
+  margin: 0 0 6px;
+  font-size: max(9px, calc(var(--c) * 0.36));
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(236, 226, 204, 0.6);
+}
+
+.fo-title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: max(24px, calc(var(--c) * 1.5));
+  line-height: 1.05;
+}
+
+.fo-text {
+  margin: calc(var(--c) * 0.45) 0 calc(var(--c) * 0.7);
+  font-size: max(12px, calc(var(--c) * 0.52));
+  line-height: 1.35;
+  animation: breathe 2.6s ease-in-out infinite;
+}
+
+@keyframes breathe {
+  50% {
+    opacity: 0.55;
+  }
+}
+
+.fo-help {
+  display: grid;
+  gap: calc(var(--c) * 0.22);
+  margin: 0 auto;
+  max-width: calc(var(--c) * 8.6);
+  padding-top: calc(var(--c) * 0.55);
+  border-top: 1px solid rgba(236, 226, 204, 0.18);
+  font-size: max(10px, calc(var(--c) * 0.4));
+  text-align: left;
+}
+
+.fo-help div {
+  display: grid;
+  grid-template-columns: 46% 1fr;
+  gap: 8px;
+}
+
+.fo-help dt {
+  font-weight: 600;
+  color: #ece2cc;
+}
+
+.fo-help dd {
+  margin: 0;
+  color: rgba(236, 226, 204, 0.62);
+}
+
+.fo-best {
+  margin: calc(var(--c) * 0.6) 0 0;
+  font-family: var(--font-display);
+  font-size: max(12px, calc(var(--c) * 0.55));
+  color: rgba(236, 226, 204, 0.75);
+}
+
+/* Steuerleiste: Halten und Pause ohne Popup-Hinweis */
+#btn-hold:disabled {
+  opacity: 0.35;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fo-text {
+    animation: none;
+  }
+}
+
+/* iPhone quer: Modusname kompakt */
+@media (orientation: landscape) and (max-height: 500px) {
+  .level-name {
+    font-size: 11px;
+    letter-spacing: 0.06em;
+  }
+
+  .fo-help {
+    display: none;
+  }
+}

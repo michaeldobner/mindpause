@@ -16,8 +16,16 @@ Alle wichtigen Änderungen an QUEEN. [English](CHANGELOG.md)
 
 ### Technik
 * Neue Werte `quiet` und `careless` für die Stufen in `js/ai.js`, Aufgeben in `Game` (wird gespeichert).
-* Braucht die Hülle 1.3.0 für die Schaltfläche Aufgeben und die Rückfrage.
+* Braucht die Hülle 1.4.0 für die Schaltfläche Aufgeben und die Rückfrage.
 * Neue Tests für Aufgeben und die Abstufung, jetzt 22 Tests für QUEEN.
+
+## 1.1.1 (2026-10-04)
+
+### Gestaltung
+* **Neues App-Symbol** im gemeinsamen Stil der Sammlung: ein Ausschnitt des Bretts von oben auf Ochsenblut-Rot, in der Mitte eine Dame mit der gravierten Krone. Das schwarze Symbol ging auf der dunklen Startseite unter.
+
+### Technik
+* Neues Skript `tools/icons.mjs` erzeugt das Symbol und die PNG-Dateien.
 
 ## 1.1.0 (2026-10-04)
 

@@ -1,19 +1,19 @@
 // KARO: Klondike-Patience mit 1 oder 3 Karten, Punkte wie bei Windows oder Vegas.
 // Die Oberfläche kommt aus der Hülle (shared/js/shell.js), hier steht nur, was KARO eigen ist.
 
-import { createShell } from '../../shared/js/shell.js?shell=1.3.0';
-import { createI18n } from '../../shared/js/i18n.js?shell=1.3.0';
-import { createStorage } from '../../shared/js/storage.js?shell=1.3.0';
-import { DEFAULT_STYLE } from '../../shared/js/sound-engine.js?shell=1.3.0';
-import { Game } from './game.js?v=1.0.0';
-import { TableView } from './view.js?v=1.0.0';
-import { KaroSound } from './sound.js?v=1.0.0';
-import { Celebration } from './celebrate.js?v=1.0.0';
-import { deckDefs } from './faces.js?v=1.0.0';
-import { LEVELS, levelById, seedFor } from './levels.js?v=1.0.0';
-import { KARO_STRINGS } from './strings.js?v=1.0.0';
+import { createShell } from '../../shared/js/shell.js?shell=1.4.0';
+import { createI18n } from '../../shared/js/i18n.js?shell=1.4.0';
+import { createStorage } from '../../shared/js/storage.js?shell=1.4.0';
+import { DEFAULT_STYLE } from '../../shared/js/sound-engine.js?shell=1.4.0';
+import { Game } from './game.js?v=1.0.2';
+import { TableView } from './view.js?v=1.0.2';
+import { KaroSound } from './sound.js?v=1.0.2';
+import { Celebration } from './celebrate.js?v=1.0.2';
+import { deckDefs } from './faces.js?v=1.0.2';
+import { LEVELS, levelById, seedFor } from './levels.js?v=1.0.2';
+import { KARO_STRINGS } from './strings.js?v=1.0.2';
 
-export const VERSION = '1.0.0';
+export const VERSION = '1.0.2';
 
 const storage = createStorage('karo:');
 const { load, save } = storage;
@@ -229,7 +229,15 @@ async function win() {
   celebration = celebration || new Celebration(view.el, lang);
   const show = () => game === forGame && !document.querySelector('#result:not([hidden])') && showWin();
   const timer = setTimeout(show, 2600);
-  await celebration.run({ rectFor: (suit) => view.foundationRect(suit), onLaunch: (c) => view.hideCard(c) });
+  try {
+    await celebration.run({
+      rectFor: (suit) => view.foundationRect(suit),
+      onMove: (c, x, y) => view.flyCard(c, x, y),
+      onLand: (c) => view.hideCard(c),
+    });
+  } catch (err) {
+    console.error(err);
+  }
   clearTimeout(timer);
   show();
 }
@@ -405,7 +413,7 @@ let worker = null;
 let request = 0;
 
 function ask({ fresh = false, budget = 60000 } = {}) {
-  if (!worker) worker = new Worker(new URL('./solver-worker.js?v=1.0.0', import.meta.url), { type: 'module' });
+  if (!worker) worker = new Worker(new URL('./solver-worker.js?v=1.0.2', import.meta.url), { type: 'module' });
   const id = ++request;
   return new Promise((resolve) => {
     const onMessage = (e) => {
@@ -463,6 +471,10 @@ updateHud();
 renderLevelList();
 setTimeout(() => shell.showCoach(), 900);
 
+// Kartenbilder für die Siegesfeier schon während des Spiels im Hintergrund vorbereiten
+celebration = new Celebration(view.el, lang);
+setTimeout(() => celebration.prepare(view.g.W), 2500);
+
 // Für automatische Tests im Browser (scripts/e2e.mjs). Jedes Spiel stellt history und e2e.move bereit.
 window.__game = {
   id: 'karo',
@@ -478,6 +490,26 @@ window.__game = {
       if (game.stock.length || game.canRecycle) return draw();
       const r = await ask();
       if (r?.move?.type === 'move') play(r.move.from, r.move.to);
+    },
+    // Zusätzliche Prüfungen für den Browser-Test: jede liefert true, wenn alles stimmt
+    checks: {
+      // Die letzte Karte auf die Ablage: springen danach Karten von den Ablagen?
+      async 'Siegesfeier'() {
+        game.tableau.forEach((c) => { c.down = []; c.up = []; });
+        game.stock = [];
+        game.waste = [];
+        game.foundations = [13, 13, 13, 12];
+        game.tableau[0].up = [51];
+        view.render({ animate: false });
+        play({ pile: 'tableau', col: 0, index: 0 }, { pile: 'foundation' });
+        // Die Feier muss anlaufen. Wie schnell, hängt vom Testrechner ab, darum bis zu 8 Sekunden warten.
+        for (let t = 0; t < 80 && (celebration?.launched || 0) < 3; t++) await new Promise((r) => setTimeout(r, 100));
+        const launched = celebration?.launched || 0;
+        const canvas = Boolean(document.querySelector('.table .celebration'));
+        celebration?.stop();
+        // Bei einem Fehler genau sagen, was fehlt
+        return launched >= 3 && canvas ? true : `gestartete Karten: ${launched}, Zeichenfläche: ${canvas}, Bilder fertig: ${celebration?.bitmaps.filter(Boolean).length}`;
+      },
     },
   },
 };

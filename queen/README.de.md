@@ -94,6 +94,8 @@ queen/
 │  ├─ themes.js            Brettstile Klassik und Mitternacht, Kronengravur
 │  ├─ view.js              Brett, Steine, Krone, Schalen, Eingabe
 │  └─ sound.js             Klänge von QUEEN
+├─ tools/
+│  └─ icons.mjs            erzeugt die App-Symbole
 ├─ icons/                  App-Symbole
 ├─ sw.js                   Offline-Betrieb
 ├─ manifest.webmanifest    Installation als App

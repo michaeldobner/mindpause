@@ -75,4 +75,4 @@ No dependencies, no build step. Everything KARO shares with the other games come
 
 ## Version
 
-Current version: **1.0.0**. See the [changelog](CHANGELOG.md).
+Current version: **1.0.2**. See the [changelog](CHANGELOG.md).
