@@ -36,3 +36,26 @@ jobs:
           name: screenshots
           path: e2e-output/
           retention-days: 14
+
+  safari:
+    name: Safari (WebKit)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Playwright mit WebKit installieren
+        run: |
+          npm install --no-save playwright@1.56.1
+          npx playwright install --with-deps webkit
+      - run: npm run e2e
+        env:
+          E2E_ENGINE: webkit
+      - name: Screenshots aus Safari
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: screenshots-safari
+          path: e2e-output/
+          retention-days: 14

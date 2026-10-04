@@ -91,7 +91,7 @@ Card size follows the available space. When a column gets long, its cards move c
 | Automatic finish | one card every 120 ms |
 | Celebration | one card every 240 ms, gravity, bounces, fading trails |
 
-With "Reduce motion", the celebration is skipped and moves arrive instantly.
+With "Reduce motion", moves arrive instantly. The celebration stays, but calmer: one card every 420 ms, slower, without trails. The celebration's card images are prepared in the background during play. If one is still missing at the win, that card bounces as a plain card with rank and suit.
 
 ## Sound
 

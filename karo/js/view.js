@@ -7,7 +7,7 @@
 //
 // Bedienung: Tippen legt eine Karte an den besten Platz, Ziehen geht auch.
 
-import { suitOf } from './cards.js?v=1.0.0';
+import { suitOf } from './cards.js?v=1.0.1';
 
 const TAP_SLOP = 8; // Pixel, ab denen aus einem Tippen ein Ziehen wird
 const RATIO = 1.4;

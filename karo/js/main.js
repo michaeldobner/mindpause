@@ -5,15 +5,15 @@ import { createShell } from '../../shared/js/shell.js?shell=1.2.0';
 import { createI18n } from '../../shared/js/i18n.js?shell=1.2.0';
 import { createStorage } from '../../shared/js/storage.js?shell=1.2.0';
 import { DEFAULT_STYLE } from '../../shared/js/sound-engine.js?shell=1.2.0';
-import { Game } from './game.js?v=1.0.0';
-import { TableView } from './view.js?v=1.0.0';
-import { KaroSound } from './sound.js?v=1.0.0';
-import { Celebration } from './celebrate.js?v=1.0.0';
-import { deckDefs } from './faces.js?v=1.0.0';
-import { LEVELS, levelById, seedFor } from './levels.js?v=1.0.0';
-import { KARO_STRINGS } from './strings.js?v=1.0.0';
+import { Game } from './game.js?v=1.0.1';
+import { TableView } from './view.js?v=1.0.1';
+import { KaroSound } from './sound.js?v=1.0.1';
+import { Celebration } from './celebrate.js?v=1.0.1';
+import { deckDefs } from './faces.js?v=1.0.1';
+import { LEVELS, levelById, seedFor } from './levels.js?v=1.0.1';
+import { KARO_STRINGS } from './strings.js?v=1.0.1';
 
-export const VERSION = '1.0.0';
+export const VERSION = '1.0.1';
 
 const storage = createStorage('karo:');
 const { load, save } = storage;
@@ -405,7 +405,7 @@ let worker = null;
 let request = 0;
 
 function ask({ fresh = false, budget = 60000 } = {}) {
-  if (!worker) worker = new Worker(new URL('./solver-worker.js?v=1.0.0', import.meta.url), { type: 'module' });
+  if (!worker) worker = new Worker(new URL('./solver-worker.js?v=1.0.1', import.meta.url), { type: 'module' });
   const id = ++request;
   return new Promise((resolve) => {
     const onMessage = (e) => {
@@ -463,6 +463,10 @@ updateHud();
 renderLevelList();
 setTimeout(() => shell.showCoach(), 900);
 
+// Kartenbilder für die Siegesfeier schon während des Spiels im Hintergrund vorbereiten
+celebration = new Celebration(view.el, lang);
+setTimeout(() => celebration.prepare(view.g.W), 2500);
+
 // Für automatische Tests im Browser (scripts/e2e.mjs). Jedes Spiel stellt history und e2e.move bereit.
 window.__game = {
   id: 'karo',
@@ -478,6 +482,23 @@ window.__game = {
       if (game.stock.length || game.canRecycle) return draw();
       const r = await ask();
       if (r?.move?.type === 'move') play(r.move.from, r.move.to);
+    },
+    // Zusätzliche Prüfungen für den Browser-Test: jede liefert true, wenn alles stimmt
+    checks: {
+      // Die letzte Karte auf die Ablage: springen danach Karten von den Ablagen?
+      async 'Siegesfeier'() {
+        game.tableau.forEach((c) => { c.down = []; c.up = []; });
+        game.stock = [];
+        game.waste = [];
+        game.foundations = [13, 13, 13, 12];
+        game.tableau[0].up = [51];
+        view.render({ animate: false });
+        play({ pile: 'tableau', col: 0, index: 0 }, { pile: 'foundation' });
+        await new Promise((r) => setTimeout(r, 1500));
+        const ok = (celebration?.launched || 0) >= 3 && Boolean(document.querySelector('.table .celebration'));
+        celebration?.stop();
+        return ok;
+      },
     },
   },
 };
