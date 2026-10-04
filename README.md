@@ -17,6 +17,7 @@ Classic board games, reimagined with tactile design and handcrafted sound. Free,
 | | Game | Description | Version |
 |---|---|---|---|
 | <img src="spring/icons/icon.svg" width="56" alt=""> | **[SPRING](spring/README.md)** · [play](https://michaeldobner.github.io/mindpause/spring/) | Peg solitaire on the classic cross-shaped board. Seven figures from easy to masterful, hints, a living rim, tilt | 2.1.0 |
+| <img src="karo/icons/icon.svg" width="56" alt=""> | **[KARO](karo/README.md)** · [play](https://michaeldobner.github.io/mindpause/karo/) | Classic solitaire as on Windows. Draw one or three, points or Vegas, levels that can always be solved, hints | 1.0.0 |
 
 More games are on the way, see the [roadmap](#roadmap).
 
@@ -47,6 +48,7 @@ mindpause/
 │  ├─ js/                  shell, languages, storage, sound engine
 │  └─ tests/               tests of the shell
 ├─ spring/                 SPRING, see spring/README.md
+├─ karo/                   KARO, see karo/README.md
 ├─ scripts/
 │  ├─ release.mjs          sets the version of a game or of the shell
 │  └─ e2e.mjs              browser test of the whole collection
@@ -96,6 +98,7 @@ Every reference carries its version (`?v=` for game files, `?shell=` for shell f
 |---|---|---|
 | SPRING | Peg solitaire, 7 figures, hints, tilt | Done |
 | Collection | Shell, home page, tests across all games | Done |
+| KARO | Klondike solitaire, draw one or three, Windows and Vegas scoring, solvable levels | Done |
 | Next game | Checkers (Dame) against the computer and for two players on one device | Planned |
 | Later | Playing against each other on two devices | Idea |
 
