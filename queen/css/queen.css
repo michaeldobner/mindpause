@@ -1,0 +1,59 @@
+/* QUEEN · Brett, Ziele und Vorschau der Modi
+ * Nur was QUEEN eigen ist. Alles andere kommt aus shared/tokens.css und shared/shell.css.
+ */
+
+:root {
+  --target: rgba(255, 255, 255, 0.9);
+}
+
+.board .target {
+  fill: none;
+  stroke: var(--target);
+  stroke-width: 4;
+  stroke-dasharray: 3 10;
+  stroke-linecap: round;
+  animation: pulse 1.4s ease-in-out infinite;
+}
+
+.board .target.hint {
+  stroke: var(--hint);
+  stroke-width: 6;
+  stroke-dasharray: none;
+}
+
+@keyframes pulse {
+  50% {
+    opacity: 0.45;
+  }
+}
+
+.board .piece {
+  cursor: pointer;
+}
+
+/* Vorschau der Modi in der Auswahl */
+.level-card .plate {
+  fill: #1c205c;
+}
+
+.level-card .d {
+  fill: #141752;
+}
+
+.level-card .l {
+  fill: #262b72;
+}
+
+.level-card .b {
+  fill: #3f6ef0;
+}
+
+.level-card .k {
+  fill: #0d0e14;
+  stroke: #3a3e66;
+  stroke-width: 0.8;
+}
+
+.level-card .g {
+  fill: #e3b448;
+}

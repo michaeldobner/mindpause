@@ -6,7 +6,7 @@
 
 A ceramic marble landing on a wooden board: warm, round, with a short bright ring and a touch of room. Like a fine object in a living room, not like a slot machine.
 
-All sounds are synthesised live in the browser with the Web Audio API. The sound engine with mastering, sound styles and the building blocks contact, wood and ceramic belongs to the shell (`shared/js/sound-engine.js`) and is available to every game. SPRING's own sounds (lift, land, rim) live in `spring/js/sound.js`. There are no audio files, so SPRING stays small, works fully offline and every sound can be tuned precisely.
+All sounds are synthesised live in the browser with the Web Audio API. The sound engine with mastering, sound styles and the building blocks contact, wood and ceramic belongs to the shell (`shared/js/sound-engine.js`) and is available to every game. SPRING's own sounds (lift, land, rim) live in `spring/js/sound.js`. Rolling and bumps in the rim come from the sound engine since shell 1.1.0, so QUEEN uses them too. There are no audio files, so SPRING stays small, works fully offline and every sound can be tuned precisely.
 
 ## Anatomy of a jump
 

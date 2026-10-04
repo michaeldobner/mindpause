@@ -2,6 +2,18 @@
 
 All notable changes to the MIND PAUSE shell. [Deutsch](CHANGELOG.de.md)
 
+## 1.1.0 (2026-10-04)
+
+Building blocks for QUEEN, available to every game.
+
+### New
+* `gutter.js`: rim physics, previously part of SPRING. New `arc` option for straight trays with walls at both ends and `speedScale` for circles of a different radius.
+* `tilt.js`: motion sensor, previously part of SPRING.
+* `SoundEngine.rim()` and `SoundEngine.clack(strength)`: rim sounds, previously part of SPRING.
+
+### Improved
+* The header never wraps: level name and counter label stay on one line, and on narrow iPhones (below 360 px) the counter is more compact.
+
 ## 1.0.0 (2026-10-04)
 
 First version, extracted from SPRING 2.0.3.
