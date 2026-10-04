@@ -1,22 +1,23 @@
 // QUEEN: Deutsche Dame gegen den Computer oder zu zweit an einem Gerät.
 // Die Oberfläche kommt aus der Hülle (shared/js/shell.js), hier steht nur, was QUEEN eigen ist.
 
-import { createShell } from '../../shared/js/shell.js?shell=1.3.0';
-import { createI18n } from '../../shared/js/i18n.js?shell=1.3.0';
-import { createStorage } from '../../shared/js/storage.js?shell=1.3.0';
-import { DEFAULT_STYLE } from '../../shared/js/sound-engine.js?shell=1.3.0';
-import { Tilt } from '../../shared/js/tilt.js?shell=1.3.0';
-import { BLUE, BLACK } from './rules.js?v=1.1.1';
-import { Game } from './game.js?v=1.1.1';
-import { QueenView } from './view.js?v=1.1.1';
-import { QueenSound } from './sound.js?v=1.1.1';
-import { THEMES, THEME_IDS, DEFAULT_THEME } from './themes.js?v=1.1.1';
-import { QUEEN_STRINGS } from './strings.js?v=1.1.1';
+import { createShell } from '../../shared/js/shell.js?shell=1.4.0';
+import { createI18n } from '../../shared/js/i18n.js?shell=1.4.0';
+import { createStorage } from '../../shared/js/storage.js?shell=1.4.0';
+import { DEFAULT_STYLE } from '../../shared/js/sound-engine.js?shell=1.4.0';
+import { Tilt } from '../../shared/js/tilt.js?shell=1.4.0';
+import { BLUE, BLACK } from './rules.js?v=1.2.0';
+import { Game } from './game.js?v=1.2.0';
+import { QueenView } from './view.js?v=1.2.0';
+import { QueenSound } from './sound.js?v=1.2.0';
+import { THEMES, THEME_IDS, DEFAULT_THEME } from './themes.js?v=1.2.0';
+import { QUEEN_STRINGS } from './strings.js?v=1.2.0';
 
-export const VERSION = '1.1.1';
+export const VERSION = '1.2.0';
 
 const MODES = [
-  { id: 'easy', computer: true, difficulty: 1 },
+  { id: 'beginner', computer: true, difficulty: 1 },
+  { id: 'easy', computer: true, difficulty: 2 },
   { id: 'medium', computer: true, difficulty: 3 },
   { id: 'hard', computer: true, difficulty: 5 },
   { id: 'duo', computer: false, difficulty: 0 },
@@ -32,7 +33,7 @@ const { t, lang } = i18n;
 
 const sound = new QueenSound({ enabled: load('sound', true), style: load('soundStyle', DEFAULT_STYLE) });
 let stats = load('stats', {});
-let mode = MODES.find((m) => m.id === load('mode', 'medium')) || MODES[1];
+let mode = MODES.find((m) => m.id === load('mode', 'easy')) || MODES[1];
 const game = new Game();
 let flipWanted = load('flip', false);
 let theme = THEME_IDS.includes(load('theme', DEFAULT_THEME)) ? load('theme', DEFAULT_THEME) : DEFAULT_THEME;
@@ -65,7 +66,7 @@ const shell = createShell({
   i18n,
   storage,
   sound,
-  buttons: ['undo', 'hint', 'restart', 'levels', 'settings'],
+  buttons: ['undo', 'hint', 'restart', 'resign', 'levels', 'settings'],
   levels: { buttonKey: 'modes', titleKey: 'chooseMode', nextKey: 'nextLevel' },
   settings: [
     { id: 'theme', nameKey: 'theme', options: THEME_IDS.map((id) => ({ value: id, labelKey: `themes.${id}` })) },
@@ -79,6 +80,7 @@ const shell = createShell({
     undo,
     hint,
     restart: newGame,
+    resign,
     again: newGame,
     back: undo,
     next: () => {
@@ -130,7 +132,10 @@ function updateHud() {
   shell.setCounter(`${blue}:${black}`, label);
   shell.setDisabled('undo', game.history.length === 0 && !(previousGame && previousGame.mode === mode.id));
   shell.setDisabled('hint', game.isOver || (mode.computer && game.turn !== HUMAN));
+  shell.setDisabled('resign', game.isOver || game.history.length === 0);
   shell.setLevelLabel(t(`modeLabel.${mode.id}`));
+  const last = game.history[game.history.length - 1];
+  view.markLast(last ? last.move : null);
   shell.renderLevels(MODES.map((m) => {
     const s = statsFor(m.id);
     return {
@@ -192,7 +197,7 @@ async function computerMove() {
   const started = performance.now();
   const move = await askAI(mode.id);
   // Kurze, natürliche Pause, auch wenn die Rechnung schnell war
-  const rest = 450 - (performance.now() - started);
+  const rest = 700 - (performance.now() - started);
   if (rest > 0) await new Promise((r) => setTimeout(r, rest));
   if (request !== aiRequest) return; // inzwischen Zurück, Neu oder Moduswechsel
   thinking = false;
@@ -211,7 +216,7 @@ async function computerMove() {
 
 let worker = null;
 function askAI(level) {
-  if (!worker) worker = new Worker(new URL('./ai-worker.js?v=1.1.1', import.meta.url), { type: 'module' });
+  if (!worker) worker = new Worker(new URL('./ai-worker.js?v=1.2.0', import.meta.url), { type: 'module' });
   const id = Math.random();
   return new Promise((resolve) => {
     const onMessage = (e) => {
@@ -249,7 +254,13 @@ function checkEnd() {
   let title;
   let text;
   let highlight = false;
-  if (result.draw) {
+  if (result.resigned) {
+    // Aufgegeben: gegen den Computer immer eine Niederlage, zu zweit gewinnt die andere Seite
+    const [win, gaveUp] = t('resigned');
+    title = mode.computer ? t('lost')[0] : win.replace('{side}', sideName(result.winner));
+    text = gaveUp.replace('{side}', sideName(-result.winner));
+    highlight = !mode.computer;
+  } else if (result.draw) {
     [title] = t('draw');
     text = t(result.draw === 'repetition' ? 'drawRepetition' : 'drawQuiet');
   } else if (mode.computer) {
@@ -311,8 +322,41 @@ async function newGame() {
   await view.sync(game);
 }
 
+// Aufgeben nach einer Rückfrage. Gegen den Computer gibt immer die eigene Seite auf, zu zweit die Seite am Zug.
+async function resign() {
+  if (game.isOver || game.history.length === 0) return;
+  const side = mode.computer ? HUMAN : game.turn;
+  const ok = await shell.confirm({
+    title: t('resignTitle'),
+    text: mode.computer ? t('resignText') : t('resignTextDuo', { side: sideName(side), other: sideName(-side) }),
+    ok: t('resign'),
+  });
+  if (!ok || game.isOver) return;
+  stopComputer();
+  previousGame = null;
+  game.resign(side);
+  persist();
+  updateHud();
+  checkEnd();
+}
+
 async function undo() {
   shell.hideResult();
+  // Nach dem Aufgeben: Zurück nimmt nur das Aufgeben zurück
+  if (game.resigned) {
+    game.resign(null);
+    if (counted) {
+      // Die schon gezählte Niederlage wieder herausnehmen
+      const st = statsFor(mode.id);
+      stats = { ...stats, [mode.id]: { ...st, games: Math.max(0, st.games - 1), losses: Math.max(0, st.losses - (mode.computer ? 1 : 0)) } };
+      save('stats', stats);
+      counted = false;
+    }
+    persist();
+    updateHud();
+    if (mode.computer && game.turn !== HUMAN) computerMove();
+    return;
+  }
   // Direkt nach Neu: Zurück holt das vorherige Spiel zurück
   if (game.history.length === 0 && previousGame && previousGame.mode === mode.id) {
     game.restore(previousGame.state);

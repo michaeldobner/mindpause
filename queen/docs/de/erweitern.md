@@ -7,25 +7,26 @@
 1. Eintrag in `LEVELS` in `queen/js/ai.js`:
 
 ```js
-expert: { depth: 20, time: 2000, noise: 0, blunder: 0 },
+expert: { depth: 20, quiet: 10, time: 2000, noise: 0 },
 ```
 
 | Wert | Bedeutung |
 |---|---|
 | `depth` | Höchste Suchtiefe in Halbzügen |
 | `time` | Zeitbudget in Millisekunden |
+| `quiet` | Wie viele Halbzüge ein laufender Schlagabtausch am Ende der Suche weitergerechnet wird |
 | `noise` | Spielraum in Punkten: Gewählt wird zufällig unter Zügen, die höchstens so viel schlechter sind als der beste |
-| `blunder` | Anteil der Züge, die ganz zufällig gewählt werden |
+| `careless` | Optional: Anteil unaufmerksamer Züge, die wie auf Einsteiger nur den eigenen Zug ansehen |
 
 2. Modus in `MODES` in `queen/js/main.js` ergänzen, mit `computer: true` und einer Schwierigkeit von 1 bis 5.
 3. Namen unter `mode` und `modeLabel` in `queen/js/strings.js` in beiden Sprachen.
-4. Mit dem Beispiel aus [Entwicklung](entwicklung.md#spielstärke-prüfen) prüfen, dass die neue Stufe die nächstschwächere deutlich schlägt.
+4. Mit dem Beispiel aus [Entwicklung](entwicklung.md#spielstärke-prüfen) prüfen, dass die neue Stufe die nächstschwächere deutlich schlägt, aber nicht immer. Bewährt haben sich 80 bis 90 % Siege.
 
 ## Bewertung verbessern
 
 `evaluate()` in `queen/js/ai.js` ist bewusst einfach. Bewährte Ergänzungen aus der Damesoftware:
 
-* **Beweglichkeit:** Zahl der eigenen Züge minus Zahl der gegnerischen.
+* **Beweglichkeit:** Zahl der eigenen Züge minus Zahl der gegnerischen. Im Endspiel mit klarem Vorsprung wird das schon genutzt.
 * **Gedeckte Steine:** Steine mit einem eigenen Stein dahinter können nicht geschlagen werden.
 * **Fluchtweg zur Krone:** Ein Stein mit freiem Weg zur Grundreihe ist fast eine Dame.
 * **Endspielwissen:** Drei Damen gegen eine gewinnen, eine Dame gegen eine ist Remis.
@@ -84,6 +85,7 @@ Die Spiellogik ist darauf vorbereitet: Ein Zug lässt sich mit `{ from, path }` 
 |---|---|---|
 | 1.0 | Deutsche Dame, drei Computerstufen, Zu zweit, Krone, Schalen, Tipps, Sterne, zweisprachig | Fertig |
 | 1.1 | Brettstile Klassik und Mitternacht, gravierte Königinnenkrone | Fertig |
-| 1.2 | Zug per Link für das Spiel auf zwei Geräten | Geplant |
+| 1.2 | Vier Stufen mit Einsteiger, Aufgeben, ruhige Computerzüge, Markierung des letzten Zugs | Fertig |
+| 1.3 | Zug per Link für das Spiel auf zwei Geräten | Geplant |
 | 1.x | Bessere Bewertung, Stufe Meister, Partie nachspielen | Geplant |
 | 2.0 | Live mit Raumcode | Idee |

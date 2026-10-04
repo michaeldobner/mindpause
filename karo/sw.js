@@ -4,7 +4,7 @@
 // Dateien der Hülle ?shell=<Version der Hülle> (siehe scripts/release.mjs).
 // So können sich alte und neue Dateien nie mischen.
 const VERSION = '1.0.2';
-const SHELL = '1.3.0';
+const SHELL = '1.4.0';
 const CACHE = `karo-v${VERSION}-shell${SHELL}`;
 
 const FILES = [

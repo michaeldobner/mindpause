@@ -4,7 +4,7 @@
 
 **Deutsche Dame für iPhone und iPad.**
 
-Gegen den Computer in drei Stufen oder zu zweit an einem Gerät. Wer die gegnerische Grundreihe erreicht, wird gekrönt.
+Gegen den Computer in vier Stufen oder zu zweit an einem Gerät. Wer die gegnerische Grundreihe erreicht, wird gekrönt.
 
 [**▶ Jetzt spielen**](https://michaeldobner.github.io/mindpause/queen/) · [English](README.md) · [Dokumentation](docs/de/README.md) · [Changelog](CHANGELOG.de.md)
 
@@ -27,7 +27,9 @@ QUEEN bringt das klassische Damespiel in die ruhige Welt von MIND PAUSE: schwarz
 | | |
 |---|---|
 | **Deutsche Dame** | 8×8, Steine schlagen auch rückwärts, fliegende Damen, Schlagpflicht, Mehrfachschlag |
-| **Drei Computerstufen** | Leicht, Mittel, Schwer. Der Computer rechnet im Hintergrund, die Oberfläche bleibt flüssig |
+| **Vier Computerstufen** | Einsteiger, Leicht, Mittel, Schwer, sorgfältig gegeneinander abgestimmt. Niedrige Stufen übersehen Dinge wie ein Mensch, statt plötzlich Steine zu verschenken |
+| **Ruhige Computerzüge** | Der Stein hebt sich an und zieht langsam, der letzte Zug bleibt dezent markiert |
+| **Aufgeben** | Eigene Schaltfläche, mit Rückfrage und rückgängig zu machen |
 | **Zu zweit** | Zwei Personen an einem Gerät, auf Wunsch dreht sich das Brett nach jedem Zug |
 | **Gravierte Krone** | Wer die Grundreihe erreicht, wird zur Dame: Eine Königinnenkrone in feiner Goldgravur erscheint, dazu ein Glockenton |
 | **Zwei Brettstile** | Klassik mit Ebenholz, Ahorn und goldenen Koordinaten oder Mitternacht in Tiefblau |
@@ -103,4 +105,4 @@ queen/
 
 ## Version
 
-Aktuelle Version: **1.1.1**. Siehe [Changelog](CHANGELOG.de.md).
+Aktuelle Version: **1.2.0**. Siehe [Changelog](CHANGELOG.de.md).

@@ -51,7 +51,7 @@ QUEEN has two board styles, chosen under **More > Board**. Both share the same g
 | Blue pieces | Gradient from `#86abff` via `#3f6ef0` to `#2142b4` | Glazed ceramic |
 | Black pieces | Gradient from `#5e616e` via `#1d1e26` to `#07070a` | Dark ceramic with a highlight |
 
-In both styles target rings are white, dotted and pulsing. The hint ring is a solid ring in the hint colour of the shell (`--hint`).
+In both styles target rings are white, dotted and pulsing. The hint ring is a solid ring in the hint colour of the shell (`--hint`). The last move is marked subtly: the start and target squares become slightly lighter (`q-last`, a warm ivory at 13 % opacity in the Classic style, a light blue at 12 % in Midnight).
 
 ## Geometry
 
@@ -107,6 +107,8 @@ The tilt of the device is turned back into board space, so pieces in the trays s
 | Capture | A slightly higher arc per jump, square by square along the path | 300 ms per jump |
 | Dragged piece released | Glides into the target without an arc | 160 ms |
 | Captured piece | Rolls in a flat arc into the tray and shrinks, several pieces one after another 90 ms apart | 420 ms |
+| Computer move | Thinking pause at least 0.7 s, the piece lifts (0.38 s), moves calmly (0.52 s per jump, 0.14 s pause in between), jumped pieces fade at once | about 1.5 s |
+| Last move | Start and target squares stay slightly lighter until the next move | stays |
 | Crowning | The engraving fades in and grows slightly, the piece lifts briefly | 520 ms |
 | Board style switch | The board fades out and back in with the new style | 330 ms |
 | Piece without moves | Wiggles sideways | 260 ms |
@@ -120,7 +122,7 @@ Animations run one after another through a queue, so a quick tap on Undo is neve
 
 | Situation | Arrangement |
 |---|---|
-| iPhone portrait | Wordmark, mode and counter at the top, board in the middle, five buttons at the bottom. Modes and settings as sheets from the bottom |
+| iPhone portrait | Wordmark, mode and counter at the top, board in the middle, six buttons at the bottom (Undo, Hint, New, Resign, Modes, More), a little smaller than with five. Modes and settings as sheets from the bottom |
 | iPhone landscape | Wordmark and counter on the left, turned board in the middle, buttons on the right. Modes as a drawer |
 | iPhone SE | Counter on two lines and a little smaller, so the header never wraps |
 | iPad portrait | Like iPhone portrait, with more room |

@@ -223,6 +223,23 @@
   }
 }
 
+/* Sechs Schaltflächen: etwas kleiner, damit alles auch auf schmalen iPhones passt */
+.controls.many {
+  gap: clamp(2px, 1.6vw, 20px);
+}
+
+.controls.many .icon-btn {
+  flex-basis: 54px;
+  font-size: 9.5px;
+  letter-spacing: 0.04em;
+}
+
+.controls.many .icon-btn svg {
+  width: 48px;
+  height: 48px;
+  padding: 13px;
+}
+
 /* ---------- Ergebnis ---------- */
 
 .result {
@@ -668,6 +685,17 @@
     height: 46px;
     padding: 12px;
   }
+
+  .controls.many .icon-btn {
+    font-size: 8px;
+    letter-spacing: 0.02em;
+  }
+
+  .controls.many .icon-btn svg {
+    width: 42px;
+    height: 42px;
+    padding: 11px;
+  }
 }
 
 /* ---------- iPhone quer: Steuerung rechts, Figuren als Schublade links ---------- */
@@ -710,6 +738,21 @@
     width: 42px;
     height: 42px;
     padding: 10px;
+  }
+
+  .controls.many {
+    gap: 4px;
+  }
+
+  .controls.many .icon-btn {
+    flex-basis: auto;
+    font-size: 8.5px;
+  }
+
+  .controls.many .icon-btn svg {
+    width: 38px;
+    height: 38px;
+    padding: 9px;
   }
 
   .panel {

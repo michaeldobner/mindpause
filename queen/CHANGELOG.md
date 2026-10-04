@@ -2,6 +2,23 @@
 
 All notable changes to QUEEN. [Deutsch](CHANGELOG.de.md)
 
+## 1.2.0 (2026-10-04)
+
+### New
+* **Four computer levels:** new **Beginner** level that only looks at its own move and falls for simple capture traps. **Easy** is clearly easier than before. The low levels overlook things like a person instead of suddenly giving pieces away. Each level beats the next weaker one in about 85 to 90 % of test games.
+* **Resign** as a button of its own, with confirmation. Against the computer it counts as a loss, with two players the side to move resigns. Undo takes back the resignation and its statistics entry.
+* **Calm computer moves:** thinking pause of at least 0.7 seconds, the piece visibly lifts and moves slowly, in a multiple capture jump by jump. Jumped pieces fade at once.
+* **Last move marker:** start and target squares stay subtly lighter.
+
+### Improved
+* The computer finishes won endgames faster: its queens close in on the last pieces, hold the long diagonal and restrict the opponent.
+* On the very first start Easy is now selected.
+
+### Technical
+* New `quiet` and `careless` values for the levels in `js/ai.js`, resigning in `Game` (saved with the game).
+* Requires shell 1.4.0 for the Resign button and the confirmation.
+* New tests for resigning and the level ladder, now 22 tests for QUEEN.
+
 ## 1.1.1 (2026-10-04)
 
 ### Design

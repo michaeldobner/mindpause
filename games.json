@@ -23,7 +23,7 @@
       "de": "Deutsche Dame gegen den Computer in drei Stufen oder zu zweit an einem Gerät. Wer die Grundreihe erreicht, wird gekrönt.",
       "en": "German checkers against the computer on three levels or for two players on one device. Reach the far row and be crowned."
     },
-    "icon": "queen/icons/icon.svg?v=1.1.1"
+    "icon": "queen/icons/icon.svg?v=1.2.0"
   },
   {
     "id": "karo",

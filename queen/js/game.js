@@ -1,7 +1,7 @@
 // Ein Spiel QUEEN: Brett, wer am Zug ist, Verlauf für Zurück, Spielende und Remis.
 // Jeder Stein hat eine feste Nummer (id), damit die Darstellung ihn flüssig bewegen kann.
 
-import { BLUE, BLACK, DRAW_PLIES, initialBoard, legalMoves, applyMove, countPieces, positionKey, sideOf, isKing } from './rules.js?v=1.1.1';
+import { BLUE, BLACK, DRAW_PLIES, initialBoard, legalMoves, applyMove, countPieces, positionKey, sideOf, isKing } from './rules.js?v=1.2.0';
 
 export class Game {
   constructor() {
@@ -17,6 +17,7 @@ export class Game {
     });
     this.turn = BLUE;
     this.quiet = 0; // Halbzüge in Folge nur mit Damen und ohne Schlag
+    this.resigned = null; // Seite, die aufgegeben hat
     this.history = [];
     this.seen = new Map([[positionKey(this.board, this.turn), 1]]);
     this.moves = legalMoves(this.board, this.turn);
@@ -82,8 +83,14 @@ export class Game {
     return countPieces(this.board);
   }
 
-  // Ergebnis: null (läuft), { winner: BLUE | BLACK } oder { draw: 'repetition' | 'quiet' }
+  // Aufgeben: die Seite side gibt auf, die andere gewinnt. Mit null wieder aufheben.
+  resign(side) {
+    this.resigned = side;
+  }
+
+  // Ergebnis: null (läuft), { winner: BLUE | BLACK, resigned? } oder { draw: 'repetition' | 'quiet' }
   get result() {
+    if (this.resigned) return { winner: -this.resigned, resigned: true };
     if (this.moves.length === 0) return { winner: -this.turn };
     if (this.quiet >= DRAW_PLIES) return { draw: 'quiet' };
     if (this.seen.get(positionKey(this.board, this.turn)) >= 3) return { draw: 'repetition' };
@@ -100,7 +107,7 @@ export class Game {
   }
 
   serialize() {
-    return { board: this.board, ids: this.ids, turn: this.turn, quiet: this.quiet, plies: this.history.length };
+    return { board: this.board, ids: this.ids, turn: this.turn, quiet: this.quiet, plies: this.history.length, resigned: this.resigned };
   }
 
   // Gespeichertes Spiel fortsetzen (ohne Verlauf für Zurück)
@@ -110,6 +117,7 @@ export class Game {
     this.ids = data.ids;
     this.turn = data.turn === BLACK ? BLACK : BLUE;
     this.quiet = data.quiet || 0;
+    this.resigned = data.resigned === BLUE || data.resigned === BLACK ? data.resigned : null;
     this.history = [];
     this.seen = new Map([[positionKey(this.board, this.turn), 1]]);
     this.moves = legalMoves(this.board, this.turn);

@@ -17,7 +17,7 @@ Classic board games, reimagined with tactile design and handcrafted sound. Free,
 | | Game | Description | Version |
 |---|---|---|---|
 | <img src="spring/icons/icon.svg" width="56" alt=""> | **[SPRING](spring/README.md)** · [play](https://michaeldobner.github.io/mindpause/spring/) | Peg solitaire on the classic cross-shaped board. Seven figures from easy to masterful, hints, a living rim, tilt | 2.1.1 |
-| <img src="queen/icons/icon.svg" width="56" alt=""> | **[QUEEN](queen/README.md)** · [play](https://michaeldobner.github.io/mindpause/queen/) | German checkers against the computer at three levels or for two players on one device. Ebony, maple and an engraved golden crown, trays for captured pieces | 1.1.1 |
+| <img src="queen/icons/icon.svg" width="56" alt=""> | **[QUEEN](queen/README.md)** · [play](https://michaeldobner.github.io/mindpause/queen/) | German checkers against the computer at four levels or for two players on one device. Ebony, maple and an engraved golden crown, trays for captured pieces | 1.2.0 |
 | <img src="karo/icons/icon.svg" width="56" alt=""> | **[KARO](karo/README.md)** · [play](https://michaeldobner.github.io/mindpause/karo/) | Classic solitaire as on Windows. Draw one or three, points or Vegas, levels that can always be solved, hints | 1.0.2 |
 | <img src="fuge/icons/icon.svg" width="56" alt=""> | **[FUGE](fuge/README.md)** · [play](https://michaeldobner.github.io/mindpause/fuge/) | The classic falling block game as a lacquered wooden box. Classic, Sprint, 3 minutes and an endless Calm mode, gestures instead of buttons | 1.0.1 |
 
@@ -84,7 +84,7 @@ On every push GitHub Actions runs both. The browser test uploads screenshots of 
 
 ```bash
 node scripts/release.mjs spring 2.2.0   # new version of SPRING
-node scripts/release.mjs shell 1.3.0    # new version of the shell, affects every game
+node scripts/release.mjs shell 1.5.0    # new version of the shell, affects every game
 ```
 
 Every reference carries its version (`?v=` for game files, `?shell=` for shell files). A device therefore never mixes old and new files after an update. `tests/release.test.js` checks this on every push.
@@ -104,10 +104,10 @@ Every reference carries its version (`?v=` for game files, `?shell=` for shell f
 |---|---|---|
 | SPRING | Peg solitaire, 7 figures, hints, tilt | Done |
 | Collection | Shell, home page, tests across all games | Done |
-| QUEEN | German checkers, three computer levels, two players on one device | Done |
+| QUEEN | German checkers, four computer levels, two players on one device | Done |
 | KARO | Klondike solitaire, draw one or three, Windows and Vegas scoring, solvable levels | Done |
 | FUGE | Falling blocks as a wooden box, four modes, gestures, shell 1.3.0 with custom buttons | Done |
-| QUEEN 1.2 | Playing each other on two devices, stage 1: move by link | Planned |
+| QUEEN 1.3 | Playing each other on two devices, stage 1: move by link | Planned |
 | Later | Live with a room code, more games | Idea |
 
 ## Writing style

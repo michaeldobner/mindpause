@@ -41,6 +41,7 @@ QUEEN checks every rule itself. You cannot make an illegal move, and when you ta
 | Win | The other side cannot move, because it has no pieces left or all of them are blocked |
 | Draw by repetition | The same position with the same side to move occurs for the third time |
 | Draw by standstill | 30 plies in a row in which only queens move and nothing is captured |
+| Resignation | One side resigns, the other wins |
 
 A ply is the move of one side, so 30 plies are 15 moves per side.
 
@@ -48,8 +49,9 @@ A ply is the move of one side, so 30 plies are 15 moves per side.
 
 | Mode | Opponent | Playing style |
 |---|---|---|
-| **Easy** | Computer | Looks two plies ahead, chooses loosely among good moves and now and then makes a human mistake. Good for learning |
-| **Medium** | Computer | Looks five plies ahead and almost always picks one of the best moves. A serious opponent |
+| **Beginner** | Computer | Only looks at its own move, never at your reply. Leaves pieces unprotected and falls for simple capture traps. For learning the rules |
+| **Easy** | Computer | Looks two plies ahead, but often misses what follows a capture and is careless every other move. For casual games |
+| **Medium** | Computer | Looks four plies ahead and usually calculates exchanges to the end, but is careless now and then. A serious opponent |
 | **Hard** | Computer | Looks as deep as it can in just under a second and always plays the best move it finds |
 | **Two players** | Human | Two people take turns on one device |
 
@@ -57,7 +59,11 @@ Choose the mode at any time with the **Modes** button (on an iPad in landscape i
 
 <img src="../images/iphone-modes-en.jpg" width="260" alt="Choose a mode">
 
-While the computer is thinking, the header shows "Black thinks". It always takes just under half a second, so its move is easy to follow.
+The levels are balanced so that each clearly beats the next weaker one, in about 85 to 90 % of test games. The mistakes of the low levels are meant to feel human: the computer overlooks things, it never suddenly gives a piece away on purpose.
+
+### The computer's move
+
+While the computer is thinking, the header shows "Black thinks", for at least 0.7 seconds. Then the piece that will move lifts visibly and moves calmly to its target, in a multiple capture jump by jump. Every jumped piece fades at once and then rolls into the tray. The start and target squares of the last move stay subtly lighter until the next move. Every move can be followed even after looking away for a moment.
 
 ## Stars and statistics
 
@@ -71,7 +77,7 @@ Stars are awarded for wins against the computer, separately for each level:
 
 For every mode QUEEN counts games, wins, losses and draws. With two players there are no stars, and the result card names the winning colour.
 
-After a win against Easy or Medium the result card offers **Next level**.
+After a win against Beginner, Easy or Medium the result card offers **Next level**.
 
 <img src="../images/iphone-result-en.jpg" width="260" alt="Result card after a win">
 
@@ -95,12 +101,13 @@ If two different capture paths lead to the same final square, QUEEN takes the on
 | **Undo** | Takes back your last move, against the computer together with its reply. If the computer is thinking, Undo cancels it |
 | **Hint** | The computer calculates the best move for the side to move at Hard level and marks it with a golden ring |
 | **New** | Starts a new game in the same mode at once. If you tapped it by mistake, Undo brings the old game back |
+| **Resign** | Ends the game after a confirmation. Against the computer it counts as a loss, with two players the side to move resigns. Undo on the result card takes the resignation back, including the statistics entry |
 | **Modes** | Opens the choice of modes |
 | **More** | Opens the settings |
 
 ### Progress
 
-QUEEN saves every move. If you close the app in the middle of a game, it continues at the same point in the same mode the next time you open it. Undo then reaches back to that resumed position. On the very first start the mode is Medium.
+QUEEN saves every move. If you close the app in the middle of a game, it continues at the same point in the same mode the next time you open it. Undo then reaches back to that resumed position. On the very first start the mode is Easy.
 
 ## The trays
 

@@ -51,7 +51,7 @@ QUEEN hat zwei Brettstile, wählbar unter **Mehr > Brett**. Beide nutzen dieselb
 | Blaue Steine | Verlauf von `#86abff` über `#3f6ef0` nach `#2142b4` | Glasierte Keramik |
 | Schwarze Steine | Verlauf von `#5e616e` über `#1d1e26` nach `#07070a` | Dunkle Keramik mit Glanzlicht |
 
-In beiden Stilen gilt: Zielringe sind weiß, gepunktet und pulsieren. Der Tippring ist ein durchgehender Ring in der Tippfarbe der Hülle (`--hint`).
+In beiden Stilen gilt: Zielringe sind weiß, gepunktet und pulsieren. Der Tippring ist ein durchgehender Ring in der Tippfarbe der Hülle (`--hint`). Der letzte Zug wird dezent markiert: Start- und Zielfeld werden leicht heller (`q-last`, im Stil Klassik ein warmes Elfenbein mit 13 % Deckkraft, im Stil Mitternacht ein helles Blau mit 12 %).
 
 ## Geometrie
 
@@ -107,6 +107,8 @@ Die Neigung des Geräts wird in den Brettraum zurückgerechnet, damit Steine in 
 | Schlag | Etwas höherer Bogen je Sprung, Feld für Feld entlang des Wegs | 300 ms je Sprung |
 | Gezogener Stein, losgelassen | Gleitet ohne Bogen ins Ziel | 160 ms |
 | Geschlagener Stein | Rollt in einem flachen Bogen in die Schale und wird dabei kleiner, mehrere Steine nacheinander im Abstand von 90 ms | 420 ms |
+| Computerzug | Denkpause mindestens 0,7 s, Stein hebt sich an (0,38 s), zieht ruhig (0,52 s je Sprung, 0,14 s Pause dazwischen), übersprungene Steine verblassen sofort | etwa 1,5 s |
+| Letzter Zug | Start- und Zielfeld bleiben leicht aufgehellt, bis wieder gezogen wird | bleibt |
 | Krönung | Die Gravur blendet ein und wächst leicht auf, der Stein hebt sich kurz an | 520 ms |
 | Wechsel des Brettstils | Brett blendet aus und im neuen Stil wieder ein | 330 ms |
 | Ungültiger Stein | Wackelt seitlich | 260 ms |
@@ -120,7 +122,7 @@ Animationen laufen nacheinander über eine Warteschlange. Ein schneller Tipp auf
 
 | Situation | Anordnung |
 |---|---|
-| iPhone hoch | Schriftzug, Modus und Zähler oben, Brett mittig, fünf Schaltflächen unten. Modi und Einstellungen als Blätter von unten |
+| iPhone hoch | Schriftzug, Modus und Zähler oben, Brett mittig, sechs Schaltflächen unten (Zurück, Tipp, Neu, Aufgeben, Modi, Mehr), etwas kleiner als bei fünf. Modi und Einstellungen als Blätter von unten |
 | iPhone quer | Schriftzug und Zähler links, gedrehtes Brett mittig, Schaltflächen rechts. Modi als Schublade |
 | iPhone SE | Zähler zweizeilig und etwas kleiner, damit die Kopfzeile nicht umbricht |
 | iPad hoch | Wie iPhone hoch, mit mehr Platz |

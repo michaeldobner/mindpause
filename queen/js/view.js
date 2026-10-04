@@ -5,10 +5,10 @@
 // Im Querformat dreht eine Transformation das Brett um 90°, die Schalen liegen dann links und
 // rechts. Beim Spiel zu zweit kann sich das Brett zusätzlich nach jedem Zug um 180° drehen.
 
-import { Gutter } from '../../shared/js/gutter.js?shell=1.3.0';
-import { BLUE, BLACK } from './rules.js?v=1.1.1';
-import { Game } from './game.js?v=1.1.1';
-import { THEMES, DEFAULT_THEME, CROWN } from './themes.js?v=1.1.1';
+import { Gutter } from '../../shared/js/gutter.js?shell=1.4.0';
+import { BLUE, BLACK } from './rules.js?v=1.2.0';
+import { Game } from './game.js?v=1.2.0';
+import { THEMES, DEFAULT_THEME, CROWN } from './themes.js?v=1.2.0';
 
 const NS = 'http://www.w3.org/2000/svg';
 const W = 1000;
@@ -129,6 +129,10 @@ export class QueenView {
         <rect ${frame(8)} rx="18" fill="url(#q-frame)" stroke="url(#q-frame-line)" stroke-width="3"/>
         <g class="squares"></g>
         <rect ${frame(0)} fill="url(#q-sq-grain)" pointer-events="none"/>
+        <g class="last" pointer-events="none">
+          <rect class="last-from" width="${CELL}" height="${CELL}" fill="url(#q-last)" visibility="hidden"/>
+          <rect class="last-to" width="${CELL}" height="${CELL}" fill="url(#q-last)" visibility="hidden"/>
+        </g>
         <rect ${frame(4)} fill="none" stroke="url(#q-coord)" stroke-width="1.5"/>
         <g class="coords" fill="url(#q-coord)" font-family="Didot, 'Bodoni 72', 'Bodoni MT', Georgia, serif" font-size="25" text-anchor="middle" dominant-baseline="central"></g>
         <g class="targets"></g>
@@ -136,6 +140,7 @@ export class QueenView {
       </g>
     `;
     this.defsEl = this.svg.querySelector('.theme-defs');
+    this.lastEls = [this.svg.querySelector('.last-from'), this.svg.querySelector('.last-to')];
     this.world = this.svg.querySelector('.world');
     this.targetsEl = this.svg.querySelector('.targets');
     this.piecesEl = this.svg.querySelector('.pieces');
@@ -348,11 +353,12 @@ export class QueenView {
     p.where = side;
     p.flying = true;
     this.setKing(p, false);
-    const from = { x: p.x, y: p.y, s: p.scale };
+    const from = { x: p.x, y: p.y, s: p.scale, o: Number(p.group.getAttribute('opacity') ?? 1) };
     return wait(delay)
       .then(() => tween(420, (t) => {
         const to = this.trayPos(side, tray.angleOf(id) ?? angle);
         this.place(p, lerp(from.x, to.x, t), lerp(from.y, to.y, t), 0.7 * Math.sin(Math.PI * t), lerp(from.s, TRAY_R / PIECE_R, t));
+        p.group.setAttribute('opacity', lerp(from.o, 1, t).toFixed(2));
       }))
       .then(() => {
         p.flying = false;
@@ -365,12 +371,27 @@ export class QueenView {
 
   // ---------- Züge ----------
 
+  // Zug des Computers: langsamer und mit Anheben, damit man ihn mit den Augen verfolgen kann
   play(record) {
-    return this.run(() => this.playNow(record));
+    return this.run(() => this.playNow(record, null, { slow: true }));
+  }
+
+  // Letzten Zug dezent markieren: Start- und Zielfeld werden etwas heller. null entfernt die Markierung.
+  markLast(move) {
+    const cells = move ? [move.from, move.to] : [];
+    this.lastEls.forEach((rect, k) => {
+      if (cells[k] === undefined) {
+        rect.setAttribute('visibility', 'hidden');
+        return;
+      }
+      rect.setAttribute('x', BOARD_X + (cells[k] & 7) * CELL);
+      rect.setAttribute('y', BOARD_Y + (cells[k] >> 3) * CELL);
+      rect.setAttribute('visibility', 'visible');
+    });
   }
 
   // record kommt von Game.apply: Zug, Nummer des Steins, geschlagene Steine, Krönung
-  async playNow(record, fromPos) {
+  async playNow(record, fromPos, { slow = false } = {}) {
     const { move, mover, capturedIds, crowned } = record;
     const p = this.pieces[mover];
     this.targetsEl.innerHTML = '';
@@ -378,20 +399,33 @@ export class QueenView {
     this.hintTo = -1;
     this.toFront(p);
 
+    // Computerzug: Stein hebt sich erst sichtbar an, dann zieht er ruhig
+    if (slow) {
+      await tween(380, (t) => this.place(p, p.x, p.y, t, 1));
+      await wait(120);
+    }
+
     // Den Weg Feld für Feld springen, geschlagene Steine heben sich danach ab
     let start = fromPos || { x: p.x, y: p.y };
-    for (let k = 0; k < move.path.length; k++) {
+    const last = move.path.length - 1;
+    const capture = move.captured.length > 0;
+    for (let k = 0; k <= last; k++) {
       const to = this.cellPos(move.path[k]);
       const s = start;
-      const capture = move.captured.length > 0;
       const quickDrag = fromPos && k === 0 && !capture;
-      await tween(quickDrag ? 160 : capture ? 300 : 260, (t) => {
-        const lift = quickDrag ? 0 : Math.sin(Math.PI * t);
+      const duration = quickDrag ? 160 : slow ? (capture ? 560 : 520) : capture ? 300 : 260;
+      await tween(duration, (t) => {
+        const arc = Math.sin(Math.PI * t);
+        const lift = quickDrag ? 0 : slow ? (k === last ? 1 - t : 1) + 0.5 * arc : arc;
         this.place(p, lerp(s.x, to.x, t), lerp(s.y, to.y, t), lift, 1);
       });
       this.emit(capture ? 'hop' : 'land', record, k);
+      // Beim langsamen Zug verblasst jeder übersprungene Stein sofort, so sieht man jeden Schlag
+      if (slow && capture) this.fade(capturedIds[k]);
+      if (slow && k < last) await wait(140);
       start = to;
     }
+    if (slow && capture) await wait(260);
 
     // Geschlagene Steine wandern in die Schale
     await Promise.all(capturedIds.map((id, k) => this.toTray(id, k * 90)));
@@ -409,6 +443,12 @@ export class QueenView {
     }
     this.emit('done', record);
     return record;
+  }
+
+  fade(id) {
+    const p = this.pieces[id];
+    if (!p) return;
+    tween(250, (t) => p.group.setAttribute('opacity', (1 - 0.6 * t).toFixed(2)));
   }
 
   shake(i) {

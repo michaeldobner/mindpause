@@ -1,12 +1,18 @@
 // Computergegner für QUEEN: Minimax mit Alpha-Beta-Schnitt (Negamax), schrittweise vertieft,
 // mit Merkliste bekannter Stellungen und Ruhesuche bei Schlägen. Ohne Darstellung.
 
-import { legalMoves, applyMove, BLUE } from './rules.js?v=1.1.1';
+import { legalMoves, applyMove, BLUE } from './rules.js?v=1.2.0';
 
+// depth: Suchtiefe in Halbzügen. quiet: wie viele Halbzüge ein laufender Schlagabtausch noch zu Ende
+// gerechnet wird. noise: Spielraum in Punkten, gewählt wird zufällig unter Zügen, die höchstens so viel
+// schlechter sind als der beste. Niedrige Stufen sehen deshalb nicht weit genug, statt plötzlich
+// absichtlich einen Stein zu verschenken: Fehler wirken wie menschliches Übersehen. careless: Anteil
+// unaufmerksamer Züge, die wie bei Einsteiger nur den eigenen Zug ansehen.
 export const LEVELS = {
-  easy: { depth: 2, time: 200, noise: 90, blunder: 0.22 },
-  medium: { depth: 5, time: 500, noise: 12, blunder: 0 },
-  hard: { depth: 14, time: 900, noise: 0, blunder: 0 },
+  beginner: { depth: 1, quiet: 0, time: 150, noise: 60 },
+  easy: { depth: 2, quiet: 1, time: 250, noise: 35, careless: 0.5 },
+  medium: { depth: 4, quiet: 6, time: 500, noise: 10, careless: 0.2 },
+  hard: { depth: 14, quiet: 8, time: 900, noise: 0 },
 };
 
 const WIN = 100000;
@@ -38,17 +44,45 @@ export function evaluate(board, side) {
   }
   // Im Endspiel zählt Material noch mehr: Tausch anstreben, wenn man vorne liegt
   if (pieces < 10) score *= 1.15;
+  // Klarer Vorsprung im Endspiel: Damen des Stärkeren rücken an die letzten Steine heran.
+  // Sonst würde der Computer einen einzelnen Stein endlos umkreisen, statt ihn einzufangen.
+  if (pieces <= 9 && Math.abs(score) >= 150) score += hunt(board, score > 0 ? 1 : -1);
   return score * side;
 }
 
+// Je näher die Damen der Seite strong an den gegnerischen Steinen stehen, desto höher (aus Sicht von Blau)
+function hunt(board, strong) {
+  const targets = [];
+  const kings = [];
+  for (let i = 0; i < 64; i++) {
+    const v = board[i];
+    if (v === 0) continue;
+    if (Math.sign(v) !== strong) targets.push(i);
+    else if (v === 2 * strong) kings.push(i);
+  }
+  if (targets.length === 0 || kings.length === 0) return 0;
+  let bonus = 0;
+  // Lange Diagonale (a1 bis h8): wer sie hält, kann eine einzelne Dame nicht entkommen lassen
+  const onLong = (i) => (i >> 3) + (i & 7) === 7;
+  if (kings.some(onLong)) bonus += 40;
+  if (targets.some((i) => onLong(i) && Math.abs(board[i]) === 2)) bonus -= 60;
+  // Gegner einengen: je weniger Züge er hat, desto besser
+  bonus += (16 - Math.min(16, legalMoves(board, -strong).length)) * 8;
+  for (const k of kings) {
+    let near = 8;
+    for (const e of targets) near = Math.min(near, Math.max(Math.abs((k >> 3) - (e >> 3)), Math.abs((k & 7) - (e & 7))));
+    bonus += (8 - near) * 4;
+  }
+  return bonus * strong;
+}
+
 export function chooseMove(board, side, level = 'medium', { random = Math.random, now = () => Date.now() } = {}) {
-  const cfg = LEVELS[level] || LEVELS.medium;
+  let cfg = LEVELS[level] || LEVELS.medium;
   const root = legalMoves(board, side);
   if (root.length === 0) return null;
   if (root.length === 1) return root[0];
-
-  // Leicht: gelegentlich ein menschlicher Fehler
-  if (cfg.blunder && random() < cfg.blunder) return root[Math.floor(random() * root.length)];
+  // Unaufmerksamer Zug: schaut nur auf den eigenen Zug, wie ein Mensch, der gerade nicht genau hinsieht
+  if (cfg.careless && random() < cfg.careless) cfg = LEVELS.beginner;
 
   const deadline = now() + cfg.time;
   const table = new Map();
@@ -65,9 +99,9 @@ export function chooseMove(board, side, level = 'medium', { random = Math.random
     if (stop) return 0;
     const moves = legalMoves(b, s);
     if (moves.length === 0) return -WIN + ply;
-    // Schläge sind Pflicht: in solchen Stellungen weiterrechnen (Ruhesuche), höchstens 8 Halbzüge extra
+    // Schläge sind Pflicht: in solchen Stellungen weiterrechnen (Ruhesuche), höchstens quiet Halbzüge extra
     const forced = moves[0].captured.length > 0;
-    if (depth <= 0 && (!forced || depth < -8)) return evaluate(b, s);
+    if (depth <= 0 && (!forced || -depth >= cfg.quiet)) return evaluate(b, s);
 
     const key = b.join('') + s;
     const hit = table.get(key);

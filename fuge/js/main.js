@@ -1,10 +1,10 @@
 // FUGE: das klassische Spiel mit fallenden Steinen, als Holzkasten mit lackierten Steinen.
 // Die Oberfläche kommt aus der Hülle (shared/js/shell.js), hier steht nur, was FUGE eigen ist.
 
-import { createShell } from '../../shared/js/shell.js?shell=1.3.0';
-import { createI18n } from '../../shared/js/i18n.js?shell=1.3.0';
-import { createStorage } from '../../shared/js/storage.js?shell=1.3.0';
-import { DEFAULT_STYLE } from '../../shared/js/sound-engine.js?shell=1.3.0';
+import { createShell } from '../../shared/js/shell.js?shell=1.4.0';
+import { createI18n } from '../../shared/js/i18n.js?shell=1.4.0';
+import { createStorage } from '../../shared/js/storage.js?shell=1.4.0';
+import { DEFAULT_STYLE } from '../../shared/js/sound-engine.js?shell=1.4.0';
 import { Game, HEIGHT, HIDDEN } from './game.js?v=1.0.1';
 import { MODES, modeById, starsFor } from './modes.js?v=1.0.1';
 import { FugeView, previewSvg } from './view.js?v=1.0.1';
