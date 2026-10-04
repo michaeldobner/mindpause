@@ -1,5 +1,6 @@
 // Erzeugt das App-Symbol von FUGE: lackierte Steine, die passgenau ineinandergreifen,
-// ein T schwebt über seiner Lücke. Gleiche Formensprache wie im Spiel (js/view.js):
+// ein T schwebt über seiner Lücke. Grund in Nussholz, ohne Rahmen, Motiv groß in der Mitte,
+// gleiche Bildsprache wie das Symbol von SPRING. Gleiche Formensprache wie im Spiel (js/view.js):
 // außen gerundete Ecken, feine Naht innerhalb eines Steins, Fuge zwischen den Steinen.
 // Schreibt icons/icon.svg und mit Playwright die PNG-Dateien.
 //
@@ -8,11 +9,11 @@
 import { writeFileSync } from 'node:fs';
 import { COLORS } from '../js/view.js';
 
-const S = 64; // Zellgröße
+const S = 60; // Zellgröße
 const GAP = 3.2;
-const R = 11;
-const OX = 64;
-const OY = 92;
+const R = 10;
+const OX = 256 - 3 * S;
+const OY = 256 - 3.5 * S; // Zeilen 1 bis 5 stehen mittig
 
 // Steine als [Form, [[x, y] …]], y nach unten
 const PIECES = [
@@ -21,8 +22,11 @@ const PIECES = [
   ['J', [[0, 3], [0, 4], [1, 4], [2, 4]]],
   ['L', [[1, 1], [2, 1], [1, 2], [1, 3]]],
 ];
+// Ocker verschwindet auf Nussholz, das O-Quadrat bekommt deshalb Salbei
+const PAINT = { O: COLORS.S };
+
 const FALLING = ['T', [[2, 3], [3, 3], [4, 3], [3, 4]]];
-const LIFT = -44; // so weit schwebt das T über seinem Platz
+const LIFT = -40; // so weit schwebt das T über seinem Platz
 
 // Umriss einer Zelle als SVG-Pfad, wie cellPath in view.js
 function cellD(px, py, nb) {
@@ -54,7 +58,7 @@ function piece([type, cells], dy = 0) {
       ur: has(x + 1, y - 1), dr: has(x + 1, y + 1), dl: has(x - 1, y + 1), ul: has(x - 1, y - 1),
     };
     const d = cellD(OX + x * S, OY + y * S + dy, nb);
-    out += `<path d="${d}" fill="${COLORS[type]}"/><path d="${d}" fill="url(#sheen)"/>`;
+    out += `<path d="${d}" fill="${PAINT[type] || COLORS[type]}"/><path d="${d}" fill="url(#sheen)"/>`;
     // feine Naht zum Nachbarn desselben Steins
     if (nb.r) out += `<rect x="${OX + (x + 1) * S - 1}" y="${OY + y * S + dy + (nb.u ? 0 : GAP)}" width="1.6" height="${S - (nb.u ? 0 : GAP) - (nb.d ? 0 : GAP)}" fill="#0a0b2a" opacity="0.16"/>`;
     if (nb.d) out += `<rect x="${OX + x * S + (nb.l ? 0 : GAP)}" y="${OY + (y + 1) * S + dy - 1}" width="${S - (nb.l ? 0 : GAP) - (nb.r ? 0 : GAP)}" height="1.6" fill="#0a0b2a" opacity="0.16"/>`;
@@ -62,16 +66,24 @@ function piece([type, cells], dy = 0) {
   return out;
 }
 
+// Feine Maserung im Nussholz
+let seed = 5;
+const rnd = () => ((seed = (seed * 9301 + 49297) % 233280) / 233280);
+let GRAIN = '';
+for (let y = 2; y < 120; y += 3 + rnd() * 5) {
+  const bend = (rnd() - 0.5) * 6;
+  GRAIN += `<path d="M0 ${y.toFixed(1)} C 70 ${(y + bend).toFixed(1)} 130 ${(y - bend).toFixed(1)} 200 ${y.toFixed(1)}" stroke="#000" stroke-opacity="${(0.05 + rnd() * 0.07).toFixed(3)}" stroke-width="${(0.6 + rnd() * 1.6).toFixed(2)}" fill="none"/>`;
+}
+
 const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
   <defs>
-    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2b307c"/><stop offset="1" stop-color="#171a50"/></linearGradient>
-    <linearGradient id="well" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0b0d31"/><stop offset="1" stop-color="#181b50"/></linearGradient>
-    <linearGradient id="sheen" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity="0.16"/><stop offset="0.45" stop-color="#fff" stop-opacity="0.02"/><stop offset="1" stop-color="#0c0c28" stop-opacity="0.12"/></linearGradient>
-    <filter id="sh" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="5" stdDeviation="6" flood-color="#02031a" flood-opacity="0.6"/></filter>
+    <radialGradient id="bg" cx="50%" cy="40%" r="70%"><stop offset="0" stop-color="#94602a"/><stop offset="1" stop-color="#3a220b"/></radialGradient>
+    <pattern id="grain" width="200" height="120" patternUnits="userSpaceOnUse">${GRAIN}</pattern>
+    <linearGradient id="sheen" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity="0.34"/><stop offset="0.4" stop-color="#fff" stop-opacity="0.04"/><stop offset="1" stop-color="#1a0d02" stop-opacity="0.18"/></linearGradient>
+    <filter id="sh" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="5" stdDeviation="6" flood-color="#1a0c00" flood-opacity="0.55"/></filter>
   </defs>
   <rect width="512" height="512" fill="url(#bg)"/>
-  <rect x="22" y="22" width="468" height="468" rx="22" fill="none" stroke="#ece2cc" stroke-opacity="0.18" stroke-width="2"/>
-  <rect x="48" y="48" width="416" height="428" rx="26" fill="url(#well)"/>
+  <rect width="512" height="512" fill="url(#grain)"/>
   <g filter="url(#sh)">${PIECES.map((p) => piece(p)).join('')}</g>
   <g filter="url(#sh)">${piece(FALLING, LIFT)}</g>
 </svg>

@@ -7,7 +7,7 @@
 //   stock       Nachziehstapel, die nächste gezogene Karte steht vorn
 //   waste       gezogene Karten, die oberste steht hinten
 
-import { deal, suitOf, rankOf, isRed } from './cards.js?v=1.0.1';
+import { deal, suitOf, rankOf, isRed } from './cards.js?v=1.0.2';
 
 export const SCORING = {
   // Windows: Punkte für Züge, Abzug für Zeit und Durchgänge, Zeitbonus beim Sieg

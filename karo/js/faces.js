@@ -11,7 +11,7 @@
 // Maße einer Karte: 250 × 350 (Seitenverhältnis wie echte Spielkarten 63 × 88 mm).
 // Der Index oben links muss allein lesbar sein, denn in den Spalten sieht man oft nur diesen Streifen.
 
-import { suitOf, rankOf } from './cards.js?v=1.0.1';
+import { suitOf, rankOf } from './cards.js?v=1.0.2';
 
 export const W = 250;
 export const H = 350;

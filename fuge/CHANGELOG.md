@@ -2,6 +2,11 @@
 
 All notable changes to FUGE. [Deutsch](CHANGELOG.de.md)
 
+## 1.0.1 (2026-10-04)
+
+### Design
+* **New app icon** in the shared style of the collection: walnut instead of indigo so it stands apart from SPRING, without frame and well, larger pieces with a stronger lacquer shine.
+
 ## 1.0.0 (2026-10-04)
 
 First version of FUGE, the fourth game of the MIND PAUSE collection.

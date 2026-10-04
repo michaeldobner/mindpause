@@ -145,4 +145,4 @@ Auf Geräten mit Vibration gibt es einen kurzen Impuls beim harten Fall und bei 
 
 ## App-Symbol
 
-Vier liegende Steine in der Wanne, darüber schwebt ein T über seiner Lücke. Gleiche Formensprache wie im Spiel. Quelle ist `icons/icon.svg`, erzeugt von `tools/icons.mjs`, daraus entstehen PNG-Dateien in 180, 192 und 512 Pixeln.
+Vier liegende Steine auf Nussholz, darüber schwebt ein T über seiner Lücke. Gleiche Formensprache wie im Spiel, aber ohne Rahmen und Wanne, damit das Symbol zu den übrigen Spielen der Sammlung passt: kräftige Farbe je Spiel, Motiv groß in der Mitte. Quelle ist `icons/icon.svg`, erzeugt von `tools/icons.mjs`, daraus entstehen PNG-Dateien in 180, 192 und 512 Pixeln.

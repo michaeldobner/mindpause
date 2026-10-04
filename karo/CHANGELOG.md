@@ -2,6 +2,11 @@
 
 All notable changes to KARO. [Deutsch](CHANGELOG.de.md)
 
+## 1.0.2 (2026-10-04)
+
+### Design
+* **New app icon** in the shared style of the collection: rich felt green without a frame, two card backs fanned out and the ace of diamonds with a large diamond in front.
+
 ## 1.0.1 (2026-10-04)
 
 ### Fixed

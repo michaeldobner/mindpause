@@ -142,4 +142,4 @@ Jede Karte zeigt eine kleine Brettvorschau im gewählten Stil, den Namen, die Sc
 
 ## App-Symbol
 
-Ein Elfenbeinstein mit der gravierten Goldkrone auf schwarzem Holz, dahinter ein feines Rautengitter in Gold und eine dünne Goldlinie als Rahmen. Quelle ist `icons/icon.svg`, daraus entstehen PNG-Dateien in 180, 192 und 512 Pixeln.
+Ein Ausschnitt des Bretts von oben auf Ochsenblut-Rot, ohne Rahmen: oben zwei Ebenholzsteine, unten zwei Elfenbeinsteine, in der Mitte eine Dame aus zwei gestapelten Elfenbeinsteinen mit der gravierten Goldkrone. Gleiche Bildsprache wie die übrigen Spiele der Sammlung: Spielmaterial von oben, Licht von oben links, weicher Schatten, eine kräftige Farbe je Spiel. Quelle ist `icons/icon.svg`, erzeugt von `tools/icons.mjs`, daraus entstehen PNG-Dateien in 180, 192 und 512 Pixeln.

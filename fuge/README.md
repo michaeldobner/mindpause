@@ -88,4 +88,4 @@ No dependencies, no build step. Everything FUGE shares with the other games come
 
 ## Version
 
-Current version: **1.0.0**. See [changelog](CHANGELOG.md).
+Current version: **1.0.1**. See [changelog](CHANGELOG.md).

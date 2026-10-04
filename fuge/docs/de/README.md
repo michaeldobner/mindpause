@@ -19,6 +19,6 @@
 | Technik | HTML, CSS, JavaScript-Module, Canvas, Web Audio, kein Framework, kein Build-Schritt |
 | Sammlung | Teil von [MIND PAUSE](../../../README.de.md), Oberfläche aus der [Hülle](../../../shared/README.de.md) |
 | Adresse | https://michaeldobner.github.io/mindpause/fuge/ |
-| Version | 1.0.0 |
+| Version | 1.0.1 |
 
 <img src="../images/ipad-de.jpg" width="700" alt="iPad im Querformat mit Seitenleiste">
