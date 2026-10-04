@@ -3,7 +3,7 @@
 // Es gibt immer genau 32 Murmeln (16 blaue, 16 schwarze). Murmeln, die eine Figur nicht braucht,
 // und geschlagene Murmeln liegen in der Rinne. Beim Wechsel der Figur baut sich das Brett sichtbar um.
 
-import { Gutter } from '../../shared/js/gutter.js?shell=1.2.0';
+import { Gutter } from '../../shared/js/gutter.js?shell=1.3.0';
 
 const NS = 'http://www.w3.org/2000/svg';
 const VB = 1000;

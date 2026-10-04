@@ -6,7 +6,7 @@ Die Hülle ist alles, was alle Spiele von MIND PAUSE teilen. Ein Spiel beschreib
 
 **Faustregel:** Soll eine Änderung in allen Spielen wirken, gehört sie hierher. Betrifft sie nur ein Spiel, gehört sie in dessen Ordner.
 
-Aktuelle Version: **1.2.0**
+Aktuelle Version: **1.3.0**
 
 ## Inhalt
 
@@ -46,7 +46,7 @@ Alle Werte stehen als CSS-Variablen in `tokens.css`. Spiele nutzen für Farben u
 | Baustein | Verhalten |
 |---|---|
 | Kopfzeile | Titel des Spiels, Name des aktuellen Levels mit Pfeil, Zähler rechts |
-| Steuerleiste | Bis zu fünf runde Schaltflächen mit Beschriftung, vom Spiel gewählt: `undo`, `hint`, `restart`, `levels`, `settings` |
+| Steuerleiste | Bis zu fünf runde Schaltflächen mit Beschriftung, vom Spiel gewählt: `undo`, `hint`, `restart`, `levels`, `settings` oder eigene des Spiels (zum Beispiel Halten und Pause bei FUGE) |
 | Auswahl | iPhone hoch: Blatt von unten mit Karten zum Wischen. iPhone quer: Schublade von links. iPad quer: feste Seitenleiste |
 | Levelkarte | Vorschau, Name, Zusatzzeile, bis zu drei Sterne, fünf Schwierigkeitspunkte, aktuelle Karte blau umrandet |
 | Einstellungen | Vom Spiel definierte Auswahl (zum Beispiel der Brettstil), Ton an oder aus, Klangfarbe (Warm, Klar, Weich), vom Spiel definierte Schalter, ein Hinweis, Versionszeile |
@@ -96,7 +96,7 @@ const shell = createShell({
 | `title` | Titel in Großbuchstaben, erscheint in Kopfzeile, Browser-Tab und Versionszeile |
 | `version` | Version des Spiels |
 | `i18n`, `storage`, `sound` | Erzeugt mit `createI18n`, `createStorage` und einer Unterklasse von `SoundEngine` |
-| `buttons` | Welche Schaltflächen die Steuerleiste zeigt, in dieser Reihenfolge |
+| `buttons` | Welche Schaltflächen die Steuerleiste zeigt, in dieser Reihenfolge. Ein Eintrag ist ein Name der Hülle oder eine eigene Schaltfläche `{ id, icon, labelKey }`: `icon` ist SVG-Inhalt im Feld 24 × 24, ein Tipp ruft `actions[id]` auf |
 | `levels` | Optionale Auswahl: Schlüssel für Beschriftung, Titel und die Schaltfläche „Nächste“ |
 | `settings` | Zusätzliche Einstellungen. Ein Schalter hat `id`, `nameKey` und `textKey`. Eine Auswahl hat `id`, `nameKey` und `options` mit `value` und `labelKey`, sie erscheint als Segmentauswahl oben in den Einstellungen |
 | `noteKey`, `coachKey`, `boardLabelKey` | Optionale Texte: Hinweis in den Einstellungen, Erststart-Hinweis, Beschriftung des Bretts |
@@ -112,7 +112,8 @@ const shell = createShell({
 | `setLevelLabel(text)` | Name des aktuellen Levels, setzt auch den Browser-Tab |
 | `renderLevels(items)` | Füllt die Auswahl. `items`: `{ id, name, meta, stars, difficulty, preview, current }` |
 | `setDisabled(name, bool)`, `setBusy(name, bool)` | Zustand einer Schaltfläche, zum Beispiel während der Tipp rechnet |
-| `showResult(opts)`, `hideResult()` | Ergebniskarte. `opts`: `{ title, text, stars, stats, highlight, showNext }` |
+| `setButton(id, { icon, labelKey })` | Symbol und Beschriftung einer Schaltfläche wechseln, zum Beispiel Pause und Weiter |
+| `showResult(opts)`, `hideResult()` | Ergebniskarte. `opts`: `{ title, text, stars, stats, highlight, showNext, showBack }`. `showBack: false` blendet „Letzten Zug zurücknehmen“ aus, für Spiele ohne Zurück |
 | `toast(text)`, `hideToast()` | Kurze Meldung |
 | `showCoach()` | Erststart-Hinweis, erscheint nur einmal |
 | `setSetting(id, wert)` | Zeigt den Zustand eines Schalters (`true` oder `false`) oder den gewählten Wert einer Auswahl |

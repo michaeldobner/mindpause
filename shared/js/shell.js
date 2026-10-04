@@ -16,7 +16,7 @@ const ICONS = {
 };
 
 // Version der Hülle. Ändern nur über: node scripts/release.mjs shell <version>
-export const SHELL_VERSION = '1.2.0';
+export const SHELL_VERSION = '1.3.0';
 
 const SIDEBAR_QUERY = '(min-width: 1000px) and (orientation: landscape) and (min-height: 600px)';
 
@@ -47,6 +47,12 @@ export function createShell(config) {
 
   const icon = (name) => `<svg viewBox="0 0 24 24" aria-hidden="true">${ICONS[name]}</svg>`;
   const buttonLabel = { undo: 'undo', hint: 'hint', restart: 'restart', levels: levels?.buttonKey, settings: 'settings' };
+
+  // Eine Schaltfläche ist ein Name der Hülle ('undo', 'hint' …) oder eine eigene des Spiels:
+  // { id, icon: SVG-Inhalt im Feld 24 × 24, labelKey }
+  const controls = buttons.map((b) => (typeof b === 'string'
+    ? { id: b, svg: icon(b), labelKey: buttonLabel[b] }
+    : { id: b.id, svg: `<svg viewBox="0 0 24 24" aria-hidden="true">${b.icon}</svg>`, labelKey: b.labelKey }));
 
   document.body.insertAdjacentHTML('afterbegin', `
     <div class="app${levels ? '' : ' no-levels'}">
@@ -97,10 +103,10 @@ export function createShell(config) {
       </main>
 
       <nav class="controls">
-        ${buttons.map((name) => `
-        <button id="btn-${name}" class="icon-btn" type="button" data-action="${name}"
-                ${name === 'levels' || name === 'settings' ? 'aria-haspopup="dialog"' : ''}>
-          ${icon(name)}<span data-i18n="${buttonLabel[name]}"></span>
+        ${controls.map((b) => `
+        <button id="btn-${b.id}" class="icon-btn" type="button" data-action="${b.id}"
+                ${b.id === 'levels' || b.id === 'settings' ? 'aria-haspopup="dialog"' : ''}>
+          ${b.svg}<span data-i18n="${b.labelKey}"></span>
         </button>`).join('')}
       </nav>
     </div>
@@ -232,13 +238,26 @@ export function createShell(config) {
     if (el) el.classList.toggle('busy', busy);
   }
 
-  // opts: { title, text, stars, stats, highlight, showNext }
+  // Eigene Schaltfläche umschalten, zum Beispiel Pause und Weiter: { icon, labelKey }
+  function setButton(id, { icon: svg, labelKey } = {}) {
+    const el = $(`#btn-${id}`);
+    if (!el) return;
+    if (svg) el.querySelector('svg').innerHTML = svg;
+    if (labelKey) {
+      const span = el.querySelector('span');
+      span.dataset.i18n = labelKey;
+      span.textContent = t(labelKey);
+    }
+  }
+
+  // opts: { title, text, stars, stats, highlight, showNext, showBack }
   function showResult(opts) {
     $('#result-title').textContent = opts.title;
     $('#result-text').textContent = opts.text || '';
     $('#result-stars').innerHTML = opts.stars === null || opts.stars === undefined ? '' : starsHtml(opts.stars);
     $('#result-stats').textContent = opts.stats || '';
     $('#next').hidden = !opts.showNext;
+    $('#back').hidden = opts.showBack === false;
     $('#result').classList.toggle('perfect', Boolean(opts.highlight));
     $('#result').hidden = false;
     requestAnimationFrame(() => $('#result').classList.add('show'));
@@ -394,6 +413,7 @@ export function createShell(config) {
     setLevelLabel,
     setDisabled,
     setBusy,
+    setButton,
     showResult,
     hideResult,
     toast,

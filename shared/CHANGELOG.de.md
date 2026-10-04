@@ -2,6 +2,18 @@
 
 Alle wichtigen Änderungen an der Hülle von MIND PAUSE. [English](CHANGELOG.md)
 
+## 1.3.0 (2026-10-04)
+
+Bausteine für FUGE, die allen Spielen zur Verfügung stehen. Bestehende Spiele verhalten sich unverändert.
+
+### Neu
+* Eigene Schaltflächen in der Steuerleiste: Ein Eintrag in `buttons` kann `{ id, icon, labelKey }` sein.
+* `setButton(id, { icon, labelKey })` wechselt Symbol und Beschriftung, zum Beispiel zwischen Pause und Weiter.
+* `showResult({ showBack: false })` blendet „Letzten Zug zurücknehmen“ aus, für Spiele ohne Zurück.
+
+### Tests
+* Der Browser-Test prüft Zurück nur bei Spielen, die diese Schaltfläche zeigen.
+
 ## 1.2.0 (2026-10-04)
 
 ### Neu

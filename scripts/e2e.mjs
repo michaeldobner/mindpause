@@ -106,10 +106,13 @@ for (const game of games) {
       await page.waitForTimeout(1100);
       const after = await page.evaluate(() => window.__game.history);
       check(after > before, `${label}: Zug ausgeführt`);
-      await page.click('#btn-undo');
-      await page.waitForTimeout(900);
-      const undone = await page.evaluate(() => window.__game.history);
-      check(undone === before, `${label}: Zurück funktioniert`);
+      // Spiele ohne Zurück (zum Beispiel FUGE) zeigen keine Schaltfläche dafür
+      if (await page.locator('#btn-undo').count()) {
+        await page.click('#btn-undo');
+        await page.waitForTimeout(900);
+        const undone = await page.evaluate(() => window.__game.history);
+        check(undone === before, `${label}: Zurück funktioniert`);
+      }
       await page.click('#btn-settings');
       await page.waitForTimeout(500);
       await page.screenshot({ path: shot(`${game.id}-${name}-settings.png`) });

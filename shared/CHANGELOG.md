@@ -2,6 +2,18 @@
 
 All notable changes to the MIND PAUSE shell. [Deutsch](CHANGELOG.de.md)
 
+## 1.3.0 (2026-10-04)
+
+Building blocks for FUGE, available to every game. Existing games behave exactly as before.
+
+### New
+* Custom buttons in the control bar: an entry in `buttons` can be `{ id, icon, labelKey }`.
+* `setButton(id, { icon, labelKey })` changes icon and label, for example between Pause and Resume.
+* `showResult({ showBack: false })` hides “Undo last move”, for games without undo.
+
+### Tests
+* The browser test checks Undo only for games that show this button.
+
 ## 1.2.0 (2026-10-04)
 
 ### New

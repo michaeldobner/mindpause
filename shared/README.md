@@ -6,7 +6,7 @@ The shell is everything every MIND PAUSE game shares. A game only describes what
 
 **Rule of thumb:** if a change should affect every game, it belongs here. If it only concerns one game, it belongs in that game's folder.
 
-Current version: **1.2.0**
+Current version: **1.3.0**
 
 ## Contents
 
@@ -46,7 +46,7 @@ All values live as CSS variables in `tokens.css`. Games never use fixed values f
 | Building block | Behaviour |
 |---|---|
 | Header | Title of the game, name of the current level with a chevron, counter on the right |
-| Control bar | Up to five round buttons with labels, chosen by the game: `undo`, `hint`, `restart`, `levels`, `settings` |
+| Control bar | Up to five round buttons with labels, chosen by the game: `undo`, `hint`, `restart`, `levels`, `settings` or the game's own (for example Hold and Pause in FUGE) |
 | Picker | iPhone portrait: sheet from the bottom with cards to swipe. iPhone landscape: drawer from the left. iPad landscape: permanent sidebar |
 | Level card | Preview, name, meta line, up to three stars, five difficulty dots, current card outlined in blue |
 | Settings | Choices defined by the game (for example the board style), sound on or off, sound style (Warm, Clear, Soft), switches defined by the game, a note, version line |
@@ -96,7 +96,7 @@ const shell = createShell({
 | `title` | Title in capitals, appears in the header, browser tab and version line |
 | `version` | Version of the game |
 | `i18n`, `storage`, `sound` | Created with `createI18n`, `createStorage` and a subclass of `SoundEngine` |
-| `buttons` | Which buttons the control bar shows, in this order |
+| `buttons` | Which buttons the control bar shows, in this order. An entry is a shell name or a custom button `{ id, icon, labelKey }`: `icon` is SVG content in a 24 × 24 box, a tap calls `actions[id]` |
 | `levels` | Optional picker: keys for the button label, the title and the "Next" button |
 | `settings` | Additional settings. A switch has `id`, `nameKey` and `textKey`. A choice has `id`, `nameKey` and `options` with `value` and `labelKey`, and appears as a segmented control at the top of the settings |
 | `noteKey`, `coachKey`, `boardLabelKey` | Optional texts: note in the settings, first launch hint, label of the board |
@@ -112,7 +112,8 @@ const shell = createShell({
 | `setLevelLabel(text)` | Name of the current level, also sets the browser tab |
 | `renderLevels(items)` | Fills the picker. `items`: `{ id, name, meta, stars, difficulty, preview, current }` |
 | `setDisabled(name, bool)`, `setBusy(name, bool)` | State of a button, for example while the hint is computing |
-| `showResult(opts)`, `hideResult()` | Result card. `opts`: `{ title, text, stars, stats, highlight, showNext }` |
+| `setButton(id, { icon, labelKey })` | Change a button's icon and label, for example Pause and Resume |
+| `showResult(opts)`, `hideResult()` | Result card. `opts`: `{ title, text, stars, stats, highlight, showNext, showBack }`. `showBack: false` hides “Undo last move”, for games without undo |
 | `toast(text)`, `hideToast()` | Short message |
 | `showCoach()` | First launch hint, shown only once |
 | `setSetting(id, value)` | Shows the state of a switch (`true` or `false`) or the selected value of a choice |
