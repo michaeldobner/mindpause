@@ -502,7 +502,8 @@ window.__game = {
         game.tableau[0].up = [51];
         view.render({ animate: false });
         play({ pile: 'tableau', col: 0, index: 0 }, { pile: 'foundation' });
-        await new Promise((r) => setTimeout(r, 1500));
+        // Die Feier muss anlaufen. Wie schnell, hängt vom Testrechner ab, darum bis zu 8 Sekunden warten.
+        for (let t = 0; t < 80 && (celebration?.launched || 0) < 3; t++) await new Promise((r) => setTimeout(r, 100));
         const launched = celebration?.launched || 0;
         const canvas = Boolean(document.querySelector('.table .celebration'));
         celebration?.stop();

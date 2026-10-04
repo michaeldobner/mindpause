@@ -147,7 +147,7 @@ export class Celebration {
     this.launched = 0;
     const flying = [];
     let next = 0;
-    let lastLaunch = -Infinity;
+    let start = null;
     let lastFrame = null;
     const scale = rectFor(0).w / 60;
 
@@ -157,7 +157,10 @@ export class Celebration {
         // Gleich schnell bei 60 und 120 Bildern pro Sekunde
         const step = lastFrame === null ? 1 : Math.min(3, (now - lastFrame) / 16.7);
         lastFrame = now;
-        if (next < order.length && now - lastLaunch > interval) {
+        // Starts nach der Uhr: dauert ein Bild länger (langsames Gerät), starten mehrere Karten
+        // auf einmal, statt dass die Feier ins Stocken gerät
+        if (start === null) start = now - interval;
+        while (next < order.length && now - start >= (next + 1) * interval) {
           const card = order[next++];
           const r = rectFor(Math.floor(card / 13));
           const dir = r.x + r.w / 2 > tw / 2 ? -1 : 1;
@@ -167,7 +170,6 @@ export class Celebration {
             vy: -(Math.random() * 4) * scale * speed,
           });
           this.launched += 1;
-          lastLaunch = now;
         }
         if (calm) {
           ctx.clearRect(0, 0, tw, th);
