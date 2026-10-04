@@ -20,6 +20,7 @@ Klassische Brettspiele, neu gedacht, mit fast greifbarem Design und handgemachte
 | <img src="queen/icons/icon.svg" width="56" alt=""> | **[QUEEN](queen/README.de.md)** · [spielen](https://michaeldobner.github.io/mindpause/queen/) | Deutsche Dame gegen den Computer in drei Stufen oder zu zweit an einem Gerät. Ebenholz, Ahorn und eine gravierte Goldkrone, Schalen für geschlagene Steine | 1.1.0 |
 | <img src="karo/icons/icon.svg" width="56" alt=""> | **[KARO](karo/README.de.md)** · [spielen](https://michaeldobner.github.io/mindpause/karo/) | Die klassische Patience wie bei Windows. 1 oder 3 Karten, Punkte oder Vegas, sicher lösbare Stufen, Tipps | 1.0.1 |
 | <img src="fuge/icons/icon.svg" width="56" alt=""> | **[FUGE](fuge/README.de.md)** · [spielen](https://michaeldobner.github.io/mindpause/fuge/) | Das klassische Spiel mit fallenden Steinen als lackierter Holzkasten. Klassisch, Sprint, 3 Minuten und Ruhe ohne Ende, Gesten statt Knöpfe | 1.0.0 |
+| <img src="muehle/icons/icon.svg" width="56" alt=""> | **[MÜHLE](muehle/README.de.md)** · [spielen](https://michaeldobner.github.io/mindpause/muehle/) | Neun Männer Mühle gegen den Computer in drei Stufen oder zu zweit an einem Gerät. Goldlinien auf schwarzem Holz, leuchtende Mühlen, Schalen als Vorrat | 1.0.0 |
 
 Weitere Spiele und das Spiel auf zwei Geräten sind in Arbeit, siehe [Roadmap](#roadmap).
 
@@ -54,6 +55,7 @@ mindpause/
 ├─ queen/                  QUEEN, siehe queen/README.de.md
 ├─ karo/                   KARO, siehe karo/README.de.md
 ├─ fuge/                   FUGE, siehe fuge/README.de.md
+├─ muehle/                 MÜHLE, siehe muehle/README.de.md
 ├─ scripts/
 │  ├─ release.mjs          setzt die Version eines Spiels oder der Hülle
 │  └─ e2e.mjs              Browser-Test der ganzen Sammlung
@@ -107,6 +109,7 @@ Jeder Verweis trägt seine Version (`?v=` für Dateien eines Spiels, `?shell=` f
 | QUEEN | Deutsche Dame, drei Computerstufen, zu zweit an einem Gerät | Fertig |
 | KARO | Klondike-Patience, 1 oder 3 Karten, Punkte nach Windows und Vegas, sicher lösbare Stufen | Fertig |
 | FUGE | Fallende Steine als Holzkasten, vier Modi, Gesten, Hülle 1.3.0 mit eigenen Schaltflächen | Fertig |
+| MÜHLE | Neun Männer Mühle nach WMD-Regeln, drei Computerstufen, zu zweit, Gestaltung von QUEEN | Fertig |
 | QUEEN 1.2 | Gegeneinander auf zwei Geräten, Stufe 1: Zug per Link | Geplant |
 | Später | Live mit Raumcode, weitere Spiele | Idee |
 

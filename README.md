@@ -20,6 +20,7 @@ Classic board games, reimagined with tactile design and handcrafted sound. Free,
 | <img src="queen/icons/icon.svg" width="56" alt=""> | **[QUEEN](queen/README.md)** · [play](https://michaeldobner.github.io/mindpause/queen/) | German checkers against the computer at three levels or for two players on one device. Ebony, maple and an engraved golden crown, trays for captured pieces | 1.1.0 |
 | <img src="karo/icons/icon.svg" width="56" alt=""> | **[KARO](karo/README.md)** · [play](https://michaeldobner.github.io/mindpause/karo/) | Classic solitaire as on Windows. Draw one or three, points or Vegas, levels that can always be solved, hints | 1.0.1 |
 | <img src="fuge/icons/icon.svg" width="56" alt=""> | **[FUGE](fuge/README.md)** · [play](https://michaeldobner.github.io/mindpause/fuge/) | The classic falling block game as a lacquered wooden box. Classic, Sprint, 3 minutes and an endless Calm mode, gestures instead of buttons | 1.0.0 |
+| <img src="muehle/icons/icon.svg" width="56" alt=""> | **[MÜHLE](muehle/README.md)** · [play](https://michaeldobner.github.io/mindpause/muehle/) | Nine men's morris against the computer on three levels or for two players on one device. Gold lines on black wood, glowing mills, trays as supply | 1.0.0 |
 
 More games and play across two devices are on the way, see the [roadmap](#roadmap).
 
@@ -54,6 +55,7 @@ mindpause/
 ├─ queen/                  QUEEN, see queen/README.md
 ├─ karo/                   KARO, see karo/README.md
 ├─ fuge/                   FUGE, see fuge/README.md
+├─ muehle/                 MÜHLE, see muehle/README.md
 ├─ scripts/
 │  ├─ release.mjs          sets the version of a game or of the shell
 │  └─ e2e.mjs              browser test of the whole collection
@@ -107,6 +109,7 @@ Every reference carries its version (`?v=` for game files, `?shell=` for shell f
 | QUEEN | German checkers, three computer levels, two players on one device | Done |
 | KARO | Klondike solitaire, draw one or three, Windows and Vegas scoring, solvable levels | Done |
 | FUGE | Falling blocks as a wooden box, four modes, gestures, shell 1.3.0 with custom buttons | Done |
+| MÜHLE | Nine men's morris with WMD rules, three computer levels, two players, design from QUEEN | Done |
 | QUEEN 1.2 | Playing each other on two devices, stage 1: move by link | Planned |
 | Later | Live with a room code, more games | Idea |
 
