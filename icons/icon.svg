@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="40%" r="70%">
+      <stop offset="0" stop-color="#2a2f7a"/>
+      <stop offset="1" stop-color="#14174a"/>
+    </radialGradient>
+    <radialGradient id="b" cx="36%" cy="32%" r="72%">
+      <stop offset="0" stop-color="#7fa6ff"/>
+      <stop offset="0.45" stop-color="#3f6ef0"/>
+      <stop offset="1" stop-color="#1d3cae"/>
+    </radialGradient>
+    <radialGradient id="k" cx="36%" cy="32%" r="72%">
+      <stop offset="0" stop-color="#5a5d6a"/>
+      <stop offset="0.45" stop-color="#1c1d24"/>
+      <stop offset="1" stop-color="#050507"/>
+    </radialGradient>
+    <radialGradient id="h" cx="50%" cy="40%" r="60%">
+      <stop offset="0" stop-color="#05061c"/>
+      <stop offset="1" stop-color="#11143f"/>
+    </radialGradient>
+    <radialGradient id="s" cx="50%" cy="50%" r="50%">
+      <stop offset="0" stop-color="#000" stop-opacity="0.5"/>
+      <stop offset="1" stop-color="#000" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="w" cx="50%" cy="50%" r="50%">
+      <stop offset="0" stop-color="#fff" stop-opacity="0.9"/>
+      <stop offset="1" stop-color="#fff" stop-opacity="0"/>
+    </radialGradient>
+    <g id="sh"><ellipse cx="4" cy="8" rx="44" ry="38" fill="url(#s)"/></g>
+    <g id="hl"><ellipse cx="-13" cy="-15" rx="15" ry="10" fill="url(#w)" transform="rotate(-30)"/></g>
+  </defs>
+  <rect width="512" height="512" fill="url(#bg)"/>
+  <g stroke="#fff" stroke-opacity="0.85" stroke-width="5" stroke-linecap="round">
+    <path d="M136 136H376M136 256H376M136 376H376M136 136V376M256 136V376M376 136V376"/>
+  </g>
+  <circle cx="256" cy="256" r="18" fill="url(#h)"/>
+  <g>
+    <g transform="translate(136 136)"><use href="#sh"/><circle r="42" fill="url(#b)"/><use href="#hl"/></g>
+    <g transform="translate(256 136)"><use href="#sh"/><circle r="42" fill="url(#k)"/><use href="#hl"/></g>
+    <g transform="translate(376 136)"><use href="#sh"/><circle r="42" fill="url(#b)"/><use href="#hl"/></g>
+    <g transform="translate(136 256)"><use href="#sh"/><circle r="42" fill="url(#k)"/><use href="#hl"/></g>
+    <g transform="translate(376 256)"><use href="#sh"/><circle r="42" fill="url(#k)"/><use href="#hl"/></g>
+    <g transform="translate(136 376)"><use href="#sh"/><circle r="42" fill="url(#b)"/><use href="#hl"/></g>
+    <g transform="translate(256 376)"><use href="#sh"/><circle r="42" fill="url(#k)"/><use href="#hl"/></g>
+    <g transform="translate(376 376)"><use href="#sh"/><circle r="42" fill="url(#b)"/><use href="#hl"/></g>
+  </g>
+</svg>

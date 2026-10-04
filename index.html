@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+  <title>SPRING</title>
+  <meta name="description" content="SPRING: the classic peg solitaire on the English 33-hole board. Das klassische Solohalma auf dem englischen Kreuzbrett.">
+  <meta name="theme-color" content="#ece8e1" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#141519" media="(prefers-color-scheme: dark)">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Spring">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <link rel="stylesheet" href="css/style.css?v=2.0.3">
+</head>
+<body>
+  <div class="app">
+    <!-- Figurenauswahl: Blatt von unten, Schublade (iPhone quer) oder feste Seitenleiste (iPad quer) -->
+    <aside id="panel" class="panel" aria-labelledby="panel-title">
+      <div class="grabber" aria-hidden="true"></div>
+      <div class="panel-head">
+        <h2 id="panel-title" data-i18n="chooseFigure"></h2>
+        <button id="panel-close" class="close-btn" type="button" data-i18n-label="close">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg>
+        </button>
+      </div>
+      <ul id="figure-list" class="figure-list"></ul>
+    </aside>
+
+    <header class="top">
+      <div class="titles">
+        <h1 class="brand">SPRING</h1>
+        <button id="figure-name" class="figure-name" type="button" aria-haspopup="dialog">
+          <span id="figure-label"></span>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+        </button>
+        <div id="coach" class="coach" role="status" hidden data-i18n="coach"></div>
+      </div>
+      <div class="counter" aria-live="polite">
+        <span id="count" class="count">32</span>
+        <span id="count-label" class="count-label"></span>
+      </div>
+    </header>
+
+    <main class="stage">
+      <svg id="board" class="board" role="img" data-i18n-label="boardLabel"></svg>
+
+      <section id="result" class="result" hidden aria-live="polite">
+        <div class="card">
+          <p class="result-kicker" data-i18n="gameOver"></p>
+          <h2 id="result-title" class="result-title"></h2>
+          <div id="result-stars" class="stars" aria-hidden="true"></div>
+          <p id="result-text" class="result-text"></p>
+          <p id="result-stats" class="result-stats"></p>
+          <div class="result-actions">
+            <button id="again" class="btn ghost" type="button" data-i18n="again"></button>
+            <button id="next" class="btn solid" type="button">
+              <span data-i18n="nextFigure"></span> <span aria-hidden="true">→</span>
+            </button>
+          </div>
+          <button id="back" class="link-btn" type="button" data-i18n="undoLast"></button>
+        </div>
+      </section>
+
+      <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+    </main>
+
+    <nav class="controls">
+      <button id="undo" class="icon-btn" type="button">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/></svg>
+        <span data-i18n="undo"></span>
+      </button>
+      <button id="hint" class="icon-btn" type="button">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18h6M10 21h4"/><path d="M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2.1h5c0-.9.4-1.6 1-2.1A6 6 0 0 0 12 3z"/></svg>
+        <span data-i18n="hint"></span>
+      </button>
+      <button id="restart" class="icon-btn" type="button">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.34-5.66"/><path d="M20 4v5h-5"/></svg>
+        <span data-i18n="restart"></span>
+      </button>
+      <button id="figures" class="icon-btn" type="button" aria-haspopup="dialog">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="5" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="12" cy="19" r="2"/><circle cx="5" cy="12" r="2"/><circle cx="19" cy="12" r="2"/></svg>
+        <span data-i18n="figures"></span>
+      </button>
+      <button id="settings-btn" class="icon-btn" type="button" aria-haspopup="dialog">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h10M18 7h2M4 17h2M10 17h10"/><circle cx="16" cy="7" r="2"/><circle cx="8" cy="17" r="2"/></svg>
+        <span data-i18n="settings"></span>
+      </button>
+    </nav>
+  </div>
+
+  <div id="scrim" class="scrim" hidden></div>
+
+  <!-- Einstellungen -->
+  <section id="settings" class="sheet" role="dialog" aria-modal="true" aria-labelledby="settings-title">
+    <div class="grabber" aria-hidden="true"></div>
+    <div class="panel-head">
+      <h2 id="settings-title" data-i18n="settingsTitle"></h2>
+      <button id="settings-close" class="close-btn" type="button" data-i18n-label="close">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg>
+      </button>
+    </div>
+
+    <div class="setting">
+      <div>
+        <p class="setting-name" data-i18n="sound"></p>
+        <p class="setting-text" data-i18n="soundOn"></p>
+      </div>
+      <button id="sound-toggle" class="switch" type="button" role="switch" aria-checked="true" data-i18n-label="sound"><span></span></button>
+    </div>
+
+    <div class="setting column">
+      <p class="setting-name" data-i18n="soundStyle"></p>
+      <div id="style-choice" class="segmented" role="radiogroup" data-i18n-label="soundStyle">
+        <button type="button" role="radio" data-style="warm" data-i18n="styles.warm"></button>
+        <button type="button" role="radio" data-style="clear" data-i18n="styles.clear"></button>
+        <button type="button" role="radio" data-style="soft" data-i18n="styles.soft"></button>
+      </div>
+    </div>
+
+    <div class="setting">
+      <div>
+        <p class="setting-name" data-i18n="tilt"></p>
+        <p class="setting-text" data-i18n="tiltText"></p>
+      </div>
+      <button id="tilt-toggle" class="switch" type="button" role="switch" aria-checked="false" data-i18n-label="tilt"><span></span></button>
+    </div>
+
+    <p class="setting-note" data-i18n="rimHint"></p>
+    <p id="version" class="setting-version"></p>
+  </section>
+
+  <script type="module" src="js/main.js?v=2.0.3"></script>
+</body>
+</html>
