@@ -10,7 +10,7 @@ Fonts, surface colours, spacing and all building blocks of the interface (header
 
 | Principle | Meaning |
 |---|---|
-| **One colour** | All pieces are alike. You read the shape, not the colour, and the board stays calm |
+| **Two colours** | Your own pieces are blue, the starting blocks of a level black, like the two sides of QUEEN Midnight. You read the shape, and the board stays calm |
 | **Tactile** | Every piece is a small piece of ceramic with a bevel, a light edge and a highlight |
 | **Calm** | No fire, no particles, no flashing. Lines dissolve, numbers rise gently |
 | **Preview, no surprise** | While dragging you see what is going to happen |
@@ -28,11 +28,12 @@ The games of the collection have short names in capitals. **BLOCKS** says what t
 | Edge of the playing area | `#2f3588` | Light edge of SPRING |
 | Hollows | Gradient `#05061c` to `#11143f` | Empty holes of SPRING |
 | Piece | Highlight `#86abff`, body `#3f6ef0`, shadow `#2142b4` | Blue pieces of QUEEN Midnight, marbles of SPRING |
-| Piece at the end | `#5e616e`, `#1d1e26`, `#07070a` | Black pieces of QUEEN Midnight |
+| Starting block in a level | `#5e616e`, `#1d1e26`, `#07070a` | Black pieces of QUEEN Midnight |
+| Pieces at the end | Night blue `#05061a`, 55 % on top | The lights go out |
 | Hint | `#ffd36b` | Hint ring of the collection |
 | Line preview | Light blue `#c8d4ff`, 18 to 28 %, pulsing | |
 
-The line above the board (best score and streak) sits on the background of the shell and therefore uses `--ink` and `--ink-soft`, which change with light and dark mode.
+The line above the board (goal and starting blocks in a level, best score otherwise, streak on the right) sits on the background of the shell and therefore uses `--ink` and `--ink-soft`, which change with light and dark mode.
 
 ## The pieces
 
@@ -65,9 +66,11 @@ The cell size follows from the available space and is rounded to whole device pi
 
 | Device | Arrangement |
 |---|---|
-| iPhone portrait | Title, mode and points at the top, best score and streak above the board, tray below, control bar at the bottom: Undo, Hint, New, Modes, More |
+| iPhone portrait | Title, level or mode and points at the top, goal or best score and streak above the board, tray below, control bar at the bottom: Undo, Hint, New, Levels, More |
 | iPhone landscape | Title, mode and points on the left, full height board, tray as a column to its right, control bar on the right |
-| iPad and computer | As in landscape, with a much larger board. Modes as a drawer from the left |
+| iPad and computer | As in landscape, with a much larger board. Levels and modes as a drawer from the left |
+
+**Picker:** first the 30 levels, each card with a preview of its starting board (starting blocks in grey), goal or best number of pieces, stars and five dots for the difficulty. Locked levels are muted. The free modes follow.
 
 The tray goes below or beside the board, whichever makes the board larger.
 
@@ -84,7 +87,8 @@ The tray goes below or beside the board, whichever makes the board larger.
 | Captions | "Double", "Streak 4", "All clear" in the middle of the board | 1.15 s |
 | Released elsewhere | The piece glides back into its slot | 220 ms |
 | New pieces | Rise into the tray one after another with a small bounce | 420 ms |
-| End | Row by row from bottom to top into black ceramic | 0.75 s |
+| End | Row by row from bottom to top darker, as if the lights go out | 0.75 s |
+| Level complete | Triad, with a bell for three stars, then the result card with "Next level" | 0.9 s |
 | Calm, board full | Pieces dissolve from top to bottom, "A fresh start" | 0.85 s |
 
 With "Reduce motion" growing, bouncing and dissolving are left out.

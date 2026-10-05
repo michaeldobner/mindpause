@@ -4,7 +4,7 @@
 
 **Block-Puzzle für iPhone und iPad.**
 
-Steine vom Tablett aufs Brett legen, volle Reihen und Spalten räumen ab. Auf einer nachtblauen Platte mit Steinen aus blauer Keramik.
+Steine vom Tablett aufs Brett legen, volle Reihen und Spalten räumen ab. 30 Level mit schwarzen Startsteinen und drei freie Modi, auf einer nachtblauen Platte mit Steinen aus blauer Keramik.
 
 [**▶ Jetzt spielen**](https://michaeldobner.github.io/mindpause/blocks/) · [English](README.md) · [Dokumentation](docs/de/README.md) · [Changelog](CHANGELOG.de.md)
 
@@ -12,9 +12,9 @@ Ein Spiel der Sammlung [MIND PAUSE](../README.de.md).
 
 [![Tests](https://github.com/michaeldobner/mindpause/actions/workflows/tests.yml/badge.svg)](https://github.com/michaeldobner/mindpause/actions/workflows/tests.yml)
 
-<img src="docs/images/iphone-game-de.jpg" width="260" alt="BLOCKS auf dem iPhone, ein Stein wird gezogen">&nbsp;&nbsp;
-<img src="docs/images/iphone-dark-de.jpg" width="260" alt="Dunkelmodus">&nbsp;&nbsp;
-<img src="docs/images/iphone-modes-de.jpg" width="260" alt="Modus wählen">
+<img src="docs/images/iphone-game-de.jpg" width="260" alt="Level 8 auf dem iPhone, ein Stein wird gezogen">&nbsp;&nbsp;
+<img src="docs/images/iphone-result-de.jpg" width="260" alt="Level geschafft mit drei Sternen">&nbsp;&nbsp;
+<img src="docs/images/iphone-modes-de.jpg" width="260" alt="Level und Modi wählen">
 
 </div>
 
@@ -26,7 +26,10 @@ Das Spiel, das jeder kennt: drei Steine auf dem Tablett, ein quadratisches Brett
 
 | | |
 |---|---|
-| **Drei Modi** | Klassisch (8 × 8), Weit (10 × 10) und Ruhe (ohne Ende) |
+| **30 Level** | Jedes Level beginnt mit schwarzen Startsteinen. Ziel: alle abräumen und das Punkteziel erreichen. Sechs Kapitel mit steigender Schwierigkeit, neue Formen kommen nach und nach dazu |
+| **Sterne und Fortschritt** | Je weniger Steine, desto mehr Sterne. Geschaffte Level schalten das nächste frei, der Stand bleibt auf dem Gerät |
+| **Drei freie Modi** | Klassisch (8 × 8), Weit (10 × 10) und Ruhe (ohne Ende), jeweils mit leicht belegtem Startbrett |
+| **Fairer Start** | Die ersten drei Steine passen immer, in jedem Level und jedem Modus |
 | **Ruhe** | Alle drei Steine passen immer. Passt trotzdem nichts mehr, räumt sich das Brett sanft auf und es geht weiter |
 | **Serie** | Wer immer wieder abräumt, vervielfacht seine Punkte. Drei Punkte über dem Brett zeigen, wie lange die Serie noch hält |
 | **Vorschau** | Beim Ziehen zeigt das Brett, wo der Stein landet und welche Reihen und Spalten verschwinden würden |
@@ -41,7 +44,8 @@ Das Spiel, das jeder kennt: drei Steine auf dem Tablett, ein quadratisches Brett
 1. Ziehe einen der drei Steine vom Tablett aufs Brett. Steine lassen sich nicht drehen.
 2. Eine **volle Reihe** oder **volle Spalte** verschwindet. Mehrere auf einmal bringen mehr Punkte.
 3. Sind alle drei Steine gelegt, kommen drei neue.
-4. Passt keiner der übrigen Steine mehr aufs Brett, ist das Spiel vorbei.
+4. **Im Level** räumst du alle schwarzen Startsteine ab und erreichst das Punkteziel. Dann ist das Level geschafft.
+5. Passt keiner der übrigen Steine mehr aufs Brett, ist das Spiel vorbei.
 
 Alle Regeln, Punkte und Modi: [Spielregeln](docs/de/spielregeln.md).
 
@@ -65,9 +69,9 @@ Alle Regeln, Punkte und Modi: [Spielregeln](docs/de/spielregeln.md).
 
 | Dokument | Inhalt |
 |---|---|
-| [Spielregeln](docs/de/spielregeln.md) | Regeln, Formen, Modi, Punkte, Serie, Sterne, Bedienung |
+| [Spielregeln](docs/de/spielregeln.md) | Regeln, Level, Formen, Modi, Punkte, Serie, Sterne, Bedienung |
 | [Design-System](docs/de/design.md) | Leitidee, Name, Farben, Steine, Layouts, Bewegung, Klang |
-| [Architektur](docs/de/architektur.md) | Module, Datenmodell, Ziehen, Füllen des Tabletts, Tests |
+| [Architektur](docs/de/architektur.md) | Module, Datenmodell, Level und ihr Erzeugen, Ziehen, Füllen des Tabletts, Tests |
 
 ## Schnellstart für Entwicklung
 
@@ -78,6 +82,7 @@ npm start                           # lokaler Server, dann http://localhost:3000
 npm test                            # Logik-Tests der ganzen Sammlung
 npm run e2e                         # Browser-Test auf iPhone und iPad
 node blocks/tools/bot.mjs           # Computerspieler, schätzt die Grenzen für die Sterne
+node blocks/tools/levels.mjs        # erzeugt die 30 Level und spielt jedes durch
 ```
 
 Keine Abhängigkeiten, kein Build-Schritt. Alles, was BLOCKS mit den anderen Spielen teilt, kommt aus der [Hülle](../shared/README.de.md).
@@ -93,6 +98,8 @@ blocks/
 │  ├─ strings.js           Texte auf Deutsch und Englisch
 │  ├─ shapes.js            Formen, Drehungen und Spiegelungen, Zufall mit Gewichten
 │  ├─ modes.js             Modi, Punkte, Serie, Sterne
+│  ├─ levels.js            30 Level: Kurve der Schwierigkeit, Formen je Kapitel, Sterne
+│  ├─ level-data.js        Startbretter und Richtwerte, erzeugt von tools/levels.mjs
 │  ├─ game.js              Spiellogik: Legen, Abräumen, Füllen des Tabletts, Ende, Tipp, Speichern
 │  ├─ view.js              Platte, Steine, Tablett und Animationen auf Canvas
 │  ├─ input.js             Ziehen mit Finger und Maus, Tastatur
@@ -100,6 +107,7 @@ blocks/
 ├─ tools/
 │  ├─ icons.mjs            erzeugt die App-Symbole
 │  ├─ screenshots.mjs      erzeugt die Bilder der Dokumentation
+│  ├─ levels.mjs           erzeugt die Level und prüft, dass jedes lösbar ist
 │  └─ bot.mjs              Computerspieler für die Grenzen der Sterne
 ├─ icons/                  App-Symbole
 ├─ sw.js                   Offline-Betrieb
@@ -110,4 +118,4 @@ blocks/
 
 ## Version
 
-Aktuelle Version: **1.0.0**. Siehe [Changelog](CHANGELOG.de.md).
+Aktuelle Version: **1.1.0**. Siehe [Changelog](CHANGELOG.de.md).

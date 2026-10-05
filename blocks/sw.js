@@ -3,7 +3,7 @@
 // Jede Version lädt nur ihre eigenen Dateien: Dateien von BLOCKS tragen ?v=<Version>,
 // Dateien der Hülle ?shell=<Version der Hülle> (siehe scripts/release.mjs).
 // So können sich alte und neue Dateien nie mischen.
-const VERSION = '1.0.0';
+const VERSION = '1.1.0';
 const SHELL = '1.5.0';
 const CACHE = `blocks-v${VERSION}-shell${SHELL}`;
 
@@ -16,7 +16,7 @@ const FILES = [
   './icons/icon-512.png',
   './icons/apple-touch-icon.png',
   `./css/blocks.css?v=${VERSION}`,
-  ...['main', 'strings', 'shapes', 'modes', 'game', 'view', 'input', 'sound']
+  ...['main', 'strings', 'shapes', 'modes', 'levels', 'level-data', 'game', 'view', 'input', 'sound']
     .map((name) => `./js/${name}.js?v=${VERSION}`),
   `../shared/tokens.css?shell=${SHELL}`,
   `../shared/shell.css?shell=${SHELL}`,

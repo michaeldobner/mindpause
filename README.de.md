@@ -21,7 +21,7 @@ Klassische Brettspiele, neu gedacht, mit fast greifbarem Design und handgemachte
 | <img src="karo/icons/icon.svg" width="56" alt=""> | **[KARO](karo/README.de.md)** · [spielen](https://michaeldobner.github.io/mindpause/karo/) | Die klassische Patience wie bei Windows. 1 oder 3 Karten, Punkte oder Vegas, sicher lösbare Stufen, Tipps | 1.0.4 |
 | <img src="fuge/icons/icon.svg" width="56" alt=""> | **[FUGE](fuge/README.de.md)** · [spielen](https://michaeldobner.github.io/mindpause/fuge/) | Das klassische Spiel mit fallenden Steinen als lackierter Holzkasten. Klassisch, Sprint, 3 Minuten und Ruhe ohne Ende, Gesten statt Knöpfe, Daumensteuerung im Querformat | 1.1.0 |
 | <img src="muehle/icons/icon.svg" width="56" alt=""> | **[MÜHLE](muehle/README.de.md)** · [spielen](https://michaeldobner.github.io/mindpause/muehle/) | Neun Männer Mühle gegen den Computer in drei Stufen oder zu zweit an einem Gerät. Goldlinien auf schwarzem Holz, leuchtende Mühlen, Schalen als Vorrat | 1.1.0 |
-| <img src="blocks/icons/icon.svg" width="56" alt=""> | **[BLOCKS](blocks/README.de.md)** · [spielen](https://michaeldobner.github.io/mindpause/blocks/) | Das Block-Puzzle: Steine vom Tablett aufs Brett ziehen, volle Reihen und Spalten räumen ab. Klassisch 8 × 8, Weit 10 × 10 und Ruhe ohne Ende, Serie, Vorschau beim Ziehen, Steine aus blauer Keramik | 1.0.0 |
+| <img src="blocks/icons/icon.svg" width="56" alt=""> | **[BLOCKS](blocks/README.de.md)** · [spielen](https://michaeldobner.github.io/mindpause/blocks/) | Das Block-Puzzle: Steine vom Tablett aufs Brett ziehen, volle Reihen und Spalten räumen ab. 30 Level mit Startsteinen und steigender Schwierigkeit, dazu Klassisch 8 × 8, Weit 10 × 10 und Ruhe ohne Ende, Serie, Vorschau beim Ziehen, Steine aus blauer Keramik | 1.1.0 |
 
 Weitere Spiele und das Spiel auf zwei Geräten sind in Arbeit, siehe [Roadmap](#roadmap).
 
@@ -114,6 +114,7 @@ Jeder Verweis trägt seine Version (`?v=` für Dateien eines Spiels, `?shell=` f
 | MÜHLE | Neun Männer Mühle nach WMD-Regeln, drei Computerstufen, zu zweit, Gestaltung von QUEEN | Fertig |
 | Querformat | Hülle 1.5.0: Querformat für alle Spiele, Brett in voller Höhe, eigene Steine unten, FUGE mit Daumensteuerung | Fertig |
 | BLOCKS | Block-Puzzle mit drei Modi, Serie und Vorschau, Farben von SPRING und QUEEN Mitternacht | Fertig |
+| BLOCKS 1.1 | 30 Level in sechs Kapiteln mit Sägezahn-Kurve, jedes auf Lösbarkeit geprüft | Fertig |
 | QUEEN 1.4 | Gegeneinander auf zwei Geräten, Stufe 1: Zug per Link | Geplant |
 | Später | Live mit Raumcode, weitere Spiele | Idee |
 

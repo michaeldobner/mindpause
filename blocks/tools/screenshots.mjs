@@ -27,14 +27,17 @@ const server = http.createServer((req, res) => {
 const URL_BLOCKS = `http://localhost:${server.address().port}/blocks/`;
 const browser = await chromium.launch();
 
-// Eine belebte Stellung: nach Tipps legen, mit festem Startwert, und einen Stein mitten im Ziehen zeigen
-const playSome = (moves) => `(async () => {
+// Eine belebte Stellung: in einem Level oder Modus nach Tipps legen
+const playSome = (moves, choice = 'classic') => `(async () => {
   const w = window.__game;
-  w.newGame({ keep: false });
+  w.progress.unlocked = 30;
+  w.choose('${choice}');
   const g = w.game;
-  g.rng.state = 12345;
-  g.refill();
-  for (let i = 0; i < ${moves}; i++) {
+  if (g.mode !== 'level') {
+    g.rng.state = 12345;
+    g.refill();
+  }
+  for (let i = 0; i < ${moves} && g.state === 'playing'; i++) {
     const h = g.hint();
     if (!h) break;
     g.place(h.slot, h.x, h.y);
@@ -71,16 +74,17 @@ async function shot(name, device, locale, prepare, colorScheme = 'light') {
 }
 
 const iphone = devices['iPhone 15'];
-await shot('iphone-game-de', iphone, 'de-DE', async (p) => { await p.evaluate(playSome(12)); await p.evaluate(holdPiece); });
-await shot('iphone-game-en', iphone, 'en-US', async (p) => { await p.evaluate(playSome(12)); await p.evaluate(holdPiece); });
-await shot('iphone-modes-de', iphone, 'de-DE', async (p) => { await p.click('#btn-levels'); await p.waitForTimeout(600); });
+await shot('iphone-level-de', iphone, 'de-DE');
+await shot('iphone-game-de', iphone, 'de-DE', async (p) => { await p.evaluate(playSome(6, 'level-8')); await p.evaluate(holdPiece); });
+await shot('iphone-game-en', iphone, 'en-US', async (p) => { await p.evaluate(playSome(6, 'level-8')); await p.evaluate(holdPiece); });
+await shot('iphone-modes-de', iphone, 'de-DE', async (p) => { await p.evaluate(playSome(0, 'level-3')); await p.click('#btn-levels'); await p.waitForTimeout(600); });
 await shot('iphone-result-de', iphone, 'de-DE', async (p) => {
-  await p.evaluate(playSome(400));
+  await p.evaluate(playSome(400, 'level-2'));
   await p.waitForTimeout(1500);
 });
 await shot('iphone-dark-de', iphone, 'de-DE', (p) => p.evaluate(playSome(22)), 'dark');
-await shot('iphone-landscape-dark-de', devices['iPhone 15 landscape'], 'de-DE', (p) => p.evaluate(playSome(10)), 'dark');
-await shot('ipad-de', devices['iPad Pro 11 landscape'], 'de-DE', (p) => p.evaluate(playSome(18)));
+await shot('iphone-landscape-dark-de', devices['iPhone 15 landscape'], 'de-DE', (p) => p.evaluate(playSome(4, 'level-14')), 'dark');
+await shot('ipad-de', devices['iPad Pro 11 landscape'], 'de-DE', (p) => p.evaluate(playSome(5, 'level-21')));
 
 await browser.close();
 server.close();

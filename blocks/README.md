@@ -4,7 +4,7 @@
 
 **Block puzzle for iPhone and iPad.**
 
-Drag pieces from the tray onto the board, full rows and columns clear. On a night blue plate with pieces of blue ceramic.
+Drag pieces from the tray onto the board, full rows and columns clear. 30 levels with black starting blocks and three free modes, on a night blue plate with pieces of blue ceramic.
 
 [**▶ Play now**](https://michaeldobner.github.io/mindpause/blocks/) · [Deutsch](README.de.md) · [Documentation](docs/en/README.md) · [Changelog](CHANGELOG.md)
 
@@ -12,9 +12,9 @@ A game of the [MIND PAUSE](../README.md) collection.
 
 [![Tests](https://github.com/michaeldobner/mindpause/actions/workflows/tests.yml/badge.svg)](https://github.com/michaeldobner/mindpause/actions/workflows/tests.yml)
 
-<img src="docs/images/iphone-game-en.jpg" width="260" alt="BLOCKS on iPhone, a piece being dragged">&nbsp;&nbsp;
-<img src="docs/images/iphone-dark-de.jpg" width="260" alt="Dark mode">&nbsp;&nbsp;
-<img src="docs/images/iphone-modes-de.jpg" width="260" alt="Choose a mode">
+<img src="docs/images/iphone-game-en.jpg" width="260" alt="Level 8 on iPhone, a piece being dragged">&nbsp;&nbsp;
+<img src="docs/images/iphone-result-de.jpg" width="260" alt="Level complete with three stars">&nbsp;&nbsp;
+<img src="docs/images/iphone-modes-de.jpg" width="260" alt="Choose levels and modes">
 
 </div>
 
@@ -26,7 +26,10 @@ The game everyone knows: three pieces on the tray, a square board, and the quest
 
 | | |
 |---|---|
-| **Three modes** | Classic (8 × 8), Wide (10 × 10) and Calm (no end) |
+| **30 levels** | Every level starts with black starting blocks. Goal: clear them all and reach the points goal. Six chapters of rising difficulty, new shapes arrive step by step |
+| **Stars and progress** | The fewer pieces, the more stars. A completed level unlocks the next one, progress stays on the device |
+| **Three free modes** | Classic (8 × 8), Wide (10 × 10) and Calm (no end), each with a lightly filled starting board |
+| **Fair start** | The first three pieces always fit, in every level and every mode |
 | **Calm** | All three pieces always fit. If nothing fits after all, the board clears gently and play goes on |
 | **Streak** | Keep clearing and your points multiply. Three dots above the board show how long the streak still holds |
 | **Preview** | While dragging, the board shows where the piece lands and which rows and columns would clear |
@@ -41,7 +44,8 @@ The game everyone knows: three pieces on the tray, a square board, and the quest
 1. Drag one of the three pieces from the tray onto the board. Pieces cannot be rotated.
 2. A **full row** or **full column** clears. Several at once score more.
 3. Once all three pieces are placed, three new ones arrive.
-4. When none of the remaining pieces fits on the board, the game is over.
+4. **In a level** you clear all black starting blocks and reach the points goal. Then the level is complete.
+5. When none of the remaining pieces fits on the board, the game is over.
 
 All rules, points and modes: [Gameplay](docs/en/gameplay.md).
 
@@ -65,9 +69,9 @@ All rules, points and modes: [Gameplay](docs/en/gameplay.md).
 
 | Document | Contents |
 |---|---|
-| [Gameplay](docs/en/gameplay.md) | Rules, shapes, modes, points, streak, stars, controls |
+| [Gameplay](docs/en/gameplay.md) | Rules, levels, shapes, modes, points, streak, stars, controls |
 | [Design system](docs/en/design.md) | Concept, name, colours, pieces, layouts, motion, sound |
-| [Architecture](docs/en/architecture.md) | Modules, data model, dragging, filling the tray, tests |
+| [Architecture](docs/en/architecture.md) | Modules, data model, levels and how they are made, dragging, filling the tray, tests |
 
 ## Quick start for development
 
@@ -78,6 +82,7 @@ npm start                           # local server, then open http://localhost:3
 npm test                            # logic tests of the whole collection
 npm run e2e                         # browser test on iPhone and iPad
 node blocks/tools/bot.mjs           # computer player, estimates the limits for the stars
+node blocks/tools/levels.mjs        # creates the 30 levels and plays through each
 ```
 
 No dependencies, no build step. Everything BLOCKS shares with the other games comes from the [shell](../shared/README.md).
@@ -93,6 +98,8 @@ blocks/
 │  ├─ strings.js           texts in German and English
 │  ├─ shapes.js            shapes, rotations and mirror images, weighted random
 │  ├─ modes.js             modes, points, streak, stars
+│  ├─ levels.js            30 levels: difficulty curve, shapes per chapter, stars
+│  ├─ level-data.js        starting boards and par values, created by tools/levels.mjs
 │  ├─ game.js              game logic: placing, clearing, filling the tray, end, hint, saving
 │  ├─ view.js              plate, pieces, tray and animations on canvas
 │  ├─ input.js             dragging with finger and mouse, keyboard
@@ -100,6 +107,7 @@ blocks/
 ├─ tools/
 │  ├─ icons.mjs            creates the app icons
 │  ├─ screenshots.mjs      creates the images of the documentation
+│  ├─ levels.mjs           creates the levels and checks that each one can be solved
 │  └─ bot.mjs              computer player for the star limits
 ├─ icons/                  app icons
 ├─ sw.js                   offline support
@@ -110,4 +118,4 @@ blocks/
 
 ## Version
 
-Current version: **1.0.0**. See the [changelog](CHANGELOG.md).
+Current version: **1.1.0**. See the [changelog](CHANGELOG.md).

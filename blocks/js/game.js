@@ -7,8 +7,9 @@
 //
 // Die Darstellung liest den Zustand und holt sich mit drainEvents() ab, was passiert ist.
 
-import { SHAPES, FAMILY_IDS, shapeOf, createRandom, pickShape } from './shapes.js?v=1.0.0';
-import { modeById, MODES, STREAK_KEEP, scorePlace } from './modes.js?v=1.0.0';
+import { SHAPES, FAMILY_IDS, shapeOf, createRandom, pickShape } from './shapes.js?v=1.1.0';
+import { modeById, MODES, STREAK_KEEP, scorePlace } from './modes.js?v=1.1.0';
+import { levelDef, LEVEL_COUNT } from './levels.js?v=1.1.0';
 
 export const TRAY = 3;
 
@@ -106,10 +107,22 @@ export function canPlaceAll(board, keys, budget = { n: 6000 }) {
 // ---------- Spiel ----------
 
 export class Game {
-  constructor({ mode = 'classic', seed = 1 } = {}) {
-    this.mode = modeById(mode) ? mode : MODES[0].id;
+  // mode: ein freier Modus oder 'level' mit level (1 bis 30).
+  // custom: eigene Beschreibung eines Levels, nur für tools/levels.mjs
+  constructor({ mode = 'classic', seed = 1, level = 1, custom = null } = {}) {
+    if (mode === 'level') {
+      this.mode = 'level';
+      this.level = Math.min(LEVEL_COUNT, Math.max(1, Math.floor(level) || 1));
+      this.custom = custom;
+      seed = this.def.seed;
+    } else {
+      this.mode = modeById(mode) ? mode : MODES[0].id;
+      this.level = 0;
+      this.custom = null;
+    }
     this.size = this.def.size;
     this.board = emptyBoard(this.size);
+    this.pre = null; // Startsteine eines Levels, die noch liegen
     this.rng = createRandom(seed);
     this.tray = new Array(TRAY).fill(null);
     this.score = 0;
@@ -125,11 +138,23 @@ export class Game {
   }
 
   get def() {
+    if (this.mode === 'level') return this.custom || levelDef(this.level);
     return modeById(this.mode);
   }
 
+  // Vorbei: verloren (over) oder Level geschafft (won)
   get isOver() {
-    return this.state === 'over';
+    return this.state !== 'playing';
+  }
+
+  // Wie viele Startsteine noch liegen
+  get preLeft() {
+    return this.pre ? this.pre.flat().filter(Boolean).length : 0;
+  }
+
+  // Ziel des Levels erreicht: alle Startsteine weg und genug Punkte
+  get levelDone() {
+    return this.mode === 'level' && this.preLeft === 0 && this.score >= this.def.target;
   }
 
   drainEvents() {
@@ -151,7 +176,8 @@ export class Game {
     let first = null; // erste Ziehung überhaupt
     let oneFits = null; // erste Ziehung, in der wenigstens ein Stein passt
     for (let attempt = 0; attempt < 40; attempt++) {
-      const trio = [pickShape(this.rng), pickShape(this.rng), pickShape(this.rng)];
+      const fam = this.def.families;
+      const trio = [pickShape(this.rng, fam), pickShape(this.rng, fam), pickShape(this.rng, fam)];
       first = first || trio;
       if (fair === 'none') return { tray: trio, ok: true };
       const some = trio.some((k) => fitsAnywhere(this.board, k));
@@ -166,6 +192,17 @@ export class Game {
   // und die ersten drei Steine passen in jedem Modus sicher in irgendeiner Reihenfolge.
   // Gelingt das nicht, beginnt das Spiel auf leerem Brett, dort passen drei Steine immer.
   setup() {
+    if (this.def.board) {
+      // Level: festes Startbrett, die Startsteine sind schwarze Keramik
+      const code = FAMILY_IDS.indexOf('dot') + 1;
+      this.board = this.def.board.map((row) => [...row].map((ch) => (ch === '#' ? code : 0)));
+      this.pre = this.board.map((r) => r.map(Boolean));
+      let tray = this.draw('all');
+      while (!tray.ok && !canPlaceAll(this.board, tray.tray, { n: 1e6 })) tray = this.draw('all');
+      this.tray = tray.tray;
+      this.events.push({ type: 'refill', tray: this.tray.slice() });
+      return;
+    }
     for (let attempt = 0; attempt < 30; attempt++) {
       this.board = scatter(this.size, this.def.start, this.rng);
       const { tray, ok } = this.draw('all');
@@ -218,7 +255,7 @@ export class Game {
     const cleared = [];
     for (let yy = 0; yy < this.size; yy++) {
       for (let xx = 0; xx < this.size; xx++) {
-        if (rows.includes(yy) || cols.includes(xx)) cleared.push({ x: xx, y: yy, code: placed[yy][xx] });
+        if (rows.includes(yy) || cols.includes(xx)) cleared.push({ x: xx, y: yy, code: placed[yy][xx], pre: Boolean(this.pre?.[yy][xx]) });
       }
     }
 
@@ -234,6 +271,10 @@ export class Game {
     const points = scorePlace({ cells: cells.length, lines, streak: this.streak, perfect });
 
     this.board = board;
+    if (this.pre) {
+      for (const r of rows) this.pre[r].fill(false);
+      for (const c of cols) for (let yy = 0; yy < this.size; yy++) this.pre[yy][c] = false;
+    }
     this.tray[slot] = null;
     this.score += points;
     this.moves += 1;
@@ -247,6 +288,11 @@ export class Game {
     }
     this.events.push({ type: 'score', points, at: [x + shape.w / 2, y + shape.h / 2] });
 
+    if (this.levelDone) {
+      this.state = 'won';
+      this.events.push({ type: 'levelDone', level: this.level });
+      return { points, lines, rows, cols, perfect, streak: this.streak };
+    }
     if (this.tray.every((k) => !k)) this.refill();
     this.checkStuck();
     return { points, lines, rows, cols, perfect, streak: this.streak };
@@ -281,7 +327,7 @@ export class Game {
     if (!this.undoSnap) return false;
     const g = Game.restore(this.undoSnap);
     if (!g) return false;
-    for (const k of ['board', 'rng', 'tray', 'score', 'moves', 'lines', 'streak', 'idle', 'tally', 'state']) this[k] = g[k];
+    for (const k of ['board', 'pre', 'rng', 'tray', 'score', 'moves', 'lines', 'streak', 'idle', 'tally', 'state']) this[k] = g[k];
     this.undoSnap = null;
     this.events.push({ type: 'undo' });
     return true;
@@ -297,6 +343,8 @@ export class Game {
       for (const [x, y] of placements(this.board, key)) {
         const { board, rows, cols } = applyPlace(this.board, key, x, y);
         let v = (rows.length + cols.length) * 100 + contact(this.board, key, x, y) * 3 - holes(board) * 12;
+        // Im Level zählen abgeräumte Startsteine extra
+        if (this.pre) v += preCleared(this.pre, rows, cols) * 25;
         // Danach müssen die übrigen Steine noch alle passen, sonst verbaut der Tipp das Tablett
         if (rest.length && !rest.some((k) => fitsAnywhere(board, k))) v -= 2000;
         else if (rest.length > 1 && !canPlaceAll(board, rest, { n: 1500 })) v -= 1000;
@@ -313,7 +361,9 @@ export class Game {
     return {
       v: 1,
       mode: this.mode,
+      level: this.level,
       board: this.board.map((r) => r.slice()),
+      pre: this.pre ? this.pre.map((r) => r.map((v) => (v ? 1 : 0))) : null,
       tray: this.tray.slice(),
       rng: this.rng.state,
       score: this.score,
@@ -328,14 +378,20 @@ export class Game {
 
   static restore(data) {
     try {
-      if (!data || data.v !== 1 || !modeById(data.mode)) return null;
+      if (!data || data.v !== 1) return null;
       const g = Object.create(Game.prototype);
       g.mode = data.mode;
-      g.size = modeById(data.mode).size;
+      g.custom = null;
+      g.level = data.mode === 'level' ? Number(data.level) : 0;
+      if (data.mode === 'level' ? !levelDef(g.level) : !modeById(data.mode)) return null;
+      g.size = g.def.size;
       if (!Array.isArray(data.board) || data.board.length !== g.size || data.board.some((r) => r.length !== g.size)) return null;
       if (!Array.isArray(data.tray) || data.tray.length !== TRAY || data.tray.some((k) => k && !SHAPES[k])) return null;
       g.board = data.board.map((r) => r.map((c) => (Number.isInteger(c) && c > 0 && c <= FAMILY_IDS.length ? c : 0)));
       g.tray = data.tray.map((k) => k || null);
+      g.pre = g.mode === 'level' && Array.isArray(data.pre) && data.pre.length === g.size
+        ? data.pre.map((r, y) => r.map((v, x) => Boolean(v) && Boolean(g.board[y][x])))
+        : g.mode === 'level' ? g.board.map((r) => r.map(() => false)) : null;
       g.rng = createRandom(0);
       g.rng.state = data.rng >>> 0;
       g.score = Number(data.score) || 0;
@@ -344,7 +400,7 @@ export class Game {
       g.streak = Number(data.streak) || 0;
       g.idle = Number(data.idle) || 0;
       g.tally = { bestStreak: 0, perfect: 0, calmClears: 0, ...data.tally };
-      g.state = data.state === 'over' ? 'over' : 'playing';
+      g.state = ['over', 'won'].includes(data.state) ? data.state : 'playing';
       g.undoSnap = null;
       g.events = [];
       if (g.tray.every((k) => !k)) g.refill();
@@ -388,4 +444,13 @@ function holes(board) {
     }
   }
   return h;
+}
+
+// Startsteine in den Linien, die verschwinden
+function preCleared(pre, rows, cols) {
+  let n = 0;
+  pre.forEach((r, y) => r.forEach((v, x) => {
+    if (v && (rows.includes(y) || cols.includes(x))) n += 1;
+  }));
+  return n;
 }
