@@ -47,7 +47,7 @@ The game everyone knows: three pieces on the tray, a square board, and the quest
 4. **In a level** you clear all black starting blocks and reach the points goal. Then the level is complete.
 5. When none of the remaining pieces fits on the board, the game is over.
 
-All rules, points and modes: [Gameplay](docs/en/gameplay.md).
+All rules, levels, points and modes: [Gameplay](docs/en/gameplay.md).
 
 ## Controls
 
@@ -94,7 +94,7 @@ blocks/
 ├─ index.html              entry page, loads the shell and BLOCKS
 ├─ css/blocks.css          stage for the canvas
 ├─ js/
-│  ├─ main.js              connects BLOCKS to the shell: modes, undo, hint, best scores, result
+│  ├─ main.js              connects BLOCKS to the shell: levels and modes, progress, undo, hint, result
 │  ├─ strings.js           texts in German and English
 │  ├─ shapes.js            shapes, rotations and mirror images, weighted random
 │  ├─ modes.js             modes, points, streak, stars

@@ -47,7 +47,7 @@ Das Spiel, das jeder kennt: drei Steine auf dem Tablett, ein quadratisches Brett
 4. **Im Level** räumst du alle schwarzen Startsteine ab und erreichst das Punkteziel. Dann ist das Level geschafft.
 5. Passt keiner der übrigen Steine mehr aufs Brett, ist das Spiel vorbei.
 
-Alle Regeln, Punkte und Modi: [Spielregeln](docs/de/spielregeln.md).
+Alle Regeln, Level, Punkte und Modi: [Spielregeln](docs/de/spielregeln.md).
 
 ## Bedienung
 
@@ -94,7 +94,7 @@ blocks/
 ├─ index.html              Einstiegsseite, lädt die Hülle und BLOCKS
 ├─ css/blocks.css          Bühne für das Canvas
 ├─ js/
-│  ├─ main.js              verbindet BLOCKS mit der Hülle: Modi, Zurück, Tipp, Bestwerte, Ergebnis
+│  ├─ main.js              verbindet BLOCKS mit der Hülle: Level und Modi, Fortschritt, Zurück, Tipp, Ergebnis
 │  ├─ strings.js           Texte auf Deutsch und Englisch
 │  ├─ shapes.js            Formen, Drehungen und Spiegelungen, Zufall mit Gewichten
 │  ├─ modes.js             Modi, Punkte, Serie, Sterne

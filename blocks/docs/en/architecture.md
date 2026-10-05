@@ -85,7 +85,7 @@ Under the prefix `blocks:` in local storage:
 
 ## Shell
 
-BLOCKS uses shell 1.5.0 without changes: the control bar of the shell (Undo, Hint, New, Modes, More), the picker as sheet or drawer, one switch in the settings and the result card. The SVG board of the shell is hidden, the canvas sits on the stage as its own element.
+BLOCKS uses shell 1.5.0 without changes: the control bar of the shell (Undo, Hint, New, Levels, More), the picker as sheet or drawer, one switch in the settings and the result card. The SVG board of the shell is hidden, the canvas sits on the stage as its own element.
 
 ## Development and tests
 

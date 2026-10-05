@@ -85,7 +85,7 @@ Unter dem Präfix `blocks:` im lokalen Speicher:
 
 ## Hülle
 
-BLOCKS nutzt die Hülle 1.5.0 ohne Änderungen: die Steuerleiste der Hülle (Zurück, Tipp, Neu, Modi, Mehr), die Auswahl als Blatt oder Schublade, einen Schalter in den Einstellungen und die Ergebniskarte. Das SVG-Brett der Hülle wird ausgeblendet, das Canvas liegt als eigenes Element auf der Bühne.
+BLOCKS nutzt die Hülle 1.5.0 ohne Änderungen: die Steuerleiste der Hülle (Zurück, Tipp, Neu, Level, Mehr), die Auswahl als Blatt oder Schublade, einen Schalter in den Einstellungen und die Ergebniskarte. Das SVG-Brett der Hülle wird ausgeblendet, das Canvas liegt als eigenes Element auf der Bühne.
 
 ## Entwicklung und Tests
 

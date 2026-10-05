@@ -78,7 +78,7 @@ Die Startbretter sind spiegelsymmetrisch und haben nie eine volle Reihe oder Spa
 
 **Beispiel:** Serie 3, ein Vierer räumt zwei Reihen ab: 4 + 60 × 3 = 184 Punkte.
 
-## Modi
+## Freie Modi
 
 Neben den Leveln gibt es drei freie Modi ohne Ziel, nur mit Punkten:
 

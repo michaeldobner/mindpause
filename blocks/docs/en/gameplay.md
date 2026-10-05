@@ -78,7 +78,7 @@ The starting boards are mirror symmetric and never have a full row or column.
 
 **Example:** streak 3, a straight four clears two rows: 4 + 60 × 3 = 184 points.
 
-## Modes
+## Free modes
 
 Besides the levels there are three free modes without a goal, just points:
 
