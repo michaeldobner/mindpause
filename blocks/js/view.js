@@ -6,8 +6,8 @@
 // Jede Zelle ist ein kleines Bild (Sprite), einmal je Farbe und Größe gezeichnet, danach nur kopiert.
 // Gezeichnet wird nur, wenn sich etwas ändert oder eine Animation läuft.
 
-import { shapeOf } from './shapes.js?v=1.1.0';
-import { TRAY } from './game.js?v=1.1.0';
+import { shapeOf } from './shapes.js?v=1.1.1';
+import { TRAY } from './game.js?v=1.1.1';
 
 // Farben aus SPRING und QUEEN Mitternacht
 export const COLORS = {

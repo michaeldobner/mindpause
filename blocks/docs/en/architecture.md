@@ -79,6 +79,7 @@ Under the prefix `blocks:` in local storage:
 | `game` | running game (`Game.serialize()`), after every piece and when leaving |
 | `mode` | last chosen mode or level, for example `level-7` |
 | `progress` | highest unlocked level and per level the stars, points and pieces of the best result |
+| `levelsIntro` | the one time start with level 1 after the update to 1.1 has happened |
 | `stats` | per free mode: number of games and best result (points, lines, pieces) |
 | `preview` | setting |
 | `sound`, `soundStyle`, `coachSeen` | from the shell |

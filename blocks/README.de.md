@@ -118,4 +118,4 @@ blocks/
 
 ## Version
 
-Aktuelle Version: **1.1.0**. Siehe [Changelog](CHANGELOG.de.md).
+Aktuelle Version: **1.1.1**. Siehe [Changelog](CHANGELOG.de.md).

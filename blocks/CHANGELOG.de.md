@@ -2,6 +2,11 @@
 
 Alle wichtigen Änderungen an BLOCKS. [English](CHANGELOG.md)
 
+## 1.1.1 (2026-10-05)
+
+### Behoben
+* **Level nach dem Update sichtbar:** Wer vor 1.1 frei gespielt hatte, landete nach dem Update in seinem alten, gespeicherten Spiel und sah von den Leveln nichts. Jetzt beginnt BLOCKS einmalig mit Level 1 und meldet „Neu: 30 Level“. Ein laufendes altes Spiel bleibt erhalten und kommt mit **Zurück** wieder.
+
 ## 1.1.0 (2026-10-05)
 
 ### Neu

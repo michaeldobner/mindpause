@@ -79,6 +79,7 @@ Unter dem Präfix `blocks:` im lokalen Speicher:
 | `game` | laufendes Spiel (`Game.serialize()`), nach jedem Stein und beim Verlassen |
 | `mode` | zuletzt gewählter Modus oder Level, zum Beispiel `level-7` |
 | `progress` | höchstes freies Level und je Level Sterne, Punkte und Steine des besten Ergebnisses |
+| `levelsIntro` | einmaliger Start mit Level 1 nach dem Update auf 1.1 ist erledigt |
 | `stats` | je freiem Modus: Zahl der Spiele und Bestwert (Punkte, Linien, Steine) |
 | `preview` | Einstellung |
 | `sound`, `soundStyle`, `coachSeen` | von der Hülle |

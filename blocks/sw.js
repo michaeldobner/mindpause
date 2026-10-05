@@ -3,7 +3,7 @@
 // Jede Version lädt nur ihre eigenen Dateien: Dateien von BLOCKS tragen ?v=<Version>,
 // Dateien der Hülle ?shell=<Version der Hülle> (siehe scripts/release.mjs).
 // So können sich alte und neue Dateien nie mischen.
-const VERSION = '1.1.0';
+const VERSION = '1.1.1';
 const SHELL = '1.5.0';
 const CACHE = `blocks-v${VERSION}-shell${SHELL}`;
 

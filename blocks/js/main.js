@@ -6,16 +6,16 @@ import { createShell } from '../../shared/js/shell.js?shell=1.5.0';
 import { createI18n } from '../../shared/js/i18n.js?shell=1.5.0';
 import { createStorage } from '../../shared/js/storage.js?shell=1.5.0';
 import { DEFAULT_STYLE } from '../../shared/js/sound-engine.js?shell=1.5.0';
-import { Game } from './game.js?v=1.1.0';
-import { MODES, modeById, starsFor, STREAK_KEEP } from './modes.js?v=1.1.0';
-import { levelDef, levelStars, LEVEL_COUNT } from './levels.js?v=1.1.0';
-import { shapeOf } from './shapes.js?v=1.1.0';
-import { BlocksView, previewSvg } from './view.js?v=1.1.0';
-import { Input } from './input.js?v=1.1.0';
-import { BlocksSound } from './sound.js?v=1.1.0';
-import { BLOCKS_STRINGS } from './strings.js?v=1.1.0';
+import { Game } from './game.js?v=1.1.1';
+import { MODES, modeById, starsFor, STREAK_KEEP } from './modes.js?v=1.1.1';
+import { levelDef, levelStars, LEVEL_COUNT } from './levels.js?v=1.1.1';
+import { shapeOf } from './shapes.js?v=1.1.1';
+import { BlocksView, previewSvg } from './view.js?v=1.1.1';
+import { Input } from './input.js?v=1.1.1';
+import { BlocksSound } from './sound.js?v=1.1.1';
+import { BLOCKS_STRINGS } from './strings.js?v=1.1.1';
 
-export const VERSION = '1.1.0';
+export const VERSION = '1.1.1';
 
 const storage = createStorage('blocks:');
 const { load, save } = storage;
@@ -48,7 +48,24 @@ function createGame() {
 }
 
 let game = restoreGame() || createGame();
-const resumed = game.moves > 0;
+let resumed = game.moves > 0;
+
+// Einmalig nach dem Update auf Version 1.1: Wer bisher frei gespielt hat, sieht sonst sein altes
+// Spiel und merkt nichts von den Leveln. Deshalb beginnt BLOCKS einmal mit Level 1, das alte Spiel
+// bleibt mit Zurück erreichbar.
+let levelsNews = '';
+if (!load('levelsIntro', false)) {
+  save('levelsIntro', true);
+  if (game.mode !== 'level') {
+    restartSnap = game.moves > 0 && !game.isOver ? game.serialize() : null;
+    choice = 'level-1';
+    save('mode', choice);
+    game = createGame();
+    save('game', game.serialize());
+    levelsNews = t(restartSnap ? 'levelsNewUndo' : 'levelsNew');
+    resumed = false;
+  }
+}
 
 function restoreGame() {
   const g = Game.restore(load('game', null));
@@ -437,7 +454,8 @@ window.addEventListener('pagehide', persist);
 updateControls();
 updateHud();
 renderLevels();
-if (resumed) shell.toast(t('resumed'), 2600);
+if (levelsNews) shell.toast(levelsNews, 4200);
+else if (resumed) shell.toast(t('resumed'), 2600);
 setTimeout(() => shell.showCoach(), 900);
 requestAnimationFrame(frame);
 

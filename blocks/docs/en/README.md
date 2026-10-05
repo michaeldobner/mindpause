@@ -19,6 +19,6 @@
 | Technology | HTML, CSS, JavaScript modules, canvas, Web Audio, no framework, no build step |
 | Collection | Part of [MIND PAUSE](../../../README.md), interface from the [shell](../../../shared/README.md) |
 | Address | https://michaeldobner.github.io/mindpause/blocks/ |
-| Version | 1.1.0 |
+| Version | 1.1.1 |
 
 <img src="../images/ipad-de.jpg" width="700" alt="iPad in landscape, tray to the right of the board">
