@@ -6,8 +6,8 @@
 // Jede Zelle ist ein kleines Bild (Sprite), einmal je Farbe und Größe gezeichnet, danach nur kopiert.
 // Gezeichnet wird nur, wenn sich etwas ändert oder eine Animation läuft.
 
-import { shapeOf } from './shapes.js?v=1.0.0';
-import { TRAY } from './game.js?v=1.0.0';
+import { shapeOf } from './shapes.js?v=1.1.0';
+import { TRAY } from './game.js?v=1.1.0';
 
 // Farben aus SPRING und QUEEN Mitternacht
 export const COLORS = {
@@ -400,16 +400,22 @@ export class BlocksView {
     const filled = [];
     for (let y = 0; y < n; y++) for (let x = 0; x < n; x++) if (board[y][x]) filled.push([x, y]);
     this.shadow(ctx, filled.map(([x, y]) => [grid.x + x * c, grid.y + y * c]), c);
+    const pre = this.game.pre;
     for (const [x, y] of filled) {
       const px = grid.x + x * c;
       const py = grid.y + y * c;
       let scale = 1;
       if (placed.has(`${x},${y}`)) scale = 1 + 0.08 * (1 - easeOut(clamp(place.t / place.dur)));
-      this.cell(ctx, 'blue', px, py, c, { scale });
+      // Startsteine eines Levels sind aus schwarzer Keramik
+      this.cell(ctx, pre?.[y][x] ? 'black' : 'blue', px, py, c, { scale });
       if (over) {
-        // Ende: Reihe für Reihe von unten nach oben zu schwarzer Keramik
+        // Ende: Reihe für Reihe von unten nach oben dunkler, wie wenn das Licht ausgeht
         const f = clamp((over.t / over.dur) * (n + 3) - (n - 1 - y));
-        if (f > 0) this.cell(ctx, 'black', px, py, c, { alpha: f });
+        if (f > 0) {
+          ctx.fillStyle = `rgba(5, 6, 26, ${0.55 * f})`;
+          roundRect(ctx, px + c * 0.06, py + c * 0.06, c * 0.88, c * 0.88, c * 0.2);
+          ctx.fill();
+        }
       }
     }
     // Abgelegter Stein leuchtet kurz auf
@@ -436,7 +442,7 @@ export class BlocksView {
       if (local >= 1) continue;
       const px = grid.x + k.x * c;
       const py = grid.y + k.y * c;
-      this.cell(ctx, 'blue', px, py, c, { alpha: 1 - local, scale: 1 - easeIn(local) * 0.6 });
+      this.cell(ctx, k.pre ? 'black' : 'blue', px, py, c, { alpha: 1 - local, scale: 1 - easeIn(local) * 0.6 });
       ctx.fillStyle = `rgba(255, 255, 255, ${(1 - local) * clamp(p / 0.15) * 0.45})`;
       const s = c * (1 - easeIn(local) * 0.6) * 0.86;
       roundRect(ctx, px + (c - s) / 2, py + (c - s) / 2, s, s, s * 0.22);
@@ -531,7 +537,7 @@ export class BlocksView {
         dy = (1 - easeOutBack(local)) * tc * 2.2;
         alpha *= clamp(local * 2);
       }
-      this.drawPiece(ctx, shape, x, y + dy, tc, { alpha, kind: game.isOver ? 'black' : 'blue' });
+      this.drawPiece(ctx, shape, x, y + dy, tc, { alpha });
       // Tipp: das Fach leuchtet golden
       if (this.hint && this.hint.slot === slot && !this.drag) {
         const r = this.g.slots[slot];
@@ -566,7 +572,29 @@ export class BlocksView {
     const label = Math.max(9, Math.min(13, c * 0.24));
     const num = Math.max(15, Math.min(30, c * 0.5));
     ctx.textBaseline = 'alphabetic';
-    if (hud.best) {
+    if (hud.goal) {
+      // Level: Punkteziel und übrige Startsteine
+      ctx.textAlign = 'left';
+      ctx.font = `600 ${label}px ${SANS}`;
+      ctx.fillStyle = this.inkSoft;
+      const lw = this.spaced(ctx, hud.goalLabel.toUpperCase(), frame.x + 2, base - num * 0.18, label * 0.14);
+      ctx.font = `${num}px ${DISPLAY}`;
+      ctx.fillStyle = hud.goal.done ? COLORS.blue : this.ink;
+      const text = `${hud.goal.score}/${hud.goal.target}`;
+      let x = frame.x + 2 + lw + label * 0.7;
+      ctx.fillText(text, x, base);
+      x += ctx.measureText(text).width + num * 0.55;
+      // Kleiner schwarzer Stein mit der Zahl der übrigen Startsteine, verschwindet bei null
+      if (hud.goal.pre > 0) {
+        const s = num * 0.72;
+        ctx.drawImage(this.sprite('black', s), x, base - s * 0.9, s, s);
+        ctx.fillStyle = this.ink;
+        ctx.fillText(String(hud.goal.pre), x + s + num * 0.18, base);
+      } else {
+        ctx.fillStyle = COLORS.blue;
+        ctx.fillText('✓', x, base);
+      }
+    } else if (hud.best) {
       ctx.textAlign = 'left';
       ctx.font = `600 ${label}px ${SANS}`;
       ctx.fillStyle = this.inkSoft;
@@ -749,11 +777,13 @@ export class BlocksView {
   }
 }
 
-// Kleine Vorschau für die Moduskarten der Hülle: Platte mit ein paar Steinen als SVG
-export function previewSvg(n, cells) {
+// Kleine Vorschau für die Karten der Auswahl: Platte mit Steinen als SVG.
+// cells: blaue Steine, pre: schwarze Startsteine, locked: gedämpft
+export function previewSvg(n, cells, { pre = [], locked = false } = {}) {
   const s = 72 / n;
-  const rects = cells.map(([x, y]) => `<rect x="${(x * s + s * 0.08).toFixed(2)}" y="${(y * s + s * 0.08).toFixed(2)}" width="${(s * 0.84).toFixed(2)}" height="${(s * 0.84).toFixed(2)}" rx="${(s * 0.2).toFixed(2)}" fill="${COLORS.blue}"/>`).join('');
-  return `<svg viewBox="0 0 100 100" aria-hidden="true">
+  const rect = (fill) => ([x, y]) => `<rect x="${(x * s + s * 0.08).toFixed(2)}" y="${(y * s + s * 0.08).toFixed(2)}" width="${(s * 0.84).toFixed(2)}" height="${(s * 0.84).toFixed(2)}" rx="${(s * 0.2).toFixed(2)}" fill="${fill}"/>`;
+  const rects = cells.map(rect(COLORS.blue)).join('') + pre.map(rect(COLORS.blackLight)).join('');
+  return `<svg viewBox="0 0 100 100" aria-hidden="true"${locked ? ' opacity="0.4"' : ''}>
     <rect x="8" y="8" width="84" height="84" rx="12" fill="${COLORS.plateTop}"/>
     <rect x="14" y="14" width="72" height="72" rx="6" fill="${COLORS.slotTop}"/>
     <g transform="translate(14 14)">${rects}</g>

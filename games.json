@@ -72,9 +72,9 @@
       "en": "Block puzzle"
     },
     "description": {
-      "de": "Steine vom Tablett aufs Brett legen, volle Reihen und Spalten räumen ab. Drei Modi, darunter Ruhe ohne Ende.",
-      "en": "Drag pieces from the tray onto the board, full rows and columns clear. Three modes, including Calm with no end."
+      "de": "Steine aufs Brett legen, volle Reihen und Spalten räumen ab. 30 Level mit Startsteinen, dazu drei freie Modi.",
+      "en": "Place pieces on the board, full rows and columns clear. 30 levels with starting blocks, plus three free modes."
     },
-    "icon": "blocks/icons/icon.svg?v=1.0.0"
+    "icon": "blocks/icons/icon.svg?v=1.1.0"
   }
 ]

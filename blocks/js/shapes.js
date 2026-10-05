@@ -86,12 +86,14 @@ export function createRandom(seed) {
   return r;
 }
 
-// Eine Lage nach Gewicht ziehen
-export function pickShape(rng) {
-  let v = rng.next() * TOTAL;
-  for (const [key, w] of POOL) {
+// Eine Lage nach Gewicht ziehen. families: nur diese Formen (Level führen große Formen nach und nach ein)
+export function pickShape(rng, families = null) {
+  const pool = families ? POOL.filter(([key]) => families.includes(SHAPES[key].family)) : POOL;
+  const total = families ? pool.reduce((sum, [, w]) => sum + w, 0) : TOTAL;
+  let v = rng.next() * total;
+  for (const [key, w] of pool) {
     v -= w;
     if (v < 0) return key;
   }
-  return POOL[POOL.length - 1][0];
+  return pool[pool.length - 1][0];
 }

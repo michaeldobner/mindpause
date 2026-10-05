@@ -2,6 +2,22 @@
 
 Alle wichtigen Änderungen an BLOCKS. [English](CHANGELOG.md)
 
+## 1.1.0 (2026-10-05)
+
+### Neu
+* **30 Level** in sechs Kapiteln. Jedes Level beginnt mit einem eigenen, spiegelsymmetrischen Startbrett aus schwarzen Startsteinen. Geschafft ist es, wenn alle Startsteine abgeräumt sind und das Punkteziel erreicht ist.
+* **Steigende Schwierigkeit als Sägezahn:** Dichte des Startbretts und Punkteziel steigen im Kapitel und fallen zu Beginn des nächsten leicht ab. Neue Formen kommen kapitelweise dazu, Kapitel 1 nutzt nur kleine Steine.
+* **Jedes Level ist lösbar:** Startbrett und Steinfolge sind fest, der Computerspieler hat jedes Level durchgespielt. Seine Zahl an Steinen ist der Richtwert für drei Sterne.
+* **Sterne und Fortschritt:** ★ geschafft, ★★ mit höchstens anderthalb mal so vielen Steinen wie der Richtwert, ★★★ mit höchstens so vielen. Geschaffte Level schalten das nächste frei. Fortschritt, Sterne und Bestwerte bleiben auf dem Gerät.
+* **Fairer Start:** In jedem Level und jedem Modus passen die ersten drei Steine sicher.
+* Über dem Brett stehen im Level das Punkteziel und die Zahl der übrigen Startsteine.
+* Die Auswahl heißt jetzt **Level** und zeigt die 30 Level mit Vorschau des Startbretts, danach die freien Modi. Wer neu beginnt, startet mit Level 1.
+
+### Geändert
+* Klassisch und Weit beginnen mit einem leicht belegten Brett (15 % der Felder), Ruhe mit 20 %.
+* Am Spielende werden die Steine dunkler statt schwarz, damit sie sich von den Startsteinen unterscheiden.
+* Der Tipp bevorzugt im Level Plätze, die Startsteine abräumen.
+
 ## 1.0.0 (2026-10-05)
 
 Erste Version von BLOCKS, dem sechsten Spiel der Sammlung MIND PAUSE.

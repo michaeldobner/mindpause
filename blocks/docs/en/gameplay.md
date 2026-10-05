@@ -4,7 +4,12 @@
 
 ## Goal
 
-Keep placing pieces on a square board for as long as possible while filling rows and columns. A full row or column clears. The game ends when none of the pieces on the tray fits on the board any more.
+Place pieces from the tray on the board and fill rows and columns. A full row or column clears.
+
+* **In a level:** clear all black starting blocks and reach the points goal.
+* **In the free modes:** score as many points as possible until no piece fits.
+
+The game ends when none of the pieces on the tray fits on the board any more.
 
 ## Flow
 
@@ -13,6 +18,36 @@ Keep placing pieces on a square board for as long as possible while filling rows
 3. Once all three are placed, three new ones arrive.
 4. After every piece, all full rows and columns are removed **at the same time**. A cell in both a full row and a full column counts once.
 5. When none of the remaining pieces fits, the game is over. Pieces that no longer fit appear faded on the tray.
+
+## Levels
+
+30 levels in six chapters of five. Every level has a fixed starting board of **black starting blocks** and a fixed order of pieces, so the same level is always the same puzzle.
+
+| | |
+|---|---|
+| Goal | Clear all starting blocks **and** reach the points goal. Both together complete the level at once |
+| Starting blocks | Behave like normal pieces and clear as soon as their row or column is full |
+| Display | Above the board: points of goal, next to it a black block with the number of starting blocks left |
+| Stars | ★ complete, ★★ with at most one and a half times the par, ★★★ with at most the par |
+| Unlocking | A completed level unlocks the next. Completed levels can be replayed at any time, the best result is saved |
+| Fairness | The first three pieces always fit. In chapters 1 to 4 all three pieces of every tray fit in some order, in chapters 5 and 6 at least one |
+
+**Par:** every level was played through by the computer player, which always follows the hint, when it was created. Every level can therefore be solved. Its number of pieces is the par for three stars. The result card shows it as long as three stars are missing.
+
+### Difficulty
+
+The curve follows the sawtooth that works well in puzzle games: harder within a chapter, a little easier at the start of the next chapter so new shapes can settle in, then higher than before.
+
+| Chapter | Levels | Starting board filled | Points goal | New shapes |
+|---|---|---|---|---|
+| 1 | 1 to 5 | 22 to 32 % | 150 to 350 | Dot, straight two and three, small corner, square 2 × 2 |
+| 2 | 6 to 10 | 27 to 37 % | 350 to 550 | Straight four, L and J, T |
+| 3 | 11 to 15 | 32 to 42 % | 600 to 800 | S and Z, straight five |
+| 4 | 16 to 20 | 36 to 46 % | 900 to 1,100 | Big corner, rectangle 2 × 3 |
+| 5 | 21 to 25 | 40 to 50 % | 1,250 to 1,450 | Square 3 × 3, all shapes |
+| 6 | 26 to 30 | 44 to 54 % | 1,650 to 1,850 | All shapes |
+
+The starting boards are mirror symmetric and never have a full row or column.
 
 ## The shapes
 
@@ -43,22 +78,26 @@ Keep placing pieces on a square board for as long as possible while filling rows
 
 **Example:** streak 3, a straight four clears two rows: 4 + 60 × 3 = 184 points.
 
-## Modes
+## Free modes
 
-| Mode | Board | Tray | End | Stars |
-|---|---|---|---|---|
-| **Classic** | 8 × 8 | At least one new piece fits | No piece fits | ★ from 1,500, ★★ from 5,000, ★★★ from 12,000 |
-| **Wide** | 10 × 10 | At least one new piece fits | No piece fits | ★ from 2,500, ★★ from 8,000, ★★★ from 20,000 |
-| **Calm** | 8 × 8 | All three pieces fit in some order | Never. If nothing fits, the board clears itself | none |
+Besides the levels there are three free modes without a goal, just points:
 
-The star limits come from games of a simple computer player (`tools/bot.mjs`) that always follows the hint. In Classic it scores about 4,000 points on average.
+| Mode | Board | Start | Tray | End | Stars |
+|---|---|---|---|---|---|
+| **Classic** | 8 × 8 | 15 % filled | At least one new piece fits | No piece fits | ★ from 1,500, ★★ from 5,000, ★★★ from 12,000 |
+| **Wide** | 10 × 10 | 15 % filled | At least one new piece fits | No piece fits | ★ from 2,500, ★★ from 8,000, ★★★ from 20,000 |
+| **Calm** | 8 × 8 | 20 % filled | All three pieces fit in some order | Never. If nothing fits, the board clears itself | none |
 
-Best scores and stars are saved per mode on the device and shown in the mode picker.
+In every mode the first three pieces always fit. The starting board is random but never has a full line.
+
+The star limits come from games of a simple computer player (`tools/bot.mjs`) that always follows the hint. In Classic it scores about 3,700 points on average.
+
+Best scores, stars and level progress are saved on the device and shown in the picker. Add BLOCKS to the home screen to keep your progress for good.
 
 ## Undo, hint and new game
 
-* **Undo** takes back the last piece, one step. This also works after the end ("Undo last move" on the result card). The pieces that follow stay the same, so undo never brings new pieces.
-* **Hint** shows a good spot as a golden outline and lights up the slot of the piece. It prefers lines, contact with the edge and other pieces, few enclosed holes, and spots after which the remaining pieces still fit.
+* **Undo** takes back the last piece, one step. A completed level stays completed. After a lost game undo also works after the end ("Undo last move" on the result card). The pieces that follow stay the same, so undo never brings new pieces.
+* **Hint** shows a good spot as a golden outline and lights up the slot of the piece. It prefers lines, cleared starting blocks in a level, contact with the edge and other pieces, few enclosed holes, and spots after which the remaining pieces still fit.
 * **New** starts a new game at once. Undo right afterwards brings the old game back.
 * The game is saved after every piece and continues there on the next start.
 

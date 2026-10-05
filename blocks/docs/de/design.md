@@ -10,7 +10,7 @@ Schriften, Oberflächenfarben, Abstände und alle Bausteine der Oberfläche (Kop
 
 | Grundsatz | Bedeutung |
 |---|---|
-| **Eine Farbe** | Alle Steine sind gleich. Gelesen wird die Form, nicht die Farbe, und das Brett bleibt ruhig |
+| **Zwei Farben** | Alle eigenen Steine sind blau, die Startsteine eines Levels schwarz, wie die beiden Seiten von QUEEN Mitternacht. Gelesen wird die Form, und das Brett bleibt ruhig |
 | **Greifbar** | Jeder Stein ist ein kleines Keramikstück mit Fase, Lichtkante und Glanzpunkt |
 | **Ruhe** | Kein Feuer, keine Partikel, kein Blinken. Linien lösen sich auf, Zahlen steigen sanft auf |
 | **Vorschau statt Überraschung** | Beim Ziehen sieht man, was passieren wird |
@@ -28,11 +28,12 @@ Die Spiele der Sammlung heißen kurz und in Versalien. **BLOCKS** sagt ohne Erkl
 | Kante Spielfläche | `#2f3588` | Lichtkante von SPRING |
 | Mulden | Verlauf `#05061c` nach `#11143f` | Freie Felder von SPRING |
 | Stein | Lichtpunkt `#86abff`, Körper `#3f6ef0`, Schatten `#2142b4` | Blaue Steine von QUEEN Mitternacht, Murmeln von SPRING |
-| Stein am Ende | `#5e616e`, `#1d1e26`, `#07070a` | Schwarze Steine von QUEEN Mitternacht |
+| Startstein im Level | `#5e616e`, `#1d1e26`, `#07070a` | Schwarze Steine von QUEEN Mitternacht |
+| Steine am Ende | Nachtblau `#05061a`, 55 % darüber | Das Licht geht aus |
 | Tipp | `#ffd36b` | Tippring der Sammlung |
 | Vorschau der Linien | Helles Blau `#c8d4ff`, 18 bis 28 %, pulsierend | |
 
-Die Zeile über dem Brett (Bestwert und Serie) steht auf dem Hintergrund der Hülle und nutzt deshalb `--ink` und `--ink-soft`, die mit Hell und Dunkel wechseln.
+Die Zeile über dem Brett (im Level Ziel und Startsteine, sonst Bestwert, rechts die Serie) steht auf dem Hintergrund der Hülle und nutzt deshalb `--ink` und `--ink-soft`, die mit Hell und Dunkel wechseln.
 
 ## Die Steine
 
@@ -65,9 +66,11 @@ Die Zellgröße ergibt sich aus dem Platz und wird auf ganze Gerätepixel gerund
 
 | Gerät | Anordnung |
 |---|---|
-| iPhone hoch | Schriftzug, Modus und Punkte oben, Bestwert und Serie über dem Brett, Tablett darunter, Steuerleiste unten: Zurück, Tipp, Neu, Modi, Mehr |
+| iPhone hoch | Schriftzug, Level oder Modus und Punkte oben, Ziel oder Bestwert und Serie über dem Brett, Tablett darunter, Steuerleiste unten: Zurück, Tipp, Neu, Level, Mehr |
 | iPhone quer | Schriftzug, Modus und Punkte links, Brett in voller Höhe, Tablett als Spalte rechts daneben, Steuerleiste rechts |
-| iPad und Rechner | Wie quer, das Brett wird deutlich größer. Modi als Schublade von links |
+| iPad und Rechner | Wie quer, das Brett wird deutlich größer. Level und Modi als Schublade von links |
+
+**Auswahl:** erst die 30 Level, jede Karte mit Vorschau des Startbretts (Startsteine grau), Ziel oder bester Zahl an Steinen, Sternen und fünf Punkten für die Schwierigkeit. Gesperrte Level sind gedämpft. Danach folgen die freien Modi.
 
 Das Layout mit dem Tablett unten oder daneben wird gewählt, je nachdem, was das Brett größer macht.
 
@@ -84,7 +87,8 @@ Das Layout mit dem Tablett unten oder daneben wird gewählt, je nachdem, was das
 | Schriftzüge | „Doppel“, „Serie 4“, „Leer geräumt“ mitten auf dem Brett | 1,15 s |
 | Daneben losgelassen | Stein gleitet zurück in sein Fach | 220 ms |
 | Neue Steine | Steigen nacheinander ins Tablett, mit leichtem Nachfedern | 420 ms |
-| Ende | Reihe für Reihe von unten nach oben zu schwarzer Keramik | 0,75 s |
+| Ende | Reihe für Reihe von unten nach oben dunkler, wie wenn das Licht ausgeht | 0,75 s |
+| Level geschafft | Dreiklang, bei drei Sternen mit Glocke, dann die Ergebniskarte mit „Weiter“ | 0,9 s |
 | Ruhe, Brett voll | Steine lösen sich von oben nach unten auf, „Neu geordnet“ | 0,85 s |
 
 Bei „Bewegung reduzieren“ entfallen Wachsen, Nachfedern und Auflösen.

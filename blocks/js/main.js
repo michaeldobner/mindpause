@@ -1,19 +1,21 @@
 // BLOCKS: Steine vom Tablett aufs Brett legen, volle Reihen und Spalten räumen ab.
+// 30 Level mit Startsteinen und Punkteziel, dazu drei freie Modi.
 // Die Oberfläche kommt aus der Hülle (shared/js/shell.js), hier steht nur, was BLOCKS eigen ist.
 
 import { createShell } from '../../shared/js/shell.js?shell=1.5.0';
 import { createI18n } from '../../shared/js/i18n.js?shell=1.5.0';
 import { createStorage } from '../../shared/js/storage.js?shell=1.5.0';
 import { DEFAULT_STYLE } from '../../shared/js/sound-engine.js?shell=1.5.0';
-import { Game } from './game.js?v=1.0.0';
-import { MODES, modeById, starsFor, STREAK_KEEP } from './modes.js?v=1.0.0';
-import { shapeOf } from './shapes.js?v=1.0.0';
-import { BlocksView, previewSvg } from './view.js?v=1.0.0';
-import { Input } from './input.js?v=1.0.0';
-import { BlocksSound } from './sound.js?v=1.0.0';
-import { BLOCKS_STRINGS } from './strings.js?v=1.0.0';
+import { Game } from './game.js?v=1.1.0';
+import { MODES, modeById, starsFor, STREAK_KEEP } from './modes.js?v=1.1.0';
+import { levelDef, levelStars, LEVEL_COUNT } from './levels.js?v=1.1.0';
+import { shapeOf } from './shapes.js?v=1.1.0';
+import { BlocksView, previewSvg } from './view.js?v=1.1.0';
+import { Input } from './input.js?v=1.1.0';
+import { BlocksSound } from './sound.js?v=1.1.0';
+import { BLOCKS_STRINGS } from './strings.js?v=1.1.0';
 
-export const VERSION = '1.0.0';
+export const VERSION = '1.1.0';
 
 const storage = createStorage('blocks:');
 const { load, save } = storage;
@@ -24,20 +26,34 @@ const locale = lang === 'de' ? 'de-DE' : 'en-US';
 // ---------- Zustand ----------
 
 const sound = new BlocksSound({ enabled: load('sound', true), style: load('soundStyle', DEFAULT_STYLE) });
-let mode = modeById(load('mode', 'classic')) || MODES[0];
+// Auswahl: ein freier Modus ('classic', 'wide', 'calm') oder ein Level ('level-7').
+// Wer neu anfängt, beginnt mit Level 1.
+const levelOf = (id) => (/^level-(\d+)$/.test(id || '') ? Number(id.slice(6)) : 0);
+const validChoice = (id) => Boolean(modeById(id)) || (levelOf(id) >= 1 && levelOf(id) <= LEVEL_COUNT);
+let choice = validChoice(load('mode', null)) ? load('mode', null) : 'level-1';
 let stats = load('stats', {});
+// Fortschritt der Level: höchstes freies Level und je Level Sterne, Punkte, Steine
+let progress = { unlocked: 1, levels: {}, ...load('progress', {}) };
 const settings = { preview: load('preview', true) };
 let endTimer = null;
 let restartSnap = null; // altes Spiel nach Neu, mit Zurück wiederherstellbar
 
 const newSeed = () => Math.floor(Math.random() * 2 ** 32) >>> 0;
-let game = restoreGame() || new Game({ mode: mode.id, seed: newSeed() });
+const isUnlocked = (n) => n >= 1 && n <= Math.min(LEVEL_COUNT, progress.unlocked);
+if (levelOf(choice) && !isUnlocked(levelOf(choice))) choice = `level-${progress.unlocked}`;
+
+function createGame() {
+  const n = levelOf(choice);
+  return n ? new Game({ mode: 'level', level: n }) : new Game({ mode: choice, seed: newSeed() });
+}
+
+let game = restoreGame() || createGame();
 const resumed = game.moves > 0;
 
 function restoreGame() {
   const g = Game.restore(load('game', null));
   if (!g || g.isOver) return null;
-  mode = modeById(g.mode) || mode;
+  choice = g.mode === 'level' ? `level-${g.level}` : g.mode;
   return g;
 }
 
@@ -46,6 +62,7 @@ function persist() {
 }
 
 const statsFor = (id) => stats[id] || { games: 0, best: null };
+const levelRecord = (n) => progress.levels[n] || null;
 
 // ---------- Hülle ----------
 
@@ -56,7 +73,7 @@ const shell = createShell({
   storage,
   sound,
   buttons: ['undo', 'hint', 'restart', 'levels', 'settings'],
-  levels: { buttonKey: 'modes', titleKey: 'chooseMode', nextKey: 'again', otherKey: 'otherMode' },
+  levels: { buttonKey: 'levelsButton', titleKey: 'chooseLevel', nextKey: 'nextLevel', otherKey: 'otherLevel' },
   settings: [{ id: 'preview', nameKey: 'preview', textKey: 'previewText' }],
   noteKey: 'note',
   coachKey: 'coach',
@@ -67,7 +84,7 @@ const shell = createShell({
     restart: newGame,
     again: () => newGame({ keep: false }),
     back: undo,
-    next: () => {},
+    next: nextLevel,
     selectLevel,
     setting: toggleSetting,
   },
@@ -111,16 +128,17 @@ function newGame({ keep = true } = {}) {
   input.release();
   // Ein laufendes Spiel lässt sich nach Neu mit Zurück wiederholen
   restartSnap = keep && game.moves > 0 && !game.isOver ? game.serialize() : null;
-  game = new Game({ mode: mode.id, seed: newSeed() });
+  game = createGame();
   view.setGame(game);
   persist();
-  renderModes();
+  renderLevels();
   updateControls();
   if (restartSnap) shell.toast(t('restartUndo'));
 }
 
 function undo() {
-  if (game.canUndo) {
+  // Ein geschafftes Level bleibt geschafft
+  if (game.canUndo && game.state !== 'won') {
     clearTimeout(endTimer);
     shell.hideResult();
     input.release();
@@ -135,10 +153,10 @@ function undo() {
     restartSnap = null;
     if (g) {
       game = g;
-      mode = modeById(g.mode) || mode;
+      choice = g.mode === 'level' ? `level-${g.level}` : g.mode;
       view.setGame(game);
       persist();
-      renderModes();
+      renderLevels();
       updateControls();
       return;
     }
@@ -156,14 +174,28 @@ function hint() {
   view.showHint(h);
 }
 
-function selectLevel(id) {
-  const m = modeById(id);
-  if (!m) return;
-  shell.closePanels();
-  if (m.id === mode.id && game.moves === 0) return;
-  mode = m;
-  save('mode', m.id);
+function choose(id) {
+  choice = id;
+  save('mode', id);
   newGame();
+}
+
+function selectLevel(id) {
+  if (!validChoice(id)) return;
+  const n = levelOf(id);
+  if (n && !isUnlocked(n)) {
+    shell.toast(t('locked', { n: n - 1 }), 2200);
+    return;
+  }
+  shell.closePanels();
+  if (id === choice && game.moves === 0) return;
+  choose(id);
+}
+
+function nextLevel() {
+  const n = levelOf(choice);
+  if (n && n < LEVEL_COUNT && isUnlocked(n + 1)) choose(`level-${n + 1}`);
+  else newGame({ keep: false });
 }
 
 function toggleSetting(id, on) {
@@ -204,6 +236,9 @@ function processEvents() {
       case 'gameOver':
         onEnd();
         break;
+      case 'levelDone':
+        onLevelDone();
+        break;
       default:
         break;
     }
@@ -226,9 +261,55 @@ function bestLine(id) {
   return best && id !== 'calm' ? t('best', { v: fmt(best.score) }) : '';
 }
 
+// Level geschafft: Sterne nach Steinen, nächstes Level freischalten
+function onLevelDone() {
+  input.release();
+  const n = game.level;
+  const stars = levelStars(n, game.moves);
+  const prev = levelRecord(n);
+  const better = !prev || stars > prev.stars || (stars === prev.stars && game.moves < prev.pieces);
+  const levels = { ...progress.levels };
+  if (better) levels[n] = { stars, score: game.score, pieces: game.moves };
+  progress = { unlocked: Math.max(progress.unlocked, Math.min(LEVEL_COUNT, n + 1)), levels };
+  save('progress', progress);
+  persist();
+  sound.win(stars === 3);
+  renderLevels();
+  updateControls();
+  clearTimeout(endTimer);
+  const parts = [t('stat.score', { v: fmt(game.score) }), t('stat.pieces', { v: game.moves })];
+  if (stars < 3) parts.push(t('stat.par', { v: levelDef(n).par }));
+  endTimer = setTimeout(() => {
+    const last = n === LEVEL_COUNT;
+    shell.showResult({
+      title: t('levelDone.title', { n }),
+      text: last ? t('levelDone.last') : t(`levelDone.text${stars}`),
+      stars,
+      stats: parts.join(' · '),
+      highlight: stars === 3,
+      showNext: !last,
+      showBack: false,
+    });
+  }, 900);
+}
+
 function onEnd() {
   input.release();
-  const id = mode.id;
+  sound.lose();
+  clearTimeout(endTimer);
+  if (game.mode === 'level') {
+    const n = game.level;
+    const parts = [t('stat.score', { v: fmt(game.score) }), t('goal.short', { a: fmt(game.score), b: fmt(game.def.target) })];
+    if (game.preLeft) parts.push(t('stat.preLeft', { v: game.preLeft }));
+    persist();
+    updateControls();
+    endTimer = setTimeout(() => {
+      const [title, text] = t('levelFail', { n });
+      shell.showResult({ title, text, stars: 0, stats: parts.join(' · '), showNext: false });
+    }, 1150);
+    return;
+  }
+  const id = game.mode;
   const result = { score: game.score, lines: game.lines, moves: game.moves };
   const s = { ...statsFor(id) };
   s.games += 1;
@@ -239,11 +320,9 @@ function onEnd() {
   stats = { ...stats, [id]: s };
   save('stats', stats);
   persist();
-  sound.lose();
   if (isBest) setTimeout(() => sound.win(true), 700);
-  renderModes();
+  renderLevels();
   updateControls();
-  clearTimeout(endTimer);
   endTimer = setTimeout(() => showEnd(isBest, result, prev), 1150);
 }
 
@@ -252,11 +331,12 @@ function showEnd(isBest, result, prev) {
   const parts = [t('stat.score', { v: fmt(result.score) }), t('stat.lines', { v: result.lines }), t('stat.pieces', { v: result.moves })];
   if (game.tally.bestStreak >= 2) parts.push(t('stat.streak', { v: game.tally.bestStreak }));
   if (!isBest && prev) parts.push(t('stat.best', { v: fmt(Math.max(prev.score, result.score)) }));
-  const stars = starsFor(mode.id, result);
-  shell.showResult({ title, text, stars, stats: parts.join(' · '), highlight: isBest, showNext: false });
+  shell.showResult({ title, text, stars: starsFor(game.mode, result), stats: parts.join(' · '), highlight: isBest, showNext: false });
 }
 
 // ---------- Anzeige ----------
+
+const choiceLabel = () => (levelOf(choice) ? t('levelName', { n: levelOf(choice) }) : t(`mode.${choice}`));
 
 let lastHud = '';
 function updateHud() {
@@ -265,10 +345,13 @@ function updateHud() {
     lastHud = key;
     shell.setCounter(fmt(game.score), t('points', { n: game.score }));
   }
-  const best = statsFor(mode.id).best;
+  const level = game.mode === 'level';
+  const best = level ? null : statsFor(game.mode).best;
   view.setHud({
-    best: best && mode.id !== 'calm' ? fmt(Math.max(best.score, game.score)) : '',
+    best: best && game.mode !== 'calm' ? fmt(Math.max(best.score, game.score)) : '',
     bestLabel: t('head.best'),
+    goal: level ? { score: fmt(Math.min(game.score, game.def.target)), target: fmt(game.def.target), done: game.score >= game.def.target, pre: game.preLeft } : null,
+    goalLabel: t('head.goal'),
     streak: game.streak,
     keep: STREAK_KEEP - game.idle,
     keepMax: STREAK_KEEP,
@@ -278,30 +361,51 @@ function updateHud() {
 
 let lastControls = '';
 function updateControls() {
-  const key = `${game.canUndo}|${Boolean(restartSnap)}|${game.state}|${mode.id}`;
+  const key = `${game.canUndo}|${Boolean(restartSnap)}|${game.state}|${choice}`;
   if (key === lastControls) return;
   lastControls = key;
   shell.setDisabled('hint', game.state !== 'playing');
-  shell.setLevelLabel(t(`mode.${mode.id}`));
+  shell.setLevelLabel(choiceLabel());
 }
 
-// Vorschau der Modi: ein paar liegende Steine
+// Vorschau der freien Modi: ein paar liegende Steine
 const PREVIEWS = {
   classic: [8, [[0, 7], [1, 7], [2, 7], [3, 7], [5, 7], [6, 7], [7, 7], [0, 6], [1, 6], [6, 6], [7, 6], [7, 5], [3, 2], [4, 2], [3, 3], [4, 3]]],
   wide: [10, [[0, 9], [1, 9], [2, 9], [3, 9], [4, 9], [6, 9], [7, 9], [8, 9], [9, 9], [0, 8], [9, 8], [9, 7], [4, 3], [5, 3], [6, 3], [5, 4]]],
   calm: [8, [[1, 6], [2, 6], [5, 6], [6, 6], [1, 5], [6, 5]]],
 };
 
-function renderModes() {
-  shell.renderLevels(MODES.map((m) => ({
-    id: m.id,
-    name: t(`mode.${m.id}`),
-    meta: bestLine(m.id) || t(`modeMeta.${m.id}`),
-    stars: starsFor(m.id, statsFor(m.id).best),
-    difficulty: m.difficulty,
-    preview: previewSvg(...PREVIEWS[m.id]),
-    current: m.id === mode.id,
-  })));
+// Auswahl: erst die 30 Level, dann die freien Modi
+function renderLevels() {
+  const items = [];
+  for (let n = 1; n <= LEVEL_COUNT; n++) {
+    const def = levelDef(n);
+    const rec = levelRecord(n);
+    const open = isUnlocked(n);
+    const cells = [];
+    def.board.forEach((row, y) => [...row].forEach((ch, x) => ch === '#' && cells.push([x, y])));
+    items.push({
+      id: `level-${n}`,
+      name: t('levelName', { n }),
+      meta: open ? (rec ? t('stat.pieces', { v: rec.pieces }) : t('levelMeta', { v: fmt(def.target) })) : t('lockedMeta'),
+      stars: rec ? rec.stars : 0,
+      difficulty: def.difficulty,
+      preview: previewSvg(def.size, [], { pre: cells, locked: !open }),
+      current: choice === `level-${n}`,
+    });
+  }
+  for (const m of MODES) {
+    items.push({
+      id: m.id,
+      name: t(`mode.${m.id}`),
+      meta: bestLine(m.id) || t(`modeMeta.${m.id}`),
+      stars: starsFor(m.id, statsFor(m.id).best),
+      difficulty: m.difficulty,
+      preview: previewSvg(...PREVIEWS[m.id]),
+      current: m.id === choice,
+    });
+  }
+  shell.renderLevels(items);
 }
 
 // ---------- Bild für Bild ----------
@@ -332,12 +436,14 @@ window.addEventListener('pagehide', persist);
 
 updateControls();
 updateHud();
-renderModes();
+renderLevels();
 if (resumed) shell.toast(t('resumed'), 2600);
 setTimeout(() => shell.showCoach(), 900);
 requestAnimationFrame(frame);
 
 // Für automatische Tests im Browser (scripts/e2e.mjs). Jedes Spiel stellt history und e2e.move bereit.
+const fire = (target, type, x, y, id) => target.dispatchEvent(new PointerEvent(type, { clientX: x, clientY: y, pointerId: id, pointerType: 'mouse', button: 0, bubbles: true, cancelable: true }));
+
 window.__game = {
   id: 'blocks',
   view,
@@ -346,8 +452,10 @@ window.__game = {
   shell,
   get game() { return game; },
   get history() { return game.moves; },
+  get progress() { return progress; },
   newGame,
   undo,
+  choose,
   e2e: {
     // Einen gültigen Zug spielen: den Stein des Tipps an seinen Platz legen
     async move() {
@@ -365,10 +473,9 @@ window.__game = {
         const [sx, sy] = view.slotCenter(h.slot);
         const tx = r.left + grid.x + (h.x + s.w / 2) * c;
         const ty = r.top + grid.y + (h.y + s.h / 2) * c;
-        const fire = (target, type, x, y) => target.dispatchEvent(new PointerEvent(type, { clientX: x, clientY: y, pointerId: 7, pointerType: 'mouse', button: 0, bubbles: true, cancelable: true }));
-        fire(view.canvas, 'pointerdown', r.left + sx, r.top + sy);
-        for (let i = 1; i <= 6; i++) fire(window, 'pointermove', r.left + sx + ((tx - r.left - sx) * i) / 6, r.top + sy + ((ty - r.top - sy) * i) / 6);
-        fire(window, 'pointerup', tx, ty);
+        fire(view.canvas, 'pointerdown', r.left + sx, r.top + sy, 7);
+        for (let i = 1; i <= 6; i++) fire(window, 'pointermove', r.left + sx + ((tx - r.left - sx) * i) / 6, r.top + sy + ((ty - r.top - sy) * i) / 6, 7);
+        fire(window, 'pointerup', tx, ty, 7);
         await new Promise((res) => setTimeout(res, 300));
         if (game.moves !== 1) return 'Stein wurde nicht gelegt';
         const placed = s.cells.every(([cx, cy]) => game.board[h.y + cy][h.x + cx]);
@@ -380,12 +487,30 @@ window.__game = {
         const r = view.el.getBoundingClientRect();
         const [sx, sy] = view.slotCenter(0);
         const key = game.tray[0];
-        const fire = (target, type, x, y) => target.dispatchEvent(new PointerEvent(type, { clientX: x, clientY: y, pointerId: 8, pointerType: 'mouse', button: 0, bubbles: true, cancelable: true }));
-        fire(view.canvas, 'pointerdown', r.left + sx, r.top + sy);
-        fire(window, 'pointermove', r.left + 2, r.top + 2);
-        fire(window, 'pointerup', r.left + 2, r.top + 2);
+        fire(view.canvas, 'pointerdown', r.left + sx, r.top + sy, 8);
+        fire(window, 'pointermove', r.left + 2, r.top + 2, 8);
+        fire(window, 'pointerup', r.left + 2, r.top + 2, 8);
         await new Promise((res) => setTimeout(res, 300));
         return (game.moves === 0 && game.tray[0] === key) || 'Stein ging verloren';
+      },
+      // Level 1 nach Tipps durchspielen: geschafft, Level 2 frei, Ergebniskarte mit „Nächstes Level“
+      async Level() {
+        const before = { ...progress };
+        choose('level-1');
+        for (let i = 0; i < 400 && game.state === 'playing'; i++) {
+          const h = game.hint();
+          if (!h) break;
+          game.place(h.slot, h.x, h.y);
+          processEvents();
+        }
+        if (game.state !== 'won') return `Level 1 nicht geschafft (${game.state})`;
+        if (progress.unlocked < 2) return 'Level 2 nicht freigeschaltet';
+        await new Promise((res) => setTimeout(res, 1300));
+        const next = document.getElementById('next');
+        const ok = !document.getElementById('result').hidden && !next.hidden;
+        progress = before;
+        save('progress', progress);
+        return ok || 'Ergebniskarte ohne „Nächstes Level“';
       },
     },
   },
