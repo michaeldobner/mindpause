@@ -118,4 +118,4 @@ blocks/
 
 ## Version
 
-Current version: **1.1.0**. See the [changelog](CHANGELOG.md).
+Current version: **1.1.1**. See the [changelog](CHANGELOG.md).

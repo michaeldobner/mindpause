@@ -2,6 +2,11 @@
 
 All notable changes to BLOCKS. [Deutsch](CHANGELOG.de.md)
 
+## 1.1.1 (2026-10-05)
+
+### Fixed
+* **Levels visible after the update:** players who had played a free mode before 1.1 landed in their old saved game after the update and saw nothing of the levels. BLOCKS now starts once with level 1 and announces "New: 30 levels". A running old game is kept and comes back with **Undo**.
+
 ## 1.1.0 (2026-10-05)
 
 ### New

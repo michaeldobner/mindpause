@@ -9,7 +9,7 @@
 // Startbrett, Startwert und Richtwert für die Sterne stehen in level-data.js. Sie werden von
 // tools/levels.mjs erzeugt, das jedes Level mit dem Computerspieler durchspielt.
 
-import { LEVEL_DATA } from './level-data.js?v=1.1.0';
+import { LEVEL_DATA } from './level-data.js?v=1.1.1';
 
 export const LEVEL_COUNT = 30;
 export const CHAPTER = 5;

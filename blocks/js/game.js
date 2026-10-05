@@ -7,9 +7,9 @@
 //
 // Die Darstellung liest den Zustand und holt sich mit drainEvents() ab, was passiert ist.
 
-import { SHAPES, FAMILY_IDS, shapeOf, createRandom, pickShape } from './shapes.js?v=1.1.0';
-import { modeById, MODES, STREAK_KEEP, scorePlace } from './modes.js?v=1.1.0';
-import { levelDef, LEVEL_COUNT } from './levels.js?v=1.1.0';
+import { SHAPES, FAMILY_IDS, shapeOf, createRandom, pickShape } from './shapes.js?v=1.1.1';
+import { modeById, MODES, STREAK_KEEP, scorePlace } from './modes.js?v=1.1.1';
+import { levelDef, LEVEL_COUNT } from './levels.js?v=1.1.1';
 
 export const TRAY = 3;
 

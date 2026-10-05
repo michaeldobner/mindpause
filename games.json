@@ -75,6 +75,6 @@
       "de": "Steine aufs Brett legen, volle Reihen und Spalten räumen ab. 30 Level mit Startsteinen, dazu drei freie Modi.",
       "en": "Place pieces on the board, full rows and columns clear. 30 levels with starting blocks, plus three free modes."
     },
-    "icon": "blocks/icons/icon.svg?v=1.1.0"
+    "icon": "blocks/icons/icon.svg?v=1.1.1"
   }
 ]
