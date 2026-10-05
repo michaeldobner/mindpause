@@ -9,7 +9,7 @@
 // und nie während die Feier läuft. Bei „Bewegung reduzieren“ fallen die Karten ruhiger:
 // langsamer und ohne Spuren.
 
-import { cardSvg, suitColor, RANK_LABELS, COLORS } from './faces.js?v=1.0.4';
+import { cardSvg, suitColor, RANK_LABELS, COLORS } from './faces.js?v=1.0.5';
 
 const SUIT_CHARS = ['♠', '♥', '♣', '♦'];
 
@@ -145,6 +145,7 @@ export class Celebration {
     canvas.addEventListener('pointerdown', stopOnTap);
     this.running = true;
     this.launched = 0;
+    this.leftover = [];
     const flying = [];
     let next = 0;
     let start = null;
@@ -204,8 +205,9 @@ export class Celebration {
     });
 
     this.running = false;
-    // Abgebrochen: Karten, die noch unterwegs sind, verschwinden
-    for (const f of flying) safely(() => onLand(f.card));
+    // Abgebrochen: Karten, die noch unterwegs sind, ruft die Feier bewusst nicht mehr an.
+    // Ob sie verschwinden, entscheidet der Aufrufer, denn inzwischen kann ein neues Spiel liegen.
+    this.leftover = flying.map((f) => f.card);
     canvas.removeEventListener('pointerdown', stopOnTap);
     canvas.classList.add('fade');
     setTimeout(() => canvas.remove(), 600);

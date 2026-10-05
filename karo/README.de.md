@@ -119,4 +119,4 @@ karo/
 
 ## Version
 
-Aktuelle Version: **1.0.4**. Siehe [Changelog](CHANGELOG.de.md).
+Aktuelle Version: **1.0.5**. Siehe [Changelog](CHANGELOG.de.md).

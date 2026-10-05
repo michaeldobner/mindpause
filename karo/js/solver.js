@@ -8,7 +8,7 @@
 // Ablagestapels. Ziehen erhöht w, neu Durchlaufen setzt w auf 0. Statt einzelner Ziehzüge kennt der
 // Löser nur „spiele die Karte an Stelle p“, das spart sehr viel Suche.
 
-import { suitOf, rankOf, isRed } from './cards.js?v=1.0.4';
+import { suitOf, rankOf, isRed } from './cards.js?v=1.0.5';
 
 const stacks = (card, onto) => rankOf(onto) === rankOf(card) + 1 && isRed(onto) !== isRed(card);
 

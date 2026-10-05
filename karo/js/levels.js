@@ -1,7 +1,7 @@
 // Die Stufen von KARO und welche Spielnummer als Nächstes kommt.
 // Die Listen der Spielnummern stehen in deals.js (erzeugt von tools/deals.mjs).
 
-import { DEALS } from './deals.js?v=1.0.4';
+import { DEALS } from './deals.js?v=1.0.5';
 
 // difficulty: Punkte in der Auswahl je Ziehmodus (1 oder 3 Karten), fan: Karten in der Vorschau
 export const LEVELS = [
