@@ -4,14 +4,15 @@
 //   'all'   alle drei Steine passen in irgendeiner Reihenfolge aufs Brett
 //   'one'   mindestens ein Stein passt
 //   'none'  reiner Zufall
+// start: Anteil der Felder, die beim Start schon belegt sind. Die ersten drei Steine passen immer.
 
 export const MODES = [
-  // Das bekannte Spiel: 8 × 8, mindestens ein Stein passt immer, wenn das Tablett neu ist
-  { id: 'classic', size: 8, fair: 'one', calm: false, difficulty: 3 },
+  // Das bekannte Spiel: 8 × 8, halb belegt, danach passt mindestens ein neuer Stein
+  { id: 'classic', size: 8, start: 0.5, fair: 'one', calm: false, difficulty: 3 },
   // Mehr Platz: 10 × 10
-  { id: 'wide', size: 10, fair: 'one', calm: false, difficulty: 2 },
+  { id: 'wide', size: 10, start: 0.45, fair: 'one', calm: false, difficulty: 2 },
   // Ohne Ende: alle drei Steine passen, ein volles Brett räumt sich auf
-  { id: 'calm', size: 8, fair: 'all', calm: true, difficulty: 1 },
+  { id: 'calm', size: 8, start: 0.35, fair: 'all', calm: true, difficulty: 1 },
 ];
 
 export const modeById = (id) => MODES.find((m) => m.id === id);

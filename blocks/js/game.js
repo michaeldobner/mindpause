@@ -18,6 +18,21 @@ export const familyOfCode = (code) => FAMILY_IDS[code - 1];
 
 const emptyBoard = (n) => Array.from({ length: n }, () => new Array(n).fill(0));
 
+// Zufällig belegtes Brett: jedes Feld mit Wahrscheinlichkeit density. Volle Reihen und Spalten
+// bekommen danach an einer zufälligen Stelle eine Lücke, damit nichts sofort verschwindet.
+export function scatter(n, density, rng) {
+  const board = emptyBoard(n);
+  if (!density) return board;
+  const code = FAMILY_IDS.indexOf('dot') + 1;
+  for (let y = 0; y < n; y++) for (let x = 0; x < n; x++) if (rng.next() < density) board[y][x] = code;
+  for (;;) {
+    const { rows, cols } = fullLines(board);
+    if (rows.length) board[rows[0]][Math.floor(rng.next() * n)] = 0;
+    else if (cols.length) board[Math.floor(rng.next() * n)][cols[0]] = 0;
+    else return board;
+  }
+}
+
 // ---------- Brett, unabhängig vom Spiel (auch für die Suche) ----------
 
 export function canPlace(board, key, x, y) {
@@ -106,7 +121,7 @@ export class Game {
     this.state = 'playing';
     this.undoSnap = null;
     this.events = [];
-    this.refill();
+    this.setup();
   }
 
   get def() {
@@ -127,24 +142,44 @@ export class Game {
 
   // Drei neue Steine. Je nach Modus wird so oft neu gezogen, bis die Bedingung stimmt.
   refill() {
-    const fair = this.def.fair;
-    let chosen = null;
-    let first = null; // erster Zug überhaupt
-    let oneFits = null; // erster Zug, in dem wenigstens ein Stein passt
-    for (let attempt = 0; attempt < 40 && !chosen; attempt++) {
+    this.tray = this.draw(this.def.fair).tray;
+    this.events.push({ type: 'refill', tray: this.tray.slice() });
+  }
+
+  // Bis zu 40 Ziehungen. Liefert die erste, die die Regel erfüllt (ok), sonst die beste andere.
+  draw(fair) {
+    let first = null; // erste Ziehung überhaupt
+    let oneFits = null; // erste Ziehung, in der wenigstens ein Stein passt
+    for (let attempt = 0; attempt < 40; attempt++) {
       const trio = [pickShape(this.rng), pickShape(this.rng), pickShape(this.rng)];
       first = first || trio;
-      if (fair === 'none') {
-        chosen = trio;
-        break;
-      }
+      if (fair === 'none') return { tray: trio, ok: true };
       const some = trio.some((k) => fitsAnywhere(this.board, k));
       if (some) oneFits = oneFits || trio;
-      if (fair === 'one' && some) chosen = trio;
-      else if (fair === 'all' && some && canPlaceAll(this.board, trio)) chosen = trio;
+      if (fair === 'one' && some) return { tray: trio, ok: true };
+      if (fair === 'all' && some && canPlaceAll(this.board, trio)) return { tray: trio, ok: true };
     }
-    this.tray = chosen || oneFits || first;
-    this.events.push({ type: 'refill', tray: this.tray.slice() });
+    return { tray: oneFits || first, ok: false };
+  }
+
+  // Startbild wie bei einem neuen Level: ein Teil des Bretts ist schon belegt, keine Linie ist voll,
+  // und die ersten drei Steine passen in jedem Modus sicher in irgendeiner Reihenfolge.
+  // Gelingt das nicht, beginnt das Spiel auf leerem Brett, dort passen drei Steine immer.
+  setup() {
+    for (let attempt = 0; attempt < 30; attempt++) {
+      this.board = scatter(this.size, this.def.start, this.rng);
+      const { tray, ok } = this.draw('all');
+      if (ok) {
+        this.tray = tray;
+        this.events.push({ type: 'refill', tray: tray.slice() });
+        return;
+      }
+    }
+    this.board = emptyBoard(this.size);
+    let tray = this.draw('all').tray;
+    while (!canPlaceAll(this.board, tray, { n: 1e6 })) tray = this.draw('all').tray;
+    this.tray = tray;
+    this.events.push({ type: 'refill', tray: tray.slice() });
   }
 
   // Passt der Stein in diesem Fach noch irgendwo hin?
@@ -262,7 +297,9 @@ export class Game {
       for (const [x, y] of placements(this.board, key)) {
         const { board, rows, cols } = applyPlace(this.board, key, x, y);
         let v = (rows.length + cols.length) * 100 + contact(this.board, key, x, y) * 3 - holes(board) * 12;
-        if (rest.length && !rest.some((k) => fitsAnywhere(board, k))) v -= 1000;
+        // Danach müssen die übrigen Steine noch alle passen, sonst verbaut der Tipp das Tablett
+        if (rest.length && !rest.some((k) => fitsAnywhere(board, k))) v -= 2000;
+        else if (rest.length > 1 && !canPlaceAll(board, rest, { n: 1500 })) v -= 1000;
         // Bei Gleichstand gewinnt die Stelle oben links, damit der Tipp ruhig bleibt
         if (!best || v > best.v) best = { slot, x, y, v };
       }

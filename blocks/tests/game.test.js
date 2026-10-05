@@ -1,12 +1,13 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { SHAPES, FAMILY_IDS, createRandom, pickShape, shapeOf } from '../js/shapes.js';
-import { Game, canPlace, canPlaceAll, fitsAnywhere, applyPlace, fullLines, codeOf, TRAY } from '../js/game.js';
+import { Game, canPlace, canPlaceAll, fitsAnywhere, applyPlace, fullLines, codeOf, scatter, TRAY } from '../js/game.js';
 import { MODES, modeById, linePoints, scorePlace, starsFor, STREAK_KEEP, PERFECT_POINTS } from '../js/modes.js';
 
-// Spiel mit bestimmtem Tablett
+// Spiel mit leerem Brett und bestimmtem Tablett
 function setup({ mode = 'classic', tray = ['dot:0', 'dot:0', 'dot:0'] } = {}) {
   const g = new Game({ mode, seed: 7 });
+  g.board = g.board.map((r) => r.map(() => 0));
   g.tray = tray.slice();
   g.events = [];
   return g;
@@ -60,12 +61,38 @@ test('Modi: Größe des Bretts, unbekannter Modus wird Klassisch', () => {
   assert.equal(MODES.length, 3);
 });
 
-test('Neues Spiel: leeres Brett, drei Steine auf dem Tablett', () => {
-  const g = new Game({ seed: 3 });
-  assert.equal(g.tray.length, TRAY);
-  assert.ok(g.tray.every((k) => SHAPES[k]));
-  assert.ok(g.board.every((r) => r.every((c) => c === 0)));
-  assert.equal(g.state, 'playing');
+test('Neues Spiel: Brett teilweise belegt, keine Linie voll, drei Steine auf dem Tablett', () => {
+  for (const mode of MODES) {
+    const g = new Game({ mode: mode.id, seed: 3 });
+    const n = g.size;
+    const filled = g.board.flat().filter(Boolean).length;
+    assert.ok(filled > n * n * mode.start * 0.5 && filled < n * n * mode.start * 1.5, `${mode.id}: ${filled} belegt`);
+    assert.deepEqual(fullLines(g.board), { rows: [], cols: [] });
+    assert.equal(g.tray.length, TRAY);
+    assert.ok(g.tray.every((k) => SHAPES[k]));
+    assert.equal(g.state, 'playing');
+    assert.equal(g.score, 0);
+  }
+});
+
+test('Die ersten drei Steine passen immer, in jedem Modus und bei jedem Startwert', () => {
+  for (const mode of MODES) {
+    for (let seed = 1; seed <= 150; seed++) {
+      const g = new Game({ mode: mode.id, seed });
+      assert.ok(canPlaceAll(g.board, g.tray, { n: 1e7 }), `${mode.id}, Startwert ${seed}`);
+    }
+  }
+});
+
+test('Startbild: gleicher Startwert gleiches Brett, ohne volle Linien auch bei hoher Dichte', () => {
+  assert.deepEqual(new Game({ seed: 9 }).board, new Game({ seed: 9 }).board);
+  assert.notDeepEqual(new Game({ seed: 9 }).board, new Game({ seed: 10 }).board);
+  const rng = createRandom(4);
+  for (let i = 0; i < 50; i++) {
+    const b = scatter(8, 0.95, rng);
+    assert.deepEqual(fullLines(b), { rows: [], cols: [] });
+  }
+  assert.ok(scatter(8, 0, rng).every((r) => r.every((c) => c === 0)));
 });
 
 test('Legen: nur auf freie Felder und innerhalb des Bretts', () => {
@@ -230,7 +257,7 @@ test('Tipp: legt den Stein, der eine Reihe schließt', () => {
 });
 
 test('Speichern und Fortsetzen', () => {
-  const g = new Game({ mode: 'wide', seed: 11 });
+  const g = new Game({ mode: 'calm', seed: 11 });
   for (let i = 0; i < 6; i++) {
     const h = g.hint();
     g.place(h.slot, h.x, h.y);
