@@ -1,4 +1,4 @@
-// Modi, Punkte und Sterne von PARKETT.
+// Modi, Punkte und Sterne von BLOCKS.
 //
 // fair: wie das Tablett gefüllt wird
 //   'all'   alle drei Steine passen in irgendeiner Reihenfolge aufs Brett

@@ -1,24 +1,24 @@
-// Formen von PARKETT und der Zufall, aus dem das Tablett gefüllt wird.
+// Formen von BLOCKS und der Zufall, aus dem das Tablett gefüllt wird.
 //
 // Jede Familie ist als Zeichenbild beschrieben, # ist ein Feld. Alle Drehungen (und bei
 // asymmetrischen Formen die Spiegelungen) werden daraus erzeugt, doppelte entfallen.
 // Ein Stein auf dem Tablett ist eine dieser Lagen, sein Schlüssel ist „familie:nummer“.
 
 const FAMILIES = [
-  // id, Bild, Gewicht der Familie, Spiegelungen, Holz für den Stil Intarsie
-  { id: 'dot', rows: ['#'], weight: 3, wood: 'cherry' },
-  { id: 'i2', rows: ['##'], weight: 6, wood: 'oak' },
-  { id: 'i3', rows: ['###'], weight: 6, wood: 'oak' },
-  { id: 'i4', rows: ['####'], weight: 5, wood: 'ash' },
-  { id: 'i5', rows: ['#####'], weight: 3, wood: 'ash' },
-  { id: 'c3', rows: ['##', '#.'], weight: 6, wood: 'pear' },
-  { id: 'o2', rows: ['##', '##'], weight: 6, wood: 'maple' },
-  { id: 'o3', rows: ['###', '###', '###'], weight: 2, wood: 'walnut' },
-  { id: 'r6', rows: ['###', '###'], weight: 3, wood: 'walnut' },
-  { id: 't4', rows: ['###', '.#.'], weight: 4, wood: 'olive' },
-  { id: 's4', rows: ['.##', '##.'], weight: 4, mirror: true, wood: 'cherry' },
-  { id: 'l4', rows: ['#..', '###'], weight: 6, mirror: true, wood: 'pear' },
-  { id: 'c5', rows: ['###', '#..', '#..'], weight: 4, wood: 'maple' },
+  // id, Bild, Gewicht der Familie, Spiegelungen
+  { id: 'dot', rows: ['#'], weight: 3 },
+  { id: 'i2', rows: ['##'], weight: 6 },
+  { id: 'i3', rows: ['###'], weight: 6 },
+  { id: 'i4', rows: ['####'], weight: 5 },
+  { id: 'i5', rows: ['#####'], weight: 3 },
+  { id: 'c3', rows: ['##', '#.'], weight: 6 },
+  { id: 'o2', rows: ['##', '##'], weight: 6 },
+  { id: 'o3', rows: ['###', '###', '###'], weight: 2 },
+  { id: 'r6', rows: ['###', '###'], weight: 3 },
+  { id: 't4', rows: ['###', '.#.'], weight: 4 },
+  { id: 's4', rows: ['.##', '##.'], weight: 4, mirror: true },
+  { id: 'l4', rows: ['#..', '###'], weight: 6, mirror: true },
+  { id: 'c5', rows: ['###', '#..', '#..'], weight: 4 },
 ];
 
 // Zellen aus einem Zeichenbild, links oben bei 0,0
@@ -52,7 +52,7 @@ function orientations(rows, mirror) {
   return out;
 }
 
-// Alle Lagen als Schlüssel → { key, family, cells, w, h, size, wood }
+// Alle Lagen als Schlüssel → { key, family, cells, w, h, size }
 export const SHAPES = {};
 const POOL = [];
 for (const f of FAMILIES) {
@@ -61,7 +61,7 @@ for (const f of FAMILIES) {
     const key = `${f.id}:${i}`;
     const w = Math.max(...cells.map(([x]) => x)) + 1;
     const h = Math.max(...cells.map(([, y]) => y)) + 1;
-    SHAPES[key] = { key, family: f.id, cells, w, h, size: cells.length, wood: f.wood };
+    SHAPES[key] = { key, family: f.id, cells, w, h, size: cells.length };
     // Das Gewicht verteilt sich auf die Lagen, damit Formen mit vielen Lagen nicht häufiger kommen
     POOL.push([key, f.weight / list.length]);
   });

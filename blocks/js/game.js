@@ -1,4 +1,4 @@
-// Spiellogik von PARKETT, ohne DOM.
+// Spiellogik von BLOCKS, ohne DOM.
 //
 // Ein quadratisches Brett, darunter ein Tablett mit drei Steinen. Jeder Stein wird einmal
 // gelegt, sind alle drei gelegt, kommen drei neue. Volle Reihen und Spalten verschwinden
@@ -12,7 +12,7 @@ import { modeById, MODES, STREAK_KEEP, scorePlace } from './modes.js?v=1.0.0';
 
 export const TRAY = 3;
 
-// Code einer Zelle: 0 leer, sonst Nummer der Familie + 1 (für das Holz im Stil Intarsie)
+// Code einer Zelle: 0 leer, sonst Nummer der Familie + 1
 export const codeOf = (key) => FAMILY_IDS.indexOf(shapeOf(key).family) + 1;
 export const familyOfCode = (code) => FAMILY_IDS[code - 1];
 

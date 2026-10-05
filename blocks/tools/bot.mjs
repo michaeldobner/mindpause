@@ -1,7 +1,7 @@
 // Ein einfacher Computerspieler, der immer dem Tipp folgt. Dient zum Abschätzen der Grenzen
 // für die Sterne (js/modes.js) und zum Prüfen, wie schnell das Füllen des Tabletts ist.
 //
-//   node parkett/tools/bot.mjs [Spiele je Modus]
+//   node blocks/tools/bot.mjs [Spiele je Modus]
 
 import { Game } from '../js/game.js';
 import { MODES } from '../js/modes.js';

@@ -1,0 +1,30 @@
+/* BLOCKS · Bühne mit Brett und Tablett
+ * Nur was BLOCKS eigen ist. Alles andere kommt aus shared/tokens.css und shared/shell.css.
+ * Brett und Steine werden auf Canvas gezeichnet (js/view.js) und sehen in Hell und Dunkel gleich aus.
+ */
+
+/* Das SVG-Brett der Hülle braucht BLOCKS nicht, die Fläche ersetzt es */
+.stage > .board {
+  display: none;
+}
+
+/* Auf der ganzen Bühne wird gezogen, nie gescrollt oder gezoomt */
+.stage {
+  touch-action: none;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+}
+
+.blocks {
+  position: absolute;
+  inset: 4px 0;
+  touch-action: none;
+}
+
+.blocks canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: block;
+}
