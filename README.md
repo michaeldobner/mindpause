@@ -21,6 +21,7 @@ Classic board games, reimagined with tactile design and handcrafted sound. Free,
 | <img src="karo/icons/icon.svg" width="56" alt=""> | **[KARO](karo/README.md)** · [play](https://michaeldobner.github.io/mindpause/karo/) | Classic solitaire as on Windows. Draw one or three, points or Vegas, levels that can always be solved, hints | 1.0.4 |
 | <img src="fuge/icons/icon.svg" width="56" alt=""> | **[FUGE](fuge/README.md)** · [play](https://michaeldobner.github.io/mindpause/fuge/) | The classic falling block game as a lacquered wooden box. Classic, Sprint, 3 minutes and an endless Calm mode, gestures instead of buttons, thumb controls in landscape | 1.1.0 |
 | <img src="muehle/icons/icon.svg" width="56" alt=""> | **[MÜHLE](muehle/README.md)** · [play](https://michaeldobner.github.io/mindpause/muehle/) | Nine men's morris against the computer on three levels or for two players on one device. Gold lines on black wood, glowing mills, trays as supply | 1.1.0 |
+| <img src="blocks/icons/icon.svg" width="56" alt=""> | **[BLOCKS](blocks/README.md)** · [play](https://michaeldobner.github.io/mindpause/blocks/) | The block puzzle: drag pieces from the tray onto the board, full rows and columns clear. Classic 8 × 8, Wide 10 × 10 and an endless Calm mode, streaks, preview while dragging, pieces of blue ceramic | 1.0.0 |
 
 More games and play across two devices are on the way, see the [roadmap](#roadmap).
 
@@ -56,6 +57,7 @@ mindpause/
 ├─ karo/                   KARO, see karo/README.md
 ├─ fuge/                   FUGE, see fuge/README.md
 ├─ muehle/                 MÜHLE, see muehle/README.md
+├─ blocks/                 BLOCKS, see blocks/README.md
 ├─ scripts/
 │  ├─ release.mjs          sets the version of a game or of the shell
 │  └─ e2e.mjs              browser test of the whole collection
@@ -111,6 +113,7 @@ Every reference carries its version (`?v=` for game files, `?shell=` for shell f
 | FUGE | Falling blocks as a wooden box, four modes, gestures, shell 1.3.0 with custom buttons | Done |
 | MÜHLE | Nine men's morris with WMD rules, three computer levels, two players, design from QUEEN | Done |
 | Landscape | Shell 1.5.0: landscape for every game, full height board, your own pieces at the bottom, FUGE with thumb controls | Done |
+| BLOCKS | Block puzzle with three modes, streak and preview, colours of SPRING and QUEEN Midnight | Done |
 | QUEEN 1.4 | Playing each other on two devices, stage 1: move by link | Planned |
 | Later | Live with a room code, more games | Idea |
 

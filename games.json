@@ -63,5 +63,18 @@
       "en": "The classic game of nine men's morris against the computer on three levels or for two players on one device. Place, move, fly."
     },
     "icon": "muehle/icons/icon.svg?v=1.1.0"
+  },
+  {
+    "id": "blocks",
+    "title": "BLOCKS",
+    "subtitle": {
+      "de": "Block-Puzzle",
+      "en": "Block puzzle"
+    },
+    "description": {
+      "de": "Steine vom Tablett aufs Brett legen, volle Reihen und Spalten räumen ab. Drei Modi, darunter Ruhe ohne Ende.",
+      "en": "Drag pieces from the tray onto the board, full rows and columns clear. Three modes, including Calm with no end."
+    },
+    "icon": "blocks/icons/icon.svg?v=1.0.0"
   }
 ]
