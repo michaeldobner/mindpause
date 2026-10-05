@@ -1,7 +1,7 @@
 // Löser im Hintergrund, damit das Spiel während der Suche flüssig bleibt.
 // fresh: das Spiel ab dem Geben prüfen (war es überhaupt lösbar?), sonst Tipp für die aktuelle Stellung.
-import { Game } from './game.js?v=1.0.4';
-import { hintFor, solve, fromGame } from './solver.js?v=1.0.4';
+import { Game } from './game.js?v=1.0.5';
+import { hintFor, solve, fromGame } from './solver.js?v=1.0.5';
 
 self.onmessage = (e) => {
   const { id, game: data, fresh, budget } = e.data;

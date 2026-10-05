@@ -2,6 +2,15 @@
 
 All notable changes to KARO. [Deutsch](CHANGELOG.de.md)
 
+## 1.0.5 (2026-10-05)
+
+### Fixed
+* **Invisible cards after "Next deal".** Tapping "Next deal" during the win celebration gave a new game in which some cards were invisible. You saw through them to the face-down card below, which looked like a face-up card showing its back. Cause: when stopping, the celebration still hid the cards that were in the air, and by then they belonged to the new game. The celebration now belongs firmly to its game, and a new game always starts with a clean table. The same applied to "Undo" during the celebration.
+* Note on 1.0.4: the cause assumed there (3D turn in Safari) was not the reason. The switch to a flat reveal stays anyway, as it makes rendering more robust.
+
+### Technical
+* Two new checks in the browser test: "Next deal" and "Undo" during the win celebration. Both fail on the old code and pass on the new.
+
 ## 1.0.4 (2026-10-05)
 
 ### Fixed

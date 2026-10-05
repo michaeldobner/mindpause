@@ -2,6 +2,15 @@
 
 Alle wichtigen Änderungen an KARO. [English](CHANGELOG.md)
 
+## 1.0.5 (2026-10-05)
+
+### Behoben
+* **Unsichtbare Karten nach „Nächstes Spiel“.** Wer während der Siegesfeier auf „Nächstes Spiel“ tippte, bekam ein neues Spiel, in dem einzelne Karten unsichtbar waren. Man sah durch sie hindurch auf die verdeckte Karte darunter, das sah aus wie eine offene Karte mit Rückseite. Ursache: Die Feier blendete beim Aufhören noch die Karten aus, die gerade in der Luft waren, und die gehörten da schon zum neuen Spiel. Jetzt gehört die Feier fest zu ihrem Spiel, und ein neues Spiel beginnt immer mit einem sauberen Tisch. Dasselbe galt für „Zurück“ während der Feier.
+* Hinweis zu 1.0.4: Die dort vermutete Ursache (3D-Drehung in Safari) war nicht der Grund. Die Umstellung auf flaches Aufdecken bleibt trotzdem, sie macht die Darstellung robuster.
+
+### Technik
+* Zwei neue Prüfungen im Browser-Test: „Nächstes Spiel“ und „Zurück“ während der Siegesfeier. Mit dem alten Stand schlagen beide fehl, mit dem neuen nicht.
+
 ## 1.0.4 (2026-10-05)
 
 ### Behoben

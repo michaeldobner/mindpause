@@ -7,7 +7,7 @@
 //
 // Bedienung: Tippen legt eine Karte an den besten Platz, Ziehen geht auch.
 
-import { suitOf } from './cards.js?v=1.0.4';
+import { suitOf } from './cards.js?v=1.0.5';
 
 const TAP_SLOP = 8; // Pixel, ab denen aus einem Tippen ein Ziehen wird
 const RATIO = 1.4;
@@ -69,7 +69,9 @@ export class TableView {
 
   setGame(game, { deal = false } = {}) {
     this.game = game;
+    // Ein neues Spiel beginnt immer mit einem sauberen Tisch: nichts ausgeblendet, nichts in der Luft
     this.hidden.clear();
+    this.cards.forEach((el) => el.classList.remove('gone', 'flying'));
     this.clearHint();
     this.layout();
     this.render({ animate: deal, deal });

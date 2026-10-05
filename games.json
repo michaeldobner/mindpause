@@ -36,7 +36,7 @@
       "de": "Die klassische Patience wie bei Windows. 1 oder 3 Karten, Punkte oder Vegas, sicher lösbare Stufen.",
       "en": "Classic solitaire as on Windows. Draw one or three, points or Vegas, levels that can always be solved."
     },
-    "icon": "karo/icons/icon.svg?v=1.0.4"
+    "icon": "karo/icons/icon.svg?v=1.0.5"
   },
   {
     "id": "fuge",

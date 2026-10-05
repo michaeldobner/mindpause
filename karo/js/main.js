@@ -5,15 +5,15 @@ import { createShell } from '../../shared/js/shell.js?shell=1.5.0';
 import { createI18n } from '../../shared/js/i18n.js?shell=1.5.0';
 import { createStorage } from '../../shared/js/storage.js?shell=1.5.0';
 import { DEFAULT_STYLE } from '../../shared/js/sound-engine.js?shell=1.5.0';
-import { Game } from './game.js?v=1.0.4';
-import { TableView } from './view.js?v=1.0.4';
-import { KaroSound } from './sound.js?v=1.0.4';
-import { Celebration } from './celebrate.js?v=1.0.4';
-import { deckDefs } from './faces.js?v=1.0.4';
-import { LEVELS, levelById, seedFor } from './levels.js?v=1.0.4';
-import { KARO_STRINGS } from './strings.js?v=1.0.4';
+import { Game } from './game.js?v=1.0.5';
+import { TableView } from './view.js?v=1.0.5';
+import { KaroSound } from './sound.js?v=1.0.5';
+import { Celebration } from './celebrate.js?v=1.0.5';
+import { deckDefs } from './faces.js?v=1.0.5';
+import { LEVELS, levelById, seedFor } from './levels.js?v=1.0.5';
+import { KARO_STRINGS } from './strings.js?v=1.0.5';
 
-export const VERSION = '1.0.4';
+export const VERSION = '1.0.5';
 
 const storage = createStorage('karo:');
 const { load, save } = storage;
@@ -229,16 +229,21 @@ async function win() {
   celebration = celebration || new Celebration(view.el, lang);
   const show = () => game === forGame && !document.querySelector('#result:not([hidden])') && showWin();
   const timer = setTimeout(show, 2600);
+  // Die Feier gehört zu genau diesem gewonnenen Spiel. Beginnt währenddessen ein neues Spiel
+  // oder wird ein Zug zurückgenommen, darf sie keine Karte mehr bewegen oder ausblenden.
+  const ours = () => game === forGame && game.isWon;
   try {
     await celebration.run({
       rectFor: (suit) => view.foundationRect(suit),
-      onMove: (c, x, y) => view.flyCard(c, x, y),
-      onLand: (c) => view.hideCard(c),
+      onMove: (c, x, y) => ours() && view.flyCard(c, x, y),
+      onLand: (c) => ours() && view.hideCard(c),
     });
   } catch (err) {
     console.error(err);
   }
   clearTimeout(timer);
+  // Per Tipp beendet: Karten, die noch in der Luft waren, verschwinden ebenfalls
+  if (ours()) for (const c of celebration.leftover || []) view.hideCard(c);
   show();
 }
 
@@ -413,7 +418,7 @@ let worker = null;
 let request = 0;
 
 function ask({ fresh = false, budget = 60000 } = {}) {
-  if (!worker) worker = new Worker(new URL('./solver-worker.js?v=1.0.4', import.meta.url), { type: 'module' });
+  if (!worker) worker = new Worker(new URL('./solver-worker.js?v=1.0.5', import.meta.url), { type: 'module' });
   const id = ++request;
   return new Promise((resolve) => {
     const onMessage = (e) => {
@@ -480,6 +485,42 @@ setTimeout(() => shell.showCoach(), 900);
 celebration = new Celebration(view.el, lang);
 setTimeout(() => celebration.prepare(view.g.W), 2500);
 
+// ---------- Hilfen für den Browser-Test ----------
+
+// Fast gewonnene Stellung herstellen und die letzte Karte ablegen
+function winNow() {
+  game.tableau.forEach((c) => { c.down = []; c.up = []; });
+  game.stock = [];
+  game.waste = [];
+  game.foundations = [13, 13, 13, 12];
+  game.tableau[0].up = [51];
+  view.render({ animate: false });
+  play({ pile: 'tableau', col: 0, index: 0 }, { pile: 'foundation' });
+}
+
+async function waitFor(test, ms = 8000) {
+  for (let t = 0; t < ms / 100 && !test(); t++) await new Promise((r) => setTimeout(r, 100));
+}
+
+// Stimmt der Tisch mit dem Spiel überein? Liefert eine Beschreibung der Abweichung oder ''.
+function tableProblems() {
+  const problems = [];
+  const visible = new Set();
+  game.tableau.forEach((col) => { col.down.forEach((c) => visible.add(c)); col.up.forEach((c) => visible.add(c)); });
+  game.stock.forEach((c) => visible.add(c));
+  game.waste.forEach((c) => visible.add(c));
+  view.cards.forEach((el, c) => {
+    if (!visible.has(c)) return;
+    if (el.classList.contains('gone')) problems.push(`${c} unsichtbar`);
+    if (el.classList.contains('flying')) problems.push(`${c} fliegt`);
+  });
+  game.tableau.forEach((col) => {
+    col.up.forEach((c) => { if (!view.cards[c].classList.contains('up')) problems.push(`${c} verdeckt statt offen`); });
+    col.down.forEach((c) => { if (view.cards[c].classList.contains('up')) problems.push(`${c} offen statt verdeckt`); });
+  });
+  return problems.join(', ');
+}
+
 // Für automatische Tests im Browser (scripts/e2e.mjs). Jedes Spiel stellt history und e2e.move bereit.
 window.__game = {
   id: 'karo',
@@ -514,6 +555,23 @@ window.__game = {
     },
     // Zusätzliche Prüfungen für den Browser-Test: jede liefert true, wenn alles stimmt
     checks: {
+      // Genau dein Ablauf: gewinnen, während die Karten fliegen auf Nächstes Spiel tippen.
+      // Danach muss jede Karte des neuen Spiels sichtbar sein und richtig liegen.
+      async 'Neues Spiel während der Feier'() {
+        winNow();
+        await waitFor(() => (celebration?.launched || 0) >= 4);
+        newGame();
+        await new Promise((r) => setTimeout(r, 2200));
+        return tableProblems() || true;
+      },
+      // Zurück während der Feier: das Spiel ist wieder offen, alle Karten sichtbar
+      async 'Zurück während der Feier'() {
+        winNow();
+        await waitFor(() => (celebration?.launched || 0) >= 4);
+        undo();
+        await new Promise((r) => setTimeout(r, 900));
+        return tableProblems() || true;
+      },
       // Die letzte Karte auf die Ablage: springen danach Karten von den Ablagen?
       async 'Siegesfeier'() {
         game.tableau.forEach((c) => { c.down = []; c.up = []; });
