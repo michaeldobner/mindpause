@@ -62,7 +62,9 @@ mindpause/
 │  ├─ release.mjs          setzt die Version eines Spiels oder der Hülle
 │  └─ e2e.mjs              Browser-Test der ganzen Sammlung
 ├─ tests/                  Tests über die ganze Sammlung
-└─ .github/workflows/      Tests bei jedem Push
+├─ Dockerfile              liefert die Sammlung mit nginx aus (Coolify)
+├─ deploy/nginx.conf       Typen, Cache und Weiterleitungen für nginx
+└─ .github/workflows/      Tests bei jedem Push, Deploy nach grünen Tests
 ```
 
 ## Entwicklung
@@ -82,8 +84,8 @@ Bei jedem Push führt GitHub Actions beides aus. Der Browser-Test lädt Screensh
 
 ## Veröffentlichung
 
-* **Hosting:** GitHub Pages, Branch `main`, Ordner `/ (root)`. Für öffentliche Repositorys kostenlos.
-* **Arbeitsweise:** Jede Änderung läuft über einen Pull Request. Sind die Tests grün, wird er in `main` übernommen und der Branch automatisch gelöscht. Ein bis zwei Minuten später ist alles live.
+* **Hosting:** Coolify auf dem eigenen Server. Ein nginx liefert die Dateien unverändert aus, siehe [`Dockerfile`](Dockerfile) und [`deploy/nginx.conf`](deploy/nginx.conf). GitHub Pages bleibt als Spiegel möglich, denn die Sammlung braucht keinen Build-Schritt und alle Verweise sind relativ.
+* **Arbeitsweise:** Jede Änderung läuft über einen Pull Request. Sind die Tests grün, wird er in `main` übernommen und der Branch automatisch gelöscht. Danach baut Coolify ein neues Abbild und rollt es aus.
 * **Versionen:** Jedes Spiel hat seine eigene Version, die Hülle ebenfalls.
 
 ```bash
@@ -92,6 +94,22 @@ node scripts/release.mjs shell 1.5.0    # neue Version der Hülle, betrifft alle
 ```
 
 Jeder Verweis trägt seine Version (`?v=` für Dateien eines Spiels, `?shell=` für Dateien der Hülle). Ein Gerät mischt deshalb nach einem Update nie alte und neue Dateien. `tests/release.test.js` prüft das bei jedem Push.
+
+### Coolify einrichten
+
+1. **Resource anlegen:** Projekt öffnen, „+ New Resource“, dieses Repository als Quelle, Branch `main`.
+2. **Build Pack:** `Dockerfile`, Base Directory `/`, Dockerfile Location `/Dockerfile`.
+3. **Port:** `80`.
+4. **Domain:** die gewünschte Adresse eintragen. Coolify holt das Zertifikat selbst. HTTPS ist Pflicht, sonst registriert kein Browser einen Service Worker und die Spiele laufen nicht offline.
+5. **Health Check:** Pfad `/healthz`.
+6. **Deploy** drücken. Der Build dauert wenige Sekunden, ins Abbild kommen rund 2 MB, siehe [`.dockerignore`](.dockerignore).
+
+Für das Ausrollen bei jeder Änderung gibt es zwei Wege:
+
+* **Coolify hört selbst zu:** in der Resource „Automatic Deployment“ einschalten. Rollt bei jedem Push auf `main` aus, auch bei roten Tests.
+* **Erst wenn die Tests grün sind:** [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml) stößt Coolify nach dem erfolgreichen Testlauf an. Dafür zwei Secrets im Repository setzen, `COOLIFY_WEBHOOK` (Deploy-URL der Resource) und `COOLIFY_TOKEN` (API-Token aus Coolify unter „Keys & Tokens“). Ohne diese Secrets überspringt der Workflow sich selbst.
+
+Beim Wechsel der Adresse zu beachten: Ein Spiel, das von `michaeldobner.github.io` auf dem Home-Bildschirm liegt, bleibt auf dieser Adresse, denn Service Worker und Speicher gehören zur Herkunft. Wer die neue Adresse haben will, legt das Spiel dort erneut ab. Die Spielstände auf dem Gerät wandern nicht mit.
 
 ## Ein Spiel hinzufügen
 

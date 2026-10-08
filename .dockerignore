@@ -1,0 +1,20 @@
+# Ins Abbild kommt nur, was der Browser braucht: index.html, games.json,
+# shared/ und die Spielordner mit index.html, css, js, icons, sw.js und
+# manifest.webmanifest. deploy/ wird gebraucht (nginx.conf) und im Dockerfile
+# wieder aus dem Web-Ordner entfernt.
+
+.git
+.gitignore
+.github
+.dockerignore
+.nojekyll
+Dockerfile
+node_modules
+e2e-output
+package.json
+package-lock.json
+scripts
+**/tests
+**/tools
+**/docs
+**/*.md

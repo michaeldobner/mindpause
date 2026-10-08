@@ -1,0 +1,57 @@
+name: Deploy
+
+# Sind die Tests auf main grün, wird in Coolify ein neues Abbild gebaut und
+# ausgerollt. Dafür braucht das Repository zwei Secrets
+# (Settings, Secrets and variables, Actions):
+#
+#   COOLIFY_WEBHOOK   Deploy-URL der Resource aus Coolify, zum Beispiel
+#                     https://coolify.example.com/api/v1/deploy?uuid=abc123
+#   COOLIFY_TOKEN     API-Token aus Coolify unter "Keys & Tokens"
+#
+# Fehlt eines davon, überspringt der Job sich selbst. Coolify kann stattdessen
+# auch selbst auf jeden Push hören, dann rollt es allerdings auch bei roten
+# Tests aus. Dieser Weg hier wartet auf grün.
+
+on:
+  workflow_run:
+    workflows: [Tests]
+    types: [completed]
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-coolify
+  cancel-in-progress: false
+
+jobs:
+  coolify:
+    name: Coolify
+    if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Zugangsdaten prüfen
+        id: ready
+        env:
+          WEBHOOK: ${{ secrets.COOLIFY_WEBHOOK }}
+          TOKEN: ${{ secrets.COOLIFY_TOKEN }}
+        run: |
+          if [ -n "$WEBHOOK" ] && [ -n "$TOKEN" ]; then
+            echo "ready=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+            echo "COOLIFY_WEBHOOK oder COOLIFY_TOKEN ist nicht gesetzt, es wird nichts ausgerollt." >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Deploy anstoßen
+        if: steps.ready.outputs.ready == 'true'
+        env:
+          WEBHOOK: ${{ secrets.COOLIFY_WEBHOOK }}
+          TOKEN: ${{ secrets.COOLIFY_TOKEN }}
+        run: |
+          status=$(curl --silent --show-error --fail-with-body \
+            --output response.txt --write-out '%{http_code}' \
+            --header "Authorization: Bearer $TOKEN" \
+            --max-time 30 --retry 3 --retry-delay 5 --retry-connrefused \
+            "$WEBHOOK") || { echo "Coolify antwortete mit $status:"; cat response.txt; exit 1; }
+          echo "Coolify antwortete mit $status:"
+          cat response.txt
