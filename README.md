@@ -6,7 +6,7 @@
 
 Classic board games, reimagined with tactile design and handcrafted sound. Free, offline, no ads.
 
-[**▶ Open MIND PAUSE**](https://michaeldobner.github.io/mindpause/) · [Deutsch](README.de.md) · [Shell](shared/README.md)
+[**▶ Open MIND PAUSE**](https://mindpause.dobner.pro/) · [Deutsch](README.de.md) · [Shell](shared/README.md)
 
 [![Tests](https://github.com/michaeldobner/mindpause/actions/workflows/tests.yml/badge.svg)](https://github.com/michaeldobner/mindpause/actions/workflows/tests.yml)
 
@@ -16,12 +16,12 @@ Classic board games, reimagined with tactile design and handcrafted sound. Free,
 
 | | Game | Description | Version |
 |---|---|---|---|
-| <img src="spring/icons/icon.svg" width="56" alt=""> | **[SPRING](spring/README.md)** · [play](https://michaeldobner.github.io/mindpause/spring/) | Peg solitaire on the classic cross-shaped board. Seven figures from easy to masterful, hints, a living rim, tilt | 2.1.2 |
-| <img src="queen/icons/icon.svg" width="56" alt=""> | **[QUEEN](queen/README.md)** · [play](https://michaeldobner.github.io/mindpause/queen/) | German checkers against the computer at four levels or for two players on one device. Ebony, maple and an engraved golden crown, trays for captured pieces, your own pieces always at the bottom | 1.3.0 |
-| <img src="karo/icons/icon.svg" width="56" alt=""> | **[KARO](karo/README.md)** · [play](https://michaeldobner.github.io/mindpause/karo/) | Classic solitaire as on Windows. Draw one or three, points or Vegas, levels that can always be solved, hints | 1.0.5 |
-| <img src="fuge/icons/icon.svg" width="56" alt=""> | **[FUGE](fuge/README.md)** · [play](https://michaeldobner.github.io/mindpause/fuge/) | The classic falling block game as a lacquered wooden box. Classic, Sprint, 3 minutes and an endless Calm mode, gestures instead of buttons, thumb controls in landscape | 1.1.0 |
-| <img src="muehle/icons/icon.svg" width="56" alt=""> | **[MÜHLE](muehle/README.md)** · [play](https://michaeldobner.github.io/mindpause/muehle/) | Nine men's morris against the computer on three levels or for two players on one device. Gold lines on black wood, glowing mills, trays as supply | 1.1.0 |
-| <img src="blocks/icons/icon.svg" width="56" alt=""> | **[BLOCKS](blocks/README.md)** · [play](https://michaeldobner.github.io/mindpause/blocks/) | The block puzzle: drag pieces from the tray onto the board, full rows and columns clear. 30 levels with starting blocks and rising difficulty, plus Classic 8 × 8, Wide 10 × 10 and an endless Calm mode, streaks, preview while dragging, pieces of blue ceramic | 1.1.1 |
+| <img src="spring/icons/icon.svg" width="56" alt=""> | **[SPRING](spring/README.md)** · [play](https://mindpause.dobner.pro/spring/) | Peg solitaire on the classic cross-shaped board. Seven figures from easy to masterful, hints, a living rim, tilt | 2.1.2 |
+| <img src="queen/icons/icon.svg" width="56" alt=""> | **[QUEEN](queen/README.md)** · [play](https://mindpause.dobner.pro/queen/) | German checkers against the computer at four levels or for two players on one device. Ebony, maple and an engraved golden crown, trays for captured pieces, your own pieces always at the bottom | 1.3.0 |
+| <img src="karo/icons/icon.svg" width="56" alt=""> | **[KARO](karo/README.md)** · [play](https://mindpause.dobner.pro/karo/) | Classic solitaire as on Windows. Draw one or three, points or Vegas, levels that can always be solved, hints | 1.0.5 |
+| <img src="fuge/icons/icon.svg" width="56" alt=""> | **[FUGE](fuge/README.md)** · [play](https://mindpause.dobner.pro/fuge/) | The classic falling block game as a lacquered wooden box. Classic, Sprint, 3 minutes and an endless Calm mode, gestures instead of buttons, thumb controls in landscape | 1.1.0 |
+| <img src="muehle/icons/icon.svg" width="56" alt=""> | **[MÜHLE](muehle/README.md)** · [play](https://mindpause.dobner.pro/muehle/) | Nine men's morris against the computer on three levels or for two players on one device. Gold lines on black wood, glowing mills, trays as supply | 1.1.0 |
+| <img src="blocks/icons/icon.svg" width="56" alt=""> | **[BLOCKS](blocks/README.md)** · [play](https://mindpause.dobner.pro/blocks/) | The block puzzle: drag pieces from the tray onto the board, full rows and columns clear. 30 levels with starting blocks and rising difficulty, plus Classic 8 × 8, Wide 10 × 10 and an endless Calm mode, streaks, preview while dragging, pieces of blue ceramic | 1.1.1 |
 
 More games and play across two devices are on the way, see the [roadmap](#roadmap).
 
@@ -63,7 +63,9 @@ mindpause/
 │  └─ e2e.mjs              browser test of the whole collection
 ├─ tests/                  tests across the collection
 ├─ Dockerfile              serves the collection with nginx (Coolify)
-├─ deploy/nginx.conf       types, caching and redirects for nginx
+├─ deploy/
+│  ├─ nginx.conf           types, caching and redirects for nginx
+│  └─ coolify-create.sh    creates the application in Coolify, once
 └─ .github/workflows/      tests on every push, deploy once they are green
 ```
 
@@ -97,19 +99,27 @@ Every reference carries its version (`?v=` for game files, `?shell=` for shell f
 
 ### Setting up Coolify
 
-1. **Create the resource:** open the project, "+ New Resource", this repository as the source, branch `main`.
-2. **Build pack:** `Dockerfile`, base directory `/`, Dockerfile location `/Dockerfile`.
-3. **Port:** `80`.
-4. **Domain:** enter the address you want. Coolify obtains the certificate itself. HTTPS is required, otherwise no browser registers a service worker and the games do not run offline.
-5. **Health check:** path `/healthz`.
-6. Press **Deploy**. The build takes a few seconds, the image holds about 2 MB, see [`.dockerignore`](.dockerignore).
+Once, through the API, see [`deploy/coolify-create.sh`](deploy/coolify-create.sh). Without `--yes` the script only shows what it would send and changes nothing.
+
+```bash
+COOLIFY_URL=https://coolify.example.com COOLIFY_API_KEY='…' \
+  bash deploy/coolify-create.sh \
+    --server-uuid … --project-uuid … --github-app-uuid … \
+    --domain https://mindpause.dobner.pro --yes
+```
+
+It creates the application with build pack `dockerfile`, port `80`, Dockerfile `/Dockerfile`, health check `/healthz` and the domain, then triggers the first deploy. If the application already exists it does not create a second one. The build takes a few seconds, the image holds about 2 MB, see [`.dockerignore`](.dockerignore).
+
+The UUIDs of the server, the project and the GitHub App are in Coolify. Some versions do not serve the GitHub App's UUID through the API, in which case it shows in the address bar when you open the source.
+
+HTTPS is required, otherwise no browser registers a service worker and the games do not run offline. Coolify obtains the certificate itself as soon as the domain's A record points at the server.
 
 There are two ways to roll out every change:
 
 * **Coolify listens itself:** switch on "Automatic Deployment" in the resource. It rolls out on every push to `main`, even when the tests are red.
 * **Only once the tests are green:** [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml) triggers Coolify after a successful test run. Set two repository secrets for it, `COOLIFY_WEBHOOK` (the resource's deploy URL) and `COOLIFY_TOKEN` (an API token from Coolify under "Keys & Tokens"). Without those secrets the workflow skips itself.
 
-One thing to keep in mind when the address changes: a game sitting on the home screen from `michaeldobner.github.io` stays on that address, because service workers and storage belong to an origin. To move to the new address, add the game again from there. Saved games on the device do not travel along.
+One thing to keep in mind when the address changes: a game sitting on the home screen from `michaeldobner.github.io` stays on that address, because service workers and storage belong to an origin. To move to `mindpause.dobner.pro`, add the game again from there. Saved games on the device do not travel along.
 
 ## Adding a game
 

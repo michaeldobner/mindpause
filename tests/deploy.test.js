@@ -70,3 +70,23 @@ test('nginx liefert Service Worker, Manifest und versionierte Dateien richtig au
   assert.match(nginx, /types \{ application\/manifest\+json webmanifest; \}/);
   assert.match(nginx, /location = \/healthz/);
 });
+
+test('Das Coolify-Skript enthält keine Zugangsdaten und keine eigene Infrastruktur', () => {
+  const skript = readFileSync('deploy/coolify-create.sh', 'utf8');
+  // Das Repository ist öffentlich. Token, UUIDs und der Host der eigenen
+  // Coolify-Instanz gehören deshalb in Parameter, nicht in die Datei.
+  assert.doesNotMatch(skript, /\d+\|[A-Za-z0-9]{30,}/, 'sieht aus wie ein Coolify-Token');
+  assert.doesNotMatch(skript, /coolify\.(?!example\.com)[a-z0-9-]+\.[a-z]{2,}/, 'eigener Coolify-Host steht in der Datei');
+  for (const name of ['SERVER', 'PROJEKT', 'GITHUB_APP', 'DOMAIN']) {
+    assert.match(skript, new RegExp(`^${name}=;|^${name}=$`, 'm'), `${name} hat einen festen Wert statt eines Parameters`);
+  }
+  assert.match(skript, /\$\{COOLIFY_API_KEY:\?/, 'der Token wird nicht aus der Umgebung gelesen');
+});
+
+test('Die Dokumentation nennt keine Coolify-Instanz und keine UUIDs', () => {
+  for (const datei of ['README.md', 'README.de.md']) {
+    const text = readFileSync(datei, 'utf8');
+    assert.doesNotMatch(text, /coolify\.(?!example\.com)[a-z0-9-]+\.[a-z]{2,}/, `${datei} nennt eine echte Coolify-Instanz`);
+    assert.doesNotMatch(text, /\d+\|[A-Za-z0-9]{30,}/, `${datei} enthält etwas, das wie ein Token aussieht`);
+  }
+});

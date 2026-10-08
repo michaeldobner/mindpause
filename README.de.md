@@ -6,7 +6,7 @@
 
 Klassische Brettspiele, neu gedacht, mit fast greifbarem Design und handgemachtem Klang. Kostenlos, offline, ohne Werbung.
 
-[**▶ MIND PAUSE öffnen**](https://michaeldobner.github.io/mindpause/) · [English](README.md) · [Hülle](shared/README.de.md)
+[**▶ MIND PAUSE öffnen**](https://mindpause.dobner.pro/) · [English](README.md) · [Hülle](shared/README.de.md)
 
 [![Tests](https://github.com/michaeldobner/mindpause/actions/workflows/tests.yml/badge.svg)](https://github.com/michaeldobner/mindpause/actions/workflows/tests.yml)
 
@@ -16,12 +16,12 @@ Klassische Brettspiele, neu gedacht, mit fast greifbarem Design und handgemachte
 
 | | Spiel | Beschreibung | Version |
 |---|---|---|---|
-| <img src="spring/icons/icon.svg" width="56" alt=""> | **[SPRING](spring/README.de.md)** · [spielen](https://michaeldobner.github.io/mindpause/spring/) | Solohalma auf dem klassischen Kreuzbrett. Sieben Figuren von leicht bis meisterhaft, Tipps, lebendiger Rand, Neigen | 2.1.2 |
-| <img src="queen/icons/icon.svg" width="56" alt=""> | **[QUEEN](queen/README.de.md)** · [spielen](https://michaeldobner.github.io/mindpause/queen/) | Deutsche Dame gegen den Computer in vier Stufen oder zu zweit an einem Gerät. Ebenholz, Ahorn und eine gravierte Goldkrone, Schalen für geschlagene Steine, eigene Steine immer unten | 1.3.0 |
-| <img src="karo/icons/icon.svg" width="56" alt=""> | **[KARO](karo/README.de.md)** · [spielen](https://michaeldobner.github.io/mindpause/karo/) | Die klassische Patience wie bei Windows. 1 oder 3 Karten, Punkte oder Vegas, sicher lösbare Stufen, Tipps | 1.0.5 |
-| <img src="fuge/icons/icon.svg" width="56" alt=""> | **[FUGE](fuge/README.de.md)** · [spielen](https://michaeldobner.github.io/mindpause/fuge/) | Das klassische Spiel mit fallenden Steinen als lackierter Holzkasten. Klassisch, Sprint, 3 Minuten und Ruhe ohne Ende, Gesten statt Knöpfe, Daumensteuerung im Querformat | 1.1.0 |
-| <img src="muehle/icons/icon.svg" width="56" alt=""> | **[MÜHLE](muehle/README.de.md)** · [spielen](https://michaeldobner.github.io/mindpause/muehle/) | Neun Männer Mühle gegen den Computer in drei Stufen oder zu zweit an einem Gerät. Goldlinien auf schwarzem Holz, leuchtende Mühlen, Schalen als Vorrat | 1.1.0 |
-| <img src="blocks/icons/icon.svg" width="56" alt=""> | **[BLOCKS](blocks/README.de.md)** · [spielen](https://michaeldobner.github.io/mindpause/blocks/) | Das Block-Puzzle: Steine vom Tablett aufs Brett ziehen, volle Reihen und Spalten räumen ab. 30 Level mit Startsteinen und steigender Schwierigkeit, dazu Klassisch 8 × 8, Weit 10 × 10 und Ruhe ohne Ende, Serie, Vorschau beim Ziehen, Steine aus blauer Keramik | 1.1.1 |
+| <img src="spring/icons/icon.svg" width="56" alt=""> | **[SPRING](spring/README.de.md)** · [spielen](https://mindpause.dobner.pro/spring/) | Solohalma auf dem klassischen Kreuzbrett. Sieben Figuren von leicht bis meisterhaft, Tipps, lebendiger Rand, Neigen | 2.1.2 |
+| <img src="queen/icons/icon.svg" width="56" alt=""> | **[QUEEN](queen/README.de.md)** · [spielen](https://mindpause.dobner.pro/queen/) | Deutsche Dame gegen den Computer in vier Stufen oder zu zweit an einem Gerät. Ebenholz, Ahorn und eine gravierte Goldkrone, Schalen für geschlagene Steine, eigene Steine immer unten | 1.3.0 |
+| <img src="karo/icons/icon.svg" width="56" alt=""> | **[KARO](karo/README.de.md)** · [spielen](https://mindpause.dobner.pro/karo/) | Die klassische Patience wie bei Windows. 1 oder 3 Karten, Punkte oder Vegas, sicher lösbare Stufen, Tipps | 1.0.5 |
+| <img src="fuge/icons/icon.svg" width="56" alt=""> | **[FUGE](fuge/README.de.md)** · [spielen](https://mindpause.dobner.pro/fuge/) | Das klassische Spiel mit fallenden Steinen als lackierter Holzkasten. Klassisch, Sprint, 3 Minuten und Ruhe ohne Ende, Gesten statt Knöpfe, Daumensteuerung im Querformat | 1.1.0 |
+| <img src="muehle/icons/icon.svg" width="56" alt=""> | **[MÜHLE](muehle/README.de.md)** · [spielen](https://mindpause.dobner.pro/muehle/) | Neun Männer Mühle gegen den Computer in drei Stufen oder zu zweit an einem Gerät. Goldlinien auf schwarzem Holz, leuchtende Mühlen, Schalen als Vorrat | 1.1.0 |
+| <img src="blocks/icons/icon.svg" width="56" alt=""> | **[BLOCKS](blocks/README.de.md)** · [spielen](https://mindpause.dobner.pro/blocks/) | Das Block-Puzzle: Steine vom Tablett aufs Brett ziehen, volle Reihen und Spalten räumen ab. 30 Level mit Startsteinen und steigender Schwierigkeit, dazu Klassisch 8 × 8, Weit 10 × 10 und Ruhe ohne Ende, Serie, Vorschau beim Ziehen, Steine aus blauer Keramik | 1.1.1 |
 
 Weitere Spiele und das Spiel auf zwei Geräten sind in Arbeit, siehe [Roadmap](#roadmap).
 
@@ -63,7 +63,9 @@ mindpause/
 │  └─ e2e.mjs              Browser-Test der ganzen Sammlung
 ├─ tests/                  Tests über die ganze Sammlung
 ├─ Dockerfile              liefert die Sammlung mit nginx aus (Coolify)
-├─ deploy/nginx.conf       Typen, Cache und Weiterleitungen für nginx
+├─ deploy/
+│  ├─ nginx.conf           Typen, Cache und Weiterleitungen für nginx
+│  └─ coolify-create.sh    legt die Anwendung in Coolify an, einmalig
 └─ .github/workflows/      Tests bei jedem Push, Deploy nach grünen Tests
 ```
 
@@ -97,19 +99,27 @@ Jeder Verweis trägt seine Version (`?v=` für Dateien eines Spiels, `?shell=` f
 
 ### Coolify einrichten
 
-1. **Resource anlegen:** Projekt öffnen, „+ New Resource“, dieses Repository als Quelle, Branch `main`.
-2. **Build Pack:** `Dockerfile`, Base Directory `/`, Dockerfile Location `/Dockerfile`.
-3. **Port:** `80`.
-4. **Domain:** die gewünschte Adresse eintragen. Coolify holt das Zertifikat selbst. HTTPS ist Pflicht, sonst registriert kein Browser einen Service Worker und die Spiele laufen nicht offline.
-5. **Health Check:** Pfad `/healthz`.
-6. **Deploy** drücken. Der Build dauert wenige Sekunden, ins Abbild kommen rund 2 MB, siehe [`.dockerignore`](.dockerignore).
+Einmalig über die API, siehe [`deploy/coolify-create.sh`](deploy/coolify-create.sh). Ohne `--yes` zeigt das Skript nur, was es senden würde, und ändert nichts.
+
+```bash
+COOLIFY_URL=https://coolify.example.com COOLIFY_API_KEY='…' \
+  bash deploy/coolify-create.sh \
+    --server-uuid … --project-uuid … --github-app-uuid … \
+    --domain https://mindpause.dobner.pro --yes
+```
+
+Es legt die Anwendung mit Build Pack `dockerfile`, Port `80`, Dockerfile `/Dockerfile`, Health Check `/healthz` und der Domain an und stößt den ersten Deploy an. Gibt es die Anwendung schon, legt es keine zweite an. Der Build dauert wenige Sekunden, ins Abbild kommen rund 2 MB, siehe [`.dockerignore`](.dockerignore).
+
+Die UUIDs von Server, Projekt und GitHub App stehen in Coolify. Manche Version liefert die der GitHub App nicht über die API, dann steht sie in der Adresszeile, wenn man die Source öffnet.
+
+HTTPS ist Pflicht, sonst registriert kein Browser einen Service Worker und die Spiele laufen nicht offline. Coolify holt das Zertifikat selbst, sobald der A-Record der Domain auf den Server zeigt.
 
 Für das Ausrollen bei jeder Änderung gibt es zwei Wege:
 
 * **Coolify hört selbst zu:** in der Resource „Automatic Deployment“ einschalten. Rollt bei jedem Push auf `main` aus, auch bei roten Tests.
 * **Erst wenn die Tests grün sind:** [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml) stößt Coolify nach dem erfolgreichen Testlauf an. Dafür zwei Secrets im Repository setzen, `COOLIFY_WEBHOOK` (Deploy-URL der Resource) und `COOLIFY_TOKEN` (API-Token aus Coolify unter „Keys & Tokens“). Ohne diese Secrets überspringt der Workflow sich selbst.
 
-Beim Wechsel der Adresse zu beachten: Ein Spiel, das von `michaeldobner.github.io` auf dem Home-Bildschirm liegt, bleibt auf dieser Adresse, denn Service Worker und Speicher gehören zur Herkunft. Wer die neue Adresse haben will, legt das Spiel dort erneut ab. Die Spielstände auf dem Gerät wandern nicht mit.
+Beim Wechsel der Adresse zu beachten: Ein Spiel, das von `michaeldobner.github.io` auf dem Home-Bildschirm liegt, bleibt auf dieser Adresse, denn Service Worker und Speicher gehören zur Herkunft. Wer `mindpause.dobner.pro` haben will, legt das Spiel von dort erneut ab. Die Spielstände auf dem Gerät wandern nicht mit.
 
 ## Ein Spiel hinzufügen
 
